@@ -307,7 +307,7 @@ class Admin_Site_Enhancements {
         // Disable Dashboard Widgets
         if ( array_key_exists( 'disable_dashboard_widgets', $options ) && $options['disable_dashboard_widgets'] ) {
             $disable_dashboard_widgets = new ASENHA\Classes\Disable_Dashboard_Widgets();
-            add_action( 'wp_dashboard_setup', [$disable_dashboard_widgets, 'disable_dashboard_widgets'], 99 );
+            add_action( 'wp_dashboard_setup', [$disable_dashboard_widgets, 'disable_dashboard_widgets'], PHP_INT_MAX );
             add_action( 'admin_init', [$disable_dashboard_widgets, 'maybe_remove_welcome_panel'] );
         }
         // Hide Admin Bar

@@ -174,14 +174,24 @@ class Disable_Smaller_Components {
      */
     public function disable_plugin_theme_editor() {
         $wp_config = new WP_Config_Transformer;
+        $is_wpconfig_writeable = $wp_config->wpconfig_file( 'writeability' );
+        // vi( $is_wpconfig_writeable, '', 'from disable_plugin_theme_editor');
+        
+        if ( $is_wpconfig_writeable ) {
+            // wp-config.php is writeable
+            $wp_config_options = array(
+                'add'       => true, // Add the config if missing.
+                'raw'       => true, // Display value in raw format without quotes.
+                'normalize' => false, // Normalize config output using WP Coding Standards.
+            );
 
-        $wp_config_options = array(
-            'add'       => true, // Add the config if missing.
-            'raw'       => true, // Display value in raw format without quotes.
-            'normalize' => false, // Normalize config output using WP Coding Standards.
-        );
-
-        $update_success = $wp_config->update( 'constant', 'DISALLOW_FILE_EDIT', 'true', $wp_config_options );
+            $update_success = $wp_config->update( 'constant', 'DISALLOW_FILE_EDIT', 'true', $wp_config_options );
+            
+        } else {
+            if ( ! defined( 'DISALLOW_FILE_EDIT' ) ) {
+                define( 'DISALLOW_FILE_EDIT', true );
+            }
+        }
     }
 
     /**
@@ -191,13 +201,21 @@ class Disable_Smaller_Components {
      */
     public function enable_plugin_theme_editor() {
         $wp_config = new WP_Config_Transformer;
+        $is_wpconfig_writeable = $wp_config->wpconfig_file( 'writeability' );
+        // vi( $is_wpconfig_writeable, '', 'from enable_plugin_theme_editor');
 
-        $wp_config_options = array(
-            'add'       => true, // Add the config if missing.
-            'raw'       => true, // Display value in raw format without quotes.
-            'normalize' => false, // Normalize config output using WP Coding Standards.
-        );
+        if ( $is_wpconfig_writeable ) {
+            $wp_config_options = array(
+                'add'       => true, // Add the config if missing.
+                'raw'       => true, // Display value in raw format without quotes.
+                'normalize' => false, // Normalize config output using WP Coding Standards.
+            );
 
-        $update_success = $wp_config->update( 'constant', 'DISALLOW_FILE_EDIT', 'false', $wp_config_options );
+            $update_success = $wp_config->update( 'constant', 'DISALLOW_FILE_EDIT', 'false', $wp_config_options );            
+        } else {
+            if ( ! defined( 'DISALLOW_FILE_EDIT' ) ) {
+                define( 'DISALLOW_FILE_EDIT', false );            
+            }
+        }
     }    
 }

@@ -60,9 +60,9 @@ class WP_Config_Transformer {
 		}
 
 		if ( !is_writable( $file ) ) {
-			$writeability = 'not writeable';
+			$writeability = false;
         } else {
-        	$writeability = 'writeable';
+        	$writeability = true;
         }
 
 		if ( $type == 'path' ) {
@@ -72,7 +72,7 @@ class WP_Config_Transformer {
 		} elseif ( $type == 'writeability' ) {
 			return $writeability;
 		} elseif ( $type == 'status' ) {
-        	return '<div class="dlm-wpconfig-status" style="display: none;">The wp-config.php file is located in ' . $location . ' ('. $file . ') and is ' . $writeability .'.</div>';
+        	return '<div class="ase-wpconfig-status" style="display: none;">The wp-config.php file is located in ' . $location . ' ('. $file . ') and is ' . ( $writeability ) ? 'writeable' : 'not writeable' .'.</div>';
 		}
 
 	}

@@ -5,7 +5,7 @@ Donate link: https://bowo.io/asenha-sp-rdm
 Tags: enhancements, tweaks, optimizations, tools  
 Requires at least: 4.6  
 Tested up to: 6.6.2  
-Stable tag: 7.4.5  
+Stable tag: 7.4.6  
 Requires PHP: 5.6  
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -34,7 +34,7 @@ https://www.youtube.com/watch?v=bX-2gmpCEMU
 
 _"ASE easily **replaces a dozen or more plugins** I install on **every website project**. Super lightweight and easy to use."_ ~[NetzzJD](https://wordpress.org/support/topic/amazing-must-have-plugin-2/)
 
-_"I bought the lifetime deal and was **blown away by the quality**, and the free version replaces SO many other plugins too. LOVE THIS!"_ ~[Jacob Wonder](https://wordpress.org/support/topic/amazing-plugin-2545/)
+_"**I bought the lifetime deal and was blown away by the quality**, and the free version replaces SO many other plugins too. LOVE THIS!"_ ~[Jacob Wonder](https://wordpress.org/support/topic/amazing-plugin-2545/)
 
 _"ASE is an amazing plugin! **Time and money saver**. Thank you!"_ ~[Iulian Baciu](https://wordpress.org/support/topic/amazing-plugin-precious/)
 
@@ -186,22 +186,27 @@ ASE does not officially support multisite. Please use at your own risk. That sai
 
 ## Changelog
 
-**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **74 _point_ releases** (e.g. 1.1.0 ) and **116 _patch_ releases** (e.g. 4.9.1). 
+**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **74 _point_ releases** (e.g. 1.1.0 ) and **117 _patch_ releases** (e.g. 4.9.1). 
 
 Each **_point release_** usually corresponds with the addition of one new module/feature. Each module/feature usually is the equivalent of one (or more) single-purpose plugin. Each **_patch release_** usually contain one or more bugfix or improvements to existing modules/features.
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web) now. Lifetime Deal (LTD) available.
 
-### 7.4.5 (2024.09.30) - ASE Free and Pro
+### 7.4.6 (2024.10.07) - ASE Free and Pro
 
-* **[IMPROVED in Free and Pro] Disable Components >> Disable Smaller Components**: added an option to disable plugin and theme editor. Props to Michael S. and [@pressthemes1](https://wordpress.org/support/users/pressthemes1/) for [suggesting this](https://wordpress.org/support/topic/disable-plugin-theme-editor/).
+* **[IMPROVED in PRO] Log In | Log Out >> Change Login URL**: now respects the recently added feature to Redirect After Login module which allows for separate redirection URL for each user role. With this improvement, if a user role is already logged-in, going to the custom login URL will properly redirect to the URL set in Redirect After Login module for that role, no longer redirecting to /wp-admin/ (the Dashboard). An improvement was also implemented to handle the scenario where the user has multiple user roles. Props to Wence W. for reporting the issue and facilitating the troubleshooting.
 
-* **[FIXED in Pro] Content Management >> Media Categories**: fix filter bar getting too tall. Now will be the same height as the category action bar.
+* **[FIXED in PRO] Admin Interface >> Admin Columns Manager**: improved mechanism to detect and categorize custom fields in a post type, ensuring they are handled properly based on their handler (ASE, ACF, Meta Box or plain custom field). Props to Stanislaw R. for reporting the issue and facilitating the troubleshooting process.
 
-* **[TRANSLATION in Free and Pro]** Added partial translation for Albanian and Chinese (Taiwan). ASE is now being translated into 25 languages:
+* **[FIXED in Free and Pro] Admin Interface >> Disable Dashboard Widgets**: fix for certain dashboard widgets not being listed by this module, thus not possible to disable them, e.g. HappyAddons for Elementor. Props to MIRAJA Design for reporting this.
+
+* **[FIXED in Free and Pro] Admin Interface >> Admin Menu Organizer**: fix admin menu scrolling issue when opening WPIDE plugin's admin page. Props to Francois G. for reporting the issue.
+
+* **[FIXED in Free and Pro] Disable Components >> Disable Smaller Components >> Disable Plugin and Theme Editor**: add a mechanism to check if wp-config.php is writeable. If wp-config.php is not writeable, a warning message will now be displayed in the module description. This will also prevent fatal error on sites where wp-config.php is not writeable. Props to @cvladan, @aguilar1181, @pressthemes1 for [reporting this](https://wordpress.org/support/topic/fatal-error-crash/).
+
+* **[TRANSLATION in Free and Pro]** Added translation for Turkish. ASE is now being translated into 26 languages:
   * **Added new/improved translation** for:
-    * Free: Updated Arabic, German, Korean and Vietnamese. Added Serbian (partial) and Chinese-Taiwan (partial).
-    * Pro: Updated Vietnamese. Added Arabic (complete).
+    * Free: Updated Dutch, Polish, Portuguese (Brazil), Serbian, Vietnamese. Added Turkish.
   * **More strings have been internationalized**. @Translators, please visit the respective project pages for the Free and Pro versions to translate the new strings, if you havent' done so already.
   * **Interested to help translate or improve the translation?** Please go to [https://translate.wpase.com](https://translate.wpase.com) for more info.
   * **Chinese (China)**: ASE Free and Pro (completed). Props to [@bricksvip](https://profiles.wordpress.org/bricksvip/) et al.
@@ -226,9 +231,9 @@ Each **_point release_** usually corresponds with the addition of one new module
   * **Danish**: ASE Free (completed) | ASE Pro (partial). Props to [Morten E.L.](https://profiles.wordpress.org/ellegaarddk/), [Helgi P.](https://profiles.wordpress.org/helgipetersen/) and [Kurt M.A.](https://profiles.wordpress.org/moskjaer/) et al.
   * **Arabic**: ASE Free (completed) | ASE Pro (completed). Props to [Mohammed J.](https://profiles.wordpress.org/ih4xz/), Yaser M., et al.
   * **Romanian**: ASE Free (completed) | ASE Pro (partial). Props to [Dan C.](https://profiles.wordpress.org/dancaragea/), [@ravishi](https://profiles.wordpress.org/ravishi/) et al.
+  * **Turkish**: ASE Free (completed). Props to [@saeead](https://wordpress.org/support/users/saeead/), [@serdaroztrk](https://profiles.wordpress.org/serdaroztrk/) et al.
   * **Serbian**: ASE Free (partial). Props to [Igor E.](https://wordpress.org/support/users/igorel/).
   * **Albanian**: ASE Free (partial). Props to [@algertpateqi](https://profiles.wordpress.org/algertpateqi/).
   * **Chinese (Taiwan)**: ASE Free (partial). Props to [Hedula](https://profiles.wordpress.org/hedula/).
-
 
 [**See the full changelog >>**](https://www.wpase.com/documentation/changelog/)
