@@ -174,47 +174,53 @@ class Disable_Smaller_Components {
      */
     public function disable_plugin_theme_editor() {
         $wp_config = new WP_Config_Transformer;
-        $is_wpconfig_writeable = $wp_config->wpconfig_file( 'writeability' );
-        // vi( $is_wpconfig_writeable, '', 'from disable_plugin_theme_editor');
-        
-        if ( $is_wpconfig_writeable ) {
-            // wp-config.php is writeable
-            $wp_config_options = array(
-                'add'       => true, // Add the config if missing.
-                'raw'       => true, // Display value in raw format without quotes.
-                'normalize' => false, // Normalize config output using WP Coding Standards.
-            );
 
-            $update_success = $wp_config->update( 'constant', 'DISALLOW_FILE_EDIT', 'true', $wp_config_options );
-            
+        if ( ! defined( 'DISALLOW_FILE_EDIT' ) ) {
+            define( 'DISALLOW_FILE_EDIT', true );
         } else {
-            if ( ! defined( 'DISALLOW_FILE_EDIT' ) ) {
-                define( 'DISALLOW_FILE_EDIT', true );
+            $is_wpconfig_writeable = $wp_config->wpconfig_file( 'writeability' );
+            
+            if ( $is_wpconfig_writeable ) {
+                $disallow_file_edit = $wp_config->get_value( 'constant', 'DISALLOW_FILE_EDIT' );
+
+                if ( 'false' == $disallow_file_edit ) {
+                    $wp_config_options = array(
+                        'add'       => true, // Add the config if missing.
+                        'raw'       => true, // Display value in raw format without quotes.
+                        'normalize' => false, // Normalize config output using WP Coding Standards.
+                    );
+
+                    $update_success = $wp_config->update( 'constant', 'DISALLOW_FILE_EDIT', 'true', $wp_config_options );                    
+                }
             }
         }
     }
 
     /**
-     * Disable plugin and theme editor
+     * Enable plugin and theme editor
      * 
      * @since 7.4.5
      */
     public function enable_plugin_theme_editor() {
         $wp_config = new WP_Config_Transformer;
-        $is_wpconfig_writeable = $wp_config->wpconfig_file( 'writeability' );
-        // vi( $is_wpconfig_writeable, '', 'from enable_plugin_theme_editor');
 
-        if ( $is_wpconfig_writeable ) {
-            $wp_config_options = array(
-                'add'       => true, // Add the config if missing.
-                'raw'       => true, // Display value in raw format without quotes.
-                'normalize' => false, // Normalize config output using WP Coding Standards.
-            );
-
-            $update_success = $wp_config->update( 'constant', 'DISALLOW_FILE_EDIT', 'false', $wp_config_options );            
+        if ( ! defined( 'DISALLOW_FILE_EDIT' ) ) {
+            define( 'DISALLOW_FILE_EDIT', false );            
         } else {
-            if ( ! defined( 'DISALLOW_FILE_EDIT' ) ) {
-                define( 'DISALLOW_FILE_EDIT', false );            
+            $is_wpconfig_writeable = $wp_config->wpconfig_file( 'writeability' );
+            
+            if ( $is_wpconfig_writeable ) {
+                $disallow_file_edit = $wp_config->get_value( 'constant', 'DISALLOW_FILE_EDIT' );
+
+                if ( 'true' == $disallow_file_edit ) {
+                    $wp_config_options = array(
+                        'add'       => true, // Add the config if missing.
+                        'raw'       => true, // Display value in raw format without quotes.
+                        'normalize' => false, // Normalize config output using WP Coding Standards.
+                    );
+
+                    $update_success = $wp_config->update( 'constant', 'DISALLOW_FILE_EDIT', 'false', $wp_config_options );
+                }
             }
         }
     }    

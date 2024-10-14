@@ -833,9 +833,9 @@ class Admin_Site_Enhancements {
             }
             if ( array_key_exists( 'disable_plugin_theme_editor', $options ) ) {
                 if ( $options['disable_plugin_theme_editor'] ) {
-                    add_action( 'plugins_loaded', [$disable_smaller_components, 'disable_plugin_theme_editor'], PHP_INT_MAX );
+                    add_action( 'admin_init', [$disable_smaller_components, 'disable_plugin_theme_editor'], PHP_INT_MAX );
                 } else {
-                    add_action( 'plugins_loaded', [$disable_smaller_components, 'enable_plugin_theme_editor'], PHP_INT_MAX );
+                    add_action( 'admin_init', [$disable_smaller_components, 'enable_plugin_theme_editor'], PHP_INT_MAX );
                 }
             }
         }
@@ -888,9 +888,6 @@ class Admin_Site_Enhancements {
             add_filter( 'safe_style_css', [$email_address_obfuscator, 'add_additional_attributes_to_safe_css'] );
             add_filter( 'widget_text', 'shortcode_unautop' );
             add_filter( 'widget_text', 'do_shortcode' );
-            if ( array_key_exists( 'obfuscate_email_address_in_content', $options ) && $options['obfuscate_email_address_in_content'] ) {
-                add_filter( 'the_content', [$email_address_obfuscator, 'obfuscate_emails_in_content__premium_only'] );
-            }
         }
         // Disable XML-RPC
         if ( array_key_exists( 'disable_xmlrpc', $options ) && $options['disable_xmlrpc'] ) {

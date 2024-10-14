@@ -91,57 +91,8 @@ class Change_Login_URL {
                         }
                     } else {
                         if ( 'separate_urls' == $redirect_after_login_type && array_key_exists( 'redirect_after_login_for_separate_role', $options ) && !empty( $options['redirect_after_login_for_separate_role'] ) ) {
-                            $redirect_after_login_for_separate_slug_raw = ( isset( $options['redirect_after_login_for_separate_slug'] ) ? $options['redirect_after_login_for_separate_slug'] : '' );
-                            // array of role => slug
-                            $redirect_after_login_for_separate_role = $options['redirect_after_login_for_separate_role'];
-                            // array of role => true/false
-                            if ( isset( $redirect_after_login_for_separate_role ) && count( $redirect_after_login_for_separate_role ) > 0 ) {
-                                foreach ( $current_user_roles as $role ) {
-                                    foreach ( $redirect_after_login_for_separate_role as $role_slug => $custom_redirect ) {
-                                        if ( $custom_redirect ) {
-                                            if ( $role_slug == $role ) {
-                                                $redirect_after_login_to_slug_raw = $redirect_after_login_for_separate_slug_raw[$role];
-                                                $relative_path = $redirect_after_login->get_redirect_relative_path( $redirect_after_login_to_slug_raw );
-                                                if ( isset( $_GET['action'] ) ) {
-                                                    // User Switching plugin
-                                                    if ( 'switch_to_user' == $_GET['action'] || 'switch_to_olduser' == $_GET['action'] ) {
-                                                        return;
-                                                        // This ensures user switching proceeds
-                                                    } else {
-                                                        wp_safe_redirect( home_url( $relative_path ) );
-                                                        exit;
-                                                    }
-                                                } else {
-                                                    // Redirect to custom redirect slug
-                                                    wp_safe_redirect( home_url( $relative_path ) );
-                                                    exit;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                                // At this point, there is no role with custom redirection. No redirection has occurred. Let's check further.
-                                if ( isset( $_GET['action'] ) ) {
-                                    // User Switching plugin
-                                    if ( 'switch_to_user' == $_GET['action'] || 'switch_to_olduser' == $_GET['action'] ) {
-                                        return;
-                                        // This ensures user switching proceeds
-                                    } else {
-                                        // Redirect to dashboard
-                                        wp_safe_redirect( get_admin_url() );
-                                        exit;
-                                    }
-                                } else {
-                                    // Redirect to dashboard
-                                    wp_safe_redirect( get_admin_url() );
-                                    exit;
-                                }
-                            } else {
-                                if ( isset( $_GET['action'] ) && ('switch_to_user' == $_GET['action'] || 'switch_to_olduser' == $_GET['action']) ) {
-                                    return;
-                                    // This ensures user switching proceeds
-                                }
-                            }
+                            // Redirect to dashboard
+                            wp_safe_redirect( get_admin_url() );
                         } else {
                             // Redirect to dashboard
                             wp_safe_redirect( get_admin_url() );

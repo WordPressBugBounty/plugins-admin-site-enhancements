@@ -235,7 +235,11 @@ class WP_Config_Transformer {
 			$anchor = "/* That's all, stop editing! Happy publishing. */";
 		} elseif ( false !== strpos( $wp_config_src, "Happy blogging" ) ) {
 			$anchor = "/* That's all, stop editing! Happy blogging. */";
-		} else {}
+		} elseif ( false !== strpos( $wp_config_src, "Absolute path to" ) ) {
+			$anchor = "/** Absolute path to the WordPress directory. */";
+		} else {
+			$anchor = '/* Add any custom values between this line and the "stop editing" line. */';
+		}
 
 		$defaults = array(
 			'raw'       => $raw_input, // Display value in raw format without quotes.
