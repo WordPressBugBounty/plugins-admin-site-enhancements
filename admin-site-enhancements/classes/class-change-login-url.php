@@ -195,7 +195,7 @@ class Change_Login_URL {
             } else {
                 $http_referrer = '';
             }
-            if ( !empty( $http_referrer ) && false === strpos( $http_referrer, $custom_login_slug ) ) {
+            if ( ! empty( $http_referrer ) && false === strpos( $http_referrer, get_site_url() ) ) {
                 //     // The referer URL does not contain the custom login slug, this is an attempt to login from a URL / method that is not the custom login page URL. Let's redirect that.
                 //     // Redirect to /not_found/
                 wp_safe_redirect( home_url( $redirect_slug . '/' ), 302 );
