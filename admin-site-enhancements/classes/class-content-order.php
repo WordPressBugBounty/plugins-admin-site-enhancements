@@ -30,7 +30,7 @@ class Content_Order {
                                 // Page title
                                 __( 'Order', 'admin-site-enhancements' ),
                                 // Menu title
-                                'edit_pages',
+                                'edit_others_posts',
                                 // Capability required
                                 'custom-order-posts',
                                 // Menu and page slug
@@ -44,7 +44,7 @@ class Content_Order {
                                 // Page title
                                 __( 'Order', 'admin-site-enhancements' ),
                                 // Menu title
-                                'edit_pages',
+                                'edit_others_posts',
                                 // Capability required
                                 'custom-order-' . $post_type_slug,
                                 // Menu and page slug
@@ -291,7 +291,7 @@ class Content_Order {
     public function save_custom_content_order() {
         global $wpdb;
         // Check user capabilities
-        if ( !current_user_can( 'edit_pages' ) ) {
+        if ( !current_user_can( 'edit_others_posts' ) ) {
             wp_send_json( 'Something went wrong.' );
         }
         // Verify nonce

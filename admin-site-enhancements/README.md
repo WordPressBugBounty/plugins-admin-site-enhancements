@@ -5,7 +5,7 @@ Donate link: https://bowo.io/asenha-sp-rdm
 Tags: enhancements, tweaks, optimizations, tools  
 Requires at least: 4.6  
 Tested up to: 6.7.1  
-Stable tag: 7.6.1.1  
+Stable tag: 7.6.2  
 Requires PHP: 5.6  
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -190,33 +190,38 @@ ASE does not officially support multisite. Please use at your own risk. That sai
 
 ## Changelog
 
-**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **76 _major_ releases** (e.g. 1.1.0 ) and **125 _minor_ releases** (e.g. 4.9.1). 
+**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **76 _major_ releases** (e.g. 1.1.0 ) and **126 _minor_ releases** (e.g. 4.9.1). 
 
 Each **_major release_** usually corresponds with the addition of one new module/feature. Each module/feature usually is the equivalent of one (or more) single-purpose plugin. Each **_minor release_** usually contain one or more bugfix or improvements to existing modules/features.
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). **Currently on YEAR END SALE, 20% discount**. Lifetime Deal (LTD) available.
 
-### 7.6.1.1 (2024.12.09) - ASE Free and Pro
+### 7.6.2 (2024.12.09) - ASE Free and Pro
 
-* **[FIXED in Free and Pro] Log In/Out | Register >> Change Login URL**: fixed a bug introduced in v7.6.1 that caused non-default login forms, e.g. WooCommerce account login, to redirect to `/not_found/` URL.
+* **[IMPROVED in Pro] Content Management >> Custom Content Types >> Custom Field Groups**: text field now supports oEmbed output when the "URL / oEmbed" sub-type is selected and the value of the field is a URL from one of the [supported oEmbed providers](https://developer.wordpress.org/reference/hooks/oembed_providers/), e.g. YouTube. [Documentation for the text field](https://www.wpase.com/documentation/custom-field-types/#text) has been udpated to include this output type. Props to Konstantinos K. for suggesting this improvement.
 
-### 7.6.1 (2024.12.09) - ASE Free and Pro
+* **[IMPROVED in Pro] Email Delivery**: add an option to store 10, 25 and 50 emails in the email log. Props to Sarah A. for the suggestion.
 
-* **[IMPROVED in Free and Pro] Log In/Out | Register >> Change Login URL**: improved code to account for login attempts done via a POST request not originating from the custom login URL/page. Props to ken0429ng for reporting the issue and facilitating the troubleshooting process.
+* **[CHANGED in Free and Pro] Content Management >> Content Order**: the required user capability to be able to order content has been changed from `edit_pages` to `edit_others_posts`. This preserve how things already work, i.e. administrators and editors can perform content ordering, but allows for scenarios where an editor / an editor-level custom role does not have the `edit_pages` capability but needs the ability to perform content ordering. Props to Uli L. for suggesting this change.
 
-* **[CHANGED in Free and Pro] Optimizations >> Image Upload Control**: changed the max height value from 3,840 pixels to 10,000 pixels to account for use cases where tall screenshots of a page is being uploaded. Props to [@jessejfisher](https://wordpress.org/support/users/jessejfisher/) for [reporting this](https://wordpress.org/support/topic/saving-validation-issue/).
+* **[FIXED in Free and Pro] ASE settings**: fix an issue where the settings page is broken when the [Assets Cleanup](https://wordpress.org/plugins/wp-asset-clean-up/) plugin is active. Props to George N. for reporting the issue with a screencast for clarity and assisting with troubleshooting.
 
-* **[FIXED in Pro] Content Mangement >> Custom Content Types >> Options Pages**: fixed an issue where a custom field in a newly created custom field group for an options page can not be displayed in Bricks and Elementor. They were shown in the custom field selection menu, but the value was not displayed on the preview and frontend. Props to Aleš S. and Ian W. for reporting the issue and facilitating the troubleshooting process.
+* **[FIXED in Pro] Log In/Out | Regisger >> Login Page Customizer**: fixed an issue where page background color and logo sizing is being / can be overridden by CSS from theme child. Props to Christian for reporting the issue.
 
-* **[FIXED in Pro] Utilities >> Display System Summary**: fixed fatal error that occurs when the file path is too long. Props to Maziar E.S. for reporting the issue in details with the error log entry and the WordPress environment details.
+* **[FIXED in Pro] Admin Interface >> Enhance List Tables**: fix PHP warning in certain scenario when Last Modifield column is being shown. Props to R. József G. for reporting the issue.
 
-* **[FIXED in Pro] Content Mangement >> Custom Content Types >> Custom Field Group**: `get_cf()` will now use GMT/UTC timezone when outputting a date field to avoid issues where the output has a one-day difference for sites configured to use certain timezones, e.g. an American timezone. Props to Jonathan J. for reporting the issue and providing screenshots as well as the WordPress environment info to help with the troubleshooting.
+* **[FIXED in Pro] Admin Interface >> Admin Logo**: fixed a layout issue where admin menu logo still shows and overlaps wp-admin content area at certain screen width range. Props to Andresen for reporting the issue.
+
+* **[FIXED in Pro] Admin Interface >> Admin Menu Organizer**: fix an issue causing the Posts >> Tags submenu item not hideable for any user roles. Props to Antonio A. for reporting the issue with a screenshot for clarity.
+
+* **[FIXED in Pro] Utilities >> Display System Summary**: fixed fatal error when open_base_dir restriction is in effect for a particular file path when trying to calculate the various main folder sizes. Props to Christian for reporting the issue with the full error log entry and facilitating the troubleshooting process.
 
 * **[YEAR END SALE]** [**Get 20% discount**](https://www.wpase.com/chnlg-to-web) by the end of the year on new Pro license purchase and upgrades.
 
-* **[TRANSLATION in Free and Pro]** Added Spanish (Chile) and completed Chinese (Taiwan) for ASE Free. ASE is now being translated into 29 languages:
+* **[TRANSLATION in Free and Pro]** ASE is now being translated into 29 languages:
   * **Added new/improved translation** for:
-    * Free: added Spanish (Chile), updated Spanish (Spain), Norwegian, Dutch, Polish, Portuguese (Brazil), Serbian, Swedish, Vietnamese, Chinese (Taiwan)
+    * Free: updated Indonesian, Albanian, Chinese (Taiwan)
+    * Pro: updated Indonesian, Czech, Polish, Portuguese (Brazil), Vietnamese
   * **More strings have been internationalized**. @Translators, please visit the respective project pages for the Free and Pro versions to translate the new strings, if you havent' done so already.
   * **Interested to help translate or improve the translation?** Please go to [https://translate.wpase.com](https://translate.wpase.com) for more info.
   * **Chinese (China)**: ASE Free and Pro (completed). Props to [@bricksvip](https://profiles.wordpress.org/bricksvip/) et al.

@@ -899,6 +899,8 @@ function asenha_dequeue_scritps() {
         wp_dequeue_script( 'otgsPopoverTooltip' );
         // WPML String Translation
         wp_dequeue_script( 'wpml-theme-plugin-localization-scan' );
+        // Asset Cleanup
+        wp_dequeue_script( 'wpassetcleanup-script' );
     }
 }
 
