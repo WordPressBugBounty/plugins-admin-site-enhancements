@@ -5,7 +5,7 @@ Donate link: https://bowo.io/asenha-sp-rdm
 Tags: enhancements, tweaks, optimizations, tools  
 Requires at least: 4.6  
 Tested up to: 6.7.1  
-Stable tag: 7.6.3  
+Stable tag: 7.6.4  
 Requires PHP: 5.6  
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -190,41 +190,28 @@ ASE does not officially support multisite. Please use at your own risk. That sai
 
 ## Changelog
 
-**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **76 _major_ releases** (e.g. 1.1.0 ) and **128 _minor_ releases** (e.g. 4.9.1). 
+**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **76 _major_ releases** (e.g. 1.1.0 ) and **129 _minor_ releases** (e.g. 4.9.1). 
 
 Each **_major release_** usually corresponds with the addition of one new module/feature. Each module/feature usually is the equivalent of one (or more) single-purpose plugin. Each **_minor release_** usually contain one or more bugfix or improvements to existing modules/features.
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). **Currently on YEAR END SALE, 20% discount**. Lifetime Deal (LTD) available.
 
-### 7.6.3 (2024.12.16) - ASE Free and Pro
+### 7.6.4 (2024.12.30) - ASE Free and Pro
 
-* **[SECURITY FIX in Free and Pro]**:
-  * **Utilities >> Email Delivery**: fix Broken Access Control vulnerability related to the process of sending a test email. Props to Rafie Muhammad (Patchstack) for the responsible disclosure.
-  * **Utilities >> View Admin as Role**: fix Privilege Escalation vulnerability that happens on a rare scenario. Props to Rafie Muhammad (Patchstack) for the responsible disclosure.
+* **[IMPROVED in Pro] Custom Code >> Code Snippets Manager**: add an option for PHP snippets to choose which hook to execute each snippet at. You can choose between `plugins_loaded` (default), `after_setup_theme`, `init`, `wp_loaded` or `wp`. Props to Morten P. and Lee B. for prompting this improvement.
 
-* **[IMPROVED in Free and Pro] Admin Interface >> Clean Up Admin Bar**: add an option to remove the home icon and site name. Props to Max Z. for prompting this improvement.
+* **[CHANGED in Pro] Admin Interface >> Admin Columns Manager**: terms list in a taxonomy columns now links to the filtered list of posts with that term, just like clicking a category on the Posts list. Props to Stijn V. for prompting this change.
 
-* **[IMPROVED and FIXED in Fre and Pro] Utilities >> Email Delivery**: 
-  * Free: fix an issue where failed delivery during a send test just continues to show the spinning "Sending test email..." message. It should now properly update to "Oops, something went wrong" message. 
-  * Pro: fix an issue where failed delivery were not properly logged as such in the email log in certain scenarios.
-  * Pro: add an option to disable authentication which is needed in some scenarios, e.g. delivery via Google Workspace's without 2FA and using the `smtp-relay.gmail.com` host without credentials. Props to @boomerangz for suggesting this improvement.
+* **[FIXED in Free and Pro] Admin Interface >> SVG Upload**: fix fatal error and deprecation notice when the [Enhanced Responsive Images](https://wordpress.org/plugins/auto-sizes/) plugin is active. Props to [Mike B.] for [reporting this](https://wordpress.org/support/topic/fatal-error-svg-with-7-6-2/) and to [Sunny](https://wordpress.org/support/users/frdmsun/) for providing a critical piece of info that led to this fix.
 
-* **[FIXED in Free and Pro] Content Management >> Media Replacement**: fix an issue where replacing non-image attachments, e.g. MP4 videos, might cause display issue on the attachment edit screen or when editing/viewing posts using displaying that attachment. Props to [@alriksson](https://wordpress.org/support/users/alriksson/) for [reporting the issue](https://wordpress.org/support/topic/media-replacement-query-string/).
-
-* **[FIXED in Pro] Admin Interface >> Admin Logo**: fix misformatted CSS for styling the admin bar logo. Props to @nassukesso for reporting this.
-  
-* **[FIXED in Pro] Admin Interface >> Admin Columns Manager**: fix an issue where the left-most, default checkbox column is displayed wider than it should when Simple Custom Post Order plugin is active. Props to Valentin J. for reporting the issue and collaborating with a thorough investigation on their part as well.
-
-* **[FIXED in Pro] Content Management >> Content Order**: 
-  * fix an issue where querying and displaying the posts on the ordering page produces a fatal error in some scenarios. Props to Valentin J. for reporting the issue with great detail (error log entry + screenshot), which helped with the troubleshooting process.
-  * exclude CPTs from WordPres core, ASE, WooCommerce, Breakdance, Bricks and Elementor from the list of non-hierarchical CPTs to enable content ordering for.
+* **[FIXED in Pro] Custom Code >> Code Snippets Manager**: fixed an issue where the Snippet Categories column is blank. Props to Stijn V. for reporting the issue.
 
 * **[YEAR END SALE]** [**Get 20% discount**](https://www.wpase.com/chnlg-to-web) by the end of the year on new Pro license purchase and upgrades.
 
 * **[TRANSLATION in Free and Pro]** ASE is now being translated into 29 languages:
   * **Added new/improved translation** for:
-    * Free: updated Hungarian, Indonesian, Chinese (Taiwan)
-    * Pro: updated Norwegian
+    * Free: updated Arabic, Spanish (Spain), Korean, Dutch, Polish, Portuguese (Brazil), Vietnamese, Chinese (Taiwan)
+    * Pro: updated Arabic, Portuguese (Brazil), Vietnamese
   * **More strings have been internationalized**. @Translators, please visit the respective project pages for the Free and Pro versions to translate the new strings, if you havent' done so already.
   * **Interested to help translate or improve the translation?** Please go to [https://translate.wpase.com](https://translate.wpase.com) for more info.
   * **Chinese (China)**: ASE Free and Pro (completed). Props to [@bricksvip](https://profiles.wordpress.org/bricksvip/) et al.
