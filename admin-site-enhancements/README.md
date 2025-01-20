@@ -5,7 +5,7 @@ Donate link: https://bowo.io/asenha-sp-rdm
 Tags: enhancements, tweaks, optimizations, tools  
 Requires at least: 4.6  
 Tested up to: 6.7.1  
-Stable tag: 7.6.6  
+Stable tag: 7.6.7.1  
 Requires PHP: 5.6  
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -190,36 +190,28 @@ ASE does not officially support multisite. Please use at your own risk. That sai
 
 ## Changelog
 
-**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **76 _major_ releases** (e.g. 1.1.0 ) and **131 _minor_ releases** (e.g. 4.9.1). 
+**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **76 _major_ releases** (e.g. 1.1.0 ) and **133 _minor_ releases** (e.g. 4.9.1). 
 
 Each **_major release_** usually corresponds with the addition of one new module/feature. Each module/feature usually is the equivalent of one (or more) single-purpose plugin. Each **_minor release_** usually contain one or more bugfix or improvements to existing modules/features.
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). Lifetime Deal (LTD) available.
 
-### 7.6.6 (2025.01.13) - ASE Free and Pro
+### 7.6.7.1 (2025.01.20) - ASE Free and Pro
 
-* **[IMPROVED in Pro] Admin Interface >> Admin Logo**: 
-  * add option to show the **admin menu logo in the backend** and show the **admin bar logo in the frontend**. Props to Max Z. for suggesting this.
-  * add option to link the admin bar logo to the dashboard when it is shown on the frontend. Props to Max Z. for suggesting this.
+* **[FIXED in Free and Pro] fixed a fatal error** introduced in v7.6.7. Props to [@cck23](https://wordpress.org/support/users/cck23/) and [@aguilar1181](https://wordpress.org/support/users/aguilar1181/) for quickly [reporting it](https://wordpress.org/support/topic/ase7-6-7-error/).
 
-* **[IMPROVED and FIXED in Pro] Custom Code >> Code Snippets Manager**: 
-  * add option to **execute PHP snippet via a secure URL**.
-  * add option to **set the load / execution priority / order** for all snippet types.
-  * improved reliability of mechanism to record error when creating / updating PHP snippets
-  * fixed fatal error when creating non-PHP snippet in a certain scenario
+### 7.6.7 (2025.01.20) - ASE Free and Pro
 
-* **[IMPROVED in Pro] Admin Interface >> Various Admin UI Enhancements**: add an option to open all admin page links in new tab. Useful for people who prefer this workflow by default, instead of pressing the Ctrl or Command button while clicking on a link. Props to Rick A. for suggesting this improvement.
+* **[IMPROVED in Pro] Admin Interface >> Admin Columns Manager**: add support for **Meta Box Lite** plugin.
 
-* **[FIXED in Free and Pro] Admin Interface >> Hide Admin Notices**: fixed notices being displayed on Pods plugin's admin screen.
+* **[IMPROVED in Pro] Custom Code >> Code Snippets Manager**: add conditional logic to set on which part of the frontend CSS / JS / HTML snippets should be loaded. Conditionals include type of page, post type, single page/post/CPT, URL, taxonomy, taxonomy term, login status and user role.
 
-* **[FIXED in Pro] Utilities >> Display System Summary**: fix fatal error in a certain scenario when trying to load the dashboard widget. This has to do with a symlinked directory present in the WP root folder that links to a destination not defined in open_basedir. Props to Rado R. for reporting the issue in details and facilitating the troubleshooting process.
-
-* **[FIXED in Pro] ASE Settings >> Export | Import**: fixed a bug where export was not working as expected. Props to David R. for reporting the issue.
+* **[FIXED in Free and Pro] Content Management >> Open All External Links in New Tab**: fix an issue where links added via Elementor are not being opened in new tabs. Props to Stijn V. for reporting the issue.
 
 * **[TRANSLATION in Free and Pro]** ASE is now being translated into 29 languages:
   * **Added new/improved translation** for:
-    * Free: updated Norwegian, Portuguese (Brazil), Albanian
-    * Pro: updated Czech, Spanish (Spain), French, Hungarian, Norwegian, Dutch, Polish, Portuguese (Brazil), Vietnamese
+    * Free: updated Turkish, Spanish (Spain), Norwegian, Dutch, Polish, Portuguese (Brazil), Russian
+    * Pro: updated Portuguese (Brazil)
   * **More strings have been internationalized**. @Translators, please visit the respective project pages for the Free and Pro versions to translate the new strings, if you havent' done so already.
   * **Interested to help translate or improve the translation?** Please go to [https://translate.wpase.com](https://translate.wpase.com) for more info.
   * **Chinese (China)**: ASE Free and Pro (completed). Props to [@bricksvip](https://profiles.wordpress.org/bricksvip/) et al.
