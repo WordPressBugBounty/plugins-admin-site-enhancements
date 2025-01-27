@@ -270,7 +270,7 @@ class Admin_Site_Enhancements {
             $open_external_links_in_new_tab = new ASENHA\Classes\Open_External_Links_In_New_Tab();
             add_filter( 'the_content', [$open_external_links_in_new_tab, 'add_target_and_rel_atts_to_content_links'] );
             if ( in_array( 'elementor/elementor.php', get_option( 'active_plugins', array() ) ) ) {
-                add_filter( 'elementor/frontend/the_content', [ $open_external_links_in_new_tab,'add_target_and_rel_atts_to_content_links'] );
+                add_filter( 'elementor/frontend/the_content', [$open_external_links_in_new_tab, 'add_target_and_rel_atts_to_content_links'] );
             }
         }
         // Allow Custom Menu Links to Open in New Tab
