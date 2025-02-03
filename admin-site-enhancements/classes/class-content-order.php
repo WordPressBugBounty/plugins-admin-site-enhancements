@@ -37,26 +37,83 @@ class Content_Order {
                                 [$this, 'custom_order_page_output']
                             );
                         } else {
-                            $hook_suffix = add_submenu_page(
-                                'edit.php?post_type=' . $post_type_slug,
-                                // Parent (menu) slug. Ref: https://developer.wordpress.org/reference/functions/add_submenu_page/#comment-1404
-                                $post_type_name_plural . ' Order',
-                                // Page title
-                                __( 'Order', 'admin-site-enhancements' ),
-                                // Menu title
-                                'edit_others_posts',
-                                // Capability required
-                                'custom-order-' . $post_type_slug,
-                                // Menu and page slug
-                                [$this, 'custom_order_page_output'],
-                                // Callback function that outputs page content
-                                9999
-                            );
+                            if ( 'sfwd-courses' == $post_type_slug ) {
+                                // LearnDash LMS Courses
+                                // Add 'Order' submenu item under LearnDash menu
+                                // Linked URL will be /wp-admin/admin.php?page=custom-order-sfwd-courses
+                                // We will add a redirect to the correct URL via $this->maybe_perform_menu_link_redirects() hooked in admin_init
+                                $hook_suffix = add_submenu_page(
+                                    'learndash-lms',
+                                    // Parent (menu) slug. Ref: https://developer.wordpress.org/reference/functions/add_submenu_page/#comment-1404
+                                    $post_type_name_plural . ' ' . __( 'Order', 'admin-site-enhancements' ),
+                                    // Page title
+                                    $post_type_name_plural . ' ' . __( 'Order', 'admin-site-enhancements' ),
+                                    // Menu title
+                                    'edit_others_posts',
+                                    // Capability required
+                                    'custom-order-' . $post_type_slug,
+                                    // Menu and page slug
+                                    [$this, 'custom_order_page_output'],
+                                    // Callback function that outputs page content
+                                    9999
+                                );
+                                // Add the actual, functional 'Order' submenu page at /edit.php?post_type=sfwd-courses&page=custom-order-sfwd-courses
+                                // We will redirect to this URL from /wp-admin/admin.php?page=custom-order-sfwd-courses created above using $this->maybe_perform_menu_link_redirects() hooked in admin_init
+                                $hook_suffix = add_submenu_page(
+                                    'edit.php?post_type=' . $post_type_slug,
+                                    // Parent (menu) slug. Ref: https://developer.wordpress.org/reference/functions/add_submenu_page/#comment-1404
+                                    //                                 'learndash-lms', // Parent (menu) slug. Ref: https://developer.wordpress.org/reference/functions/add_submenu_page/#comment-1404
+                                    $post_type_name_plural . ' ' . __( 'Order', 'admin-site-enhancements' ),
+                                    // Page title
+                                    $post_type_name_plural . ' ' . __( 'Order', 'admin-site-enhancements' ),
+                                    // Menu title
+                                    'edit_others_posts',
+                                    // Capability required
+                                    'custom-order-' . $post_type_slug,
+                                    // Menu and page slug
+                                    [$this, 'custom_order_page_output'],
+                                    // Callback function that outputs page content
+                                    9999
+                                );
+                            } else {
+                                $hook_suffix = add_submenu_page(
+                                    'edit.php?post_type=' . $post_type_slug,
+                                    // Parent (menu) slug. Ref: https://developer.wordpress.org/reference/functions/add_submenu_page/#comment-1404
+                                    $post_type_name_plural . ' Order',
+                                    // Page title
+                                    __( 'Order', 'admin-site-enhancements' ),
+                                    // Menu title
+                                    'edit_others_posts',
+                                    // Capability required
+                                    'custom-order-' . $post_type_slug,
+                                    // Menu and page slug
+                                    [$this, 'custom_order_page_output'],
+                                    // Callback function that outputs page content
+                                    9999
+                                );
+                            }
                         }
                         add_action( 'admin_print_styles-' . $hook_suffix, [$this, 'enqueue_content_order_styles'] );
                         add_action( 'admin_print_scripts-' . $hook_suffix, [$this, 'enqueue_content_order_scripts'] );
                     }
                 }
+            }
+        }
+    }
+
+    /**
+     * Maybe perform redirects from the 'Order' submenu link
+     * 
+     * @since 7.6.9
+     */
+    public function maybe_perform_menu_link_redirects() {
+        $request_uri = sanitize_text_field( $_SERVER['REQUEST_URI'] );
+        // e.g. /wp-admin/index.php?page=page-slug
+        // Redirect for LearnDash LMS Courses post type ('sfwd-courses')
+        if ( in_array( 'sfwd-lms/sfwd_lms.php', get_option( 'active_plugins', array() ) ) ) {
+            if ( false !== strpos( $request_uri, 'admin.php?page=custom-order-sfwd-courses' ) ) {
+                wp_safe_redirect( get_admin_url() . 'edit.php?post_type=sfwd-courses&page=custom-order-sfwd-courses' );
+                exit;
             }
         }
     }
