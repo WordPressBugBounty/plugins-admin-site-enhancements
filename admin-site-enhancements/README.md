@@ -5,7 +5,7 @@ Donate link: https://bowo.io/asenha-sp-rdm
 Tags: enhancements, tweaks, optimizations, tools  
 Requires at least: 4.6  
 Tested up to: 6.7.1  
-Stable tag: 7.6.9  
+Stable tag: 7.6.10  
 Requires PHP: 5.6  
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -190,34 +190,40 @@ ASE does not officially support multisite. Please use at your own risk. That sai
 
 ## Changelog
 
-**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **76 _major_ releases** (e.g. 1.1.0 ) and **135 _minor_ releases** (e.g. 4.9.1). 
+**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **76 _major_ releases** (e.g. 1.1.0 ) and **136 _minor_ releases** (e.g. 4.9.1). 
 
 Each **_major release_** usually corresponds with the addition of one new module/feature. Each module/feature usually is the equivalent of one (or more) single-purpose plugin. Each **_minor release_** usually contain one or more bugfix or improvements to existing modules/features.
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). Lifetime Deal (LTD) available.
 
-### 7.6.9 (2025.02.03) - ASE Free and Pro
+### 7.6.10 (2025.02.10) - ASE Free and Pro
 
-* **[IMPROVED in Free and Pro] Security >> Disable XML-RPC**: added additional things being disabled related to XML-RPC, namely, the 'X-Pingback' header in HTTP response headers, closing pings and pre-emptively remove several XML-RPC methods. Props to David M. for prompting this improvement.
+* **[IMPROVED in Free and Pro] Content Management >> Content Order**: 
+  * **when WPML plugin is active**, the content ordering page will now only show posts from the chosen language. Props to Stijn V. for prompting this improvement.
+  * **added 'Order' button in posts list tables** of post types where Content Order module is enabled for. Useful for when the 'Order' submenu can not be added to the parent menu that contains the link to the post type list table, e.g. LearnDash courses.
 
-* **[IMPROVED in Pro] Custom Code >> Code Snippets Manager**: added the missing Pages as part of selection in the "Single Page/Post/CPT" conditional for loading CSS/JS/HTML snippets on the frontend. Props to Killian H. for reporting the issue.
+* **[IMPROVED in Pro] Security >> Email Address Obfuscator**: added a 'text' parameter to the obfuscator shortcode that allows for showing a custom text instead of the human-readable email address. This, combined with the 'link' and 'class' parameter, allows for showing the obfuscated and linked email address as, for example, a "Contact Us" button. Props to Antoine L. for suggesting this improvement.
 
-* **[FIXED in Free and Pro] Utilities >> View Admin as Role**: fix PHP fatal error in a certain scenario. Props to Dale R. for reporting the issue in detail along with the error log entry.
+* **[IMPROVED in Pro] Admin Interface >> Admin Columns Manager**: improv rendering of the post list table when this module is enabled. Props to Jake K. for prompting this improvement.
 
-* **[FIXED in Free and Pro] Content Management >> Media Replacement**: 
-  - added mechanism to prevent browser cache busting URL parameter being added twice when performing replacements.
-  - fix an issue where in the grid view, media replacement is not working properly in Firefox / Zen browsers. Props to Justin for reporting the issue in detail and facilitating the troubleshooting process.
+* **[FIXED in Pro] Custom Code >> Code Snippets Manager**: fix styling issues when select2 JS and CSS files are also loaded by LearnDash and Hash Form plugins on the snippet creation and editing screens.
 
-* **[FIXED in Pro] Admin Interface >> Admin Columns Manager**: fix date column showing 1 day difference with frontend displayed date. Props to Jonathan J. for reporting the issue and facilitating the troubleshooting process.
+* **[SECURITY FIX in Free and Pro]:
+  * **Security >> Limit Login Attempts**: fix Bypass via IP Spoofing vulnerability as responsibly disclosed by Bob, a security researcher for WPScan and Jetpack.
+  * **Utilities >> Password Protection**: fix Password Protection Bypass vulnerability as responsibly disclosed by Bob, a security researcher for WPScan and Jetpack.  
 
-* **[FIXED in Pro] Admin Interface >> Admin Menu Organizer**: fix an issue where submenu item's Hide / Options is not toggling the sub-options when clicked. Props to Christian for reporting the issue and facilitating the troubleshooting process.
+* **[CHANGED in Free] Security >> Limit Login Attempts**: IP detection from a preferred header, e.g. `HTTP_X_FORWARDED_FOR`, is now also available in the free version of ASE.
 
-* **[FIXED in Pro] Content Management >> Content Order**: fix an issue with LearnDash where enabling content ordering for Courses will not add the 'Order' submenu item. Props to Bas B. for reporting the issue and facilitating the troubleshooting process.
+* **[FIXED in Free and Pro] Content Management >> External Permalinks**: fixed a compatibility issue that causes BeTheme template builder failing to load on singular template of post types that has External Permalinks enabled for. Props to PJ for reporting the issue and facilitating the troubleshooting process.
+
+* **[CHANGED in Pro] Admin Interface >> Admin Logo**: Admin bar logo link will no longer open in new browser tab by default. Props to Henry R. for suggesting this change.
+
+* **[FIXED in Pro] Custom Code >> Code Snippets Manager**: fix an issue where in a particular scenario, code snippets are not being properly stored as files to load/execute from. Props to Jhay B. for reporting the issue and facilitating the troubleshooting.
 
 * **[TRANSLATION in Free and Pro]** ASE is now being translated into 29 languages:
   * **Added new/improved translation** for:
-    * Free: update Norwegian, Dutch, Polish, Portuguese (Brazil) and Slovak
-    * Pro: updated Slovak
+    * Free: update Norwegian, French, Polish, Dutch, Portuguese (Brazil), Persian
+    * Pro: update Polish, Vietnamese, Portuguese (Brazil)
   * **More strings have been internationalized**. @Translators, please visit the respective project pages for the Free and Pro versions to translate the new strings, if you havent' done so already.
   * **Interested to help translate or improve the translation?** Please go to [https://translate.wpase.com](https://translate.wpase.com) for more info.
   * **Chinese (China)**: ASE Free and Pro (completed). Props to [@bricksvip](https://profiles.wordpress.org/bricksvip/) et al.

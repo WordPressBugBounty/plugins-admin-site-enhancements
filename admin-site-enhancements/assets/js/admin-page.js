@@ -261,6 +261,8 @@
       $('.login-fails-allowed').appendTo('.fields-security .limit-login-attempts .asenha-subfields');
       $('.login-lockout-maxcount').appendTo('.fields-security .limit-login-attempts .asenha-subfields');
       
+      $('.limit-login-attempts-header-override').appendTo('.fields-security .limit-login-attempts .asenha-subfields');
+      $('.limit-login-attempts-header-override-description').appendTo('.fields-security .limit-login-attempts .asenha-subfields');
       $('.login-attempts-log-table').appendTo('.fields-security .limit-login-attempts .asenha-subfields');
       $('.obfuscate-author-slugs').appendTo('.fields-security > table > tbody');
       $('.obfuscate-email-address').appendTo('.fields-security > table > tbody');

@@ -99,6 +99,8 @@ class Admin_Site_Enhancements {
                 $content_order = new ASENHA\Classes\Content_Order();
                 add_action( 'admin_menu', [$content_order, 'add_content_order_submenu'] );
                 add_action( 'admin_init', [$content_order, 'maybe_perform_menu_link_redirects'] );
+                add_action( 'admin_footer', [$content_order, 'add_additional_elements'] );
+                add_filter( 'admin_enqueue_scripts', [$content_order, 'add_list_tables_scripts'] );
                 add_action( 'wp_ajax_save_custom_order', [$content_order, 'save_custom_content_order'] );
                 add_filter( 'pre_get_posts', [$content_order, 'orderby_menu_order'], PHP_INT_MAX );
                 // TODO: https://developer.wordpress.org/reference/hooks/ajax_query_attachments_args/ (for grid view of media library)

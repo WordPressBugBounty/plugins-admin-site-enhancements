@@ -102,6 +102,67 @@ class Content_Order {
     }
 
     /**
+     * Add additinal HTML elements on list tables
+     * 
+     * @since 7.6.10
+     */
+    public function add_additional_elements() {
+        global $pagenow, $typenow;
+        $common_methods = new Common_Methods();
+        $options = get_option( ASENHA_SLUG_U, array() );
+        $content_order_for = ( isset( $options['content_order_for'] ) ? $options['content_order_for'] : array() );
+        $content_order_enabled_post_types = $common_methods->get_array_of_keys_with_true_value( $content_order_for );
+        $content_order_other_enabled_post_types = array();
+        // List tables of pages, posts and CPTs. Administrators only.
+        if ( 'edit.php' == $pagenow && current_user_can( 'manage_options' ) && (in_array( $typenow, $content_order_enabled_post_types ) || in_array( $typenow, $content_order_other_enabled_post_types )) ) {
+            // Add "Order" button
+            ?>
+            <div id="content-order-button">
+                <a class="button" href="<?php 
+            echo esc_url( get_admin_url() );
+            ?>edit.php?post_type=<?php 
+            echo esc_attr( $typenow );
+            ?>&page=custom-order-<?php 
+            echo esc_attr( $typenow );
+            ?>"><?php 
+            _e( 'Order', 'admin-site-enhancements' );
+            ?></a>
+            </div>
+            <?php 
+        }
+    }
+
+    /**
+     * Add scripts for content list tables
+     * 
+     * @since 7.6.10
+     */
+    public function add_list_tables_scripts( $hook_suffix ) {
+        global $pagenow, $typenow;
+        $common_methods = new Common_Methods();
+        $options = get_option( ASENHA_SLUG_U, array() );
+        $content_order_for = ( isset( $options['content_order_for'] ) ? $options['content_order_for'] : array() );
+        $content_order_enabled_post_types = $common_methods->get_array_of_keys_with_true_value( $content_order_for );
+        $content_order_other_enabled_post_types = array();
+        // List tables of pages, posts and CPTs
+        if ( 'edit.php' == $hook_suffix && current_user_can( 'manage_options' ) && (in_array( $typenow, $content_order_enabled_post_types ) || in_array( $typenow, $content_order_other_enabled_post_types )) ) {
+            wp_enqueue_style(
+                'asenha-list-tables-content-order',
+                ASENHA_URL . 'assets/css/list-tables-content-order.css',
+                array(),
+                ASENHA_VERSION
+            );
+            wp_enqueue_script(
+                'asenha-list-tables-content-order',
+                ASENHA_URL . 'assets/js/list-tables-content-order.js',
+                array('jquery'),
+                ASENHA_VERSION,
+                false
+            );
+        }
+    }
+
+    /**
      * Maybe perform redirects from the 'Order' submenu link
      * 
      * @since 7.6.9
@@ -258,34 +319,55 @@ class Content_Order {
         if ( !empty( $taxonomies_and_terms ) ) {
             $taxonomies_and_terms = '<span class="item-taxonomy-terms">' . $taxonomies_and_terms . '</span>';
         }
-        ?>
+        // If WPML plugin is active, let's get the current language
+        if ( in_array( 'sitepress-multilingual-cms/sitepress.php', get_option( 'active_plugins', array() ) ) ) {
+            $current_language = apply_filters( 'wpml_current_language', null );
+            $current_post_language_info = apply_filters( 'wpml_post_language_details', null, $post->ID );
+            if ( !is_wp_error( $current_post_language_info ) ) {
+                $current_post_language = $current_post_language_info['language_code'];
+            } else {
+                // wpml has not set language information for the post
+                // e.g. post is not translated  yet, so, let's use the current site/admin language
+                $current_post_language = $current_language;
+            }
+            $same_language = $current_language === $current_post_language;
+            // true if language is the same, false otherwise
+        } else {
+            // WPML is not active, $same_language is always true, e.g. all posts are in English
+            $same_language = true;
+        }
+        // Only render sortable for posts that have the same language as the current chosen language
+        if ( $same_language ) {
+            ?>
         <li id="list_<?php 
-        echo esc_attr( $post->ID );
-        ?>" data-id="<?php 
-        echo esc_attr( $post->ID );
-        ?>" data-menu-order="<?php 
-        echo esc_attr( $post->menu_order );
-        ?>" data-parent="<?php 
-        echo esc_attr( $post->post_parent );
-        ?>" data-has-child="<?php 
-        echo esc_attr( $has_child );
-        ?>" data-post-type="<?php 
-        echo esc_attr( $post->post_type );
-        ?>">
+            echo esc_attr( $post->ID );
+            ?>" data-id="<?php 
+            echo esc_attr( $post->ID );
+            ?>" data-menu-order="<?php 
+            echo esc_attr( $post->menu_order );
+            ?>" data-parent="<?php 
+            echo esc_attr( $post->post_parent );
+            ?>" data-has-child="<?php 
+            echo esc_attr( $has_child );
+            ?>" data-post-type="<?php 
+            echo esc_attr( $post->post_type );
+            ?>">
             <div class="row">
                 <div class="row-content">
                     <?php 
-        echo '<div class="content-main">
+            echo '<div class="content-main">
                                 <span class="dashicons dashicons-menu"></span><a href="' . esc_attr( get_edit_post_link( $post->ID ) ) . '" class="item-title">' . esc_html( $post->post_title ) . '</a><span class="item-status' . esc_attr( $post_status_label_class ) . '">' . esc_html( $post_status_label_separator ) . esc_html( $post_status_label ) . '</span>' . wp_kses_post( $has_child_label ) . wp_kses_post( $taxonomies_and_terms ) . wp_kses_post( $short_excerpt ) . '<div class="fader"></div>
                             </div>
                             <div class="content-additional">
                                 <a href="' . esc_attr( get_the_permalink( $post->ID ) ) . '" target="_blank" class="button item-view-link">View</a>
                             </div>';
-        ?>
+            ?>
                 </div>
             </div>
         </li>
         <?php 
+        }
+        // if ( $same_language )
     }
 
     /**
