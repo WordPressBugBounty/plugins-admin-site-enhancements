@@ -43,6 +43,7 @@ class Admin_Site_Enhancements {
         add_action( 'all_admin_notices', 'asenha_suppress_generic_notices', 5 );
         // Enqueue admin scripts and styles
         add_action( 'admin_enqueue_scripts', 'asenha_admin_scripts' );
+        add_action( 'admin_head', 'asenha_admin_menu_organizer_css' );
         // Enqueue public scripts and styles
         add_action( 'wp_enqueue_scripts', 'asenha_public_scripts' );
         // Dequeue scripts that prevents settings page from working

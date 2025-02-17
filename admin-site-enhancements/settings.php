@@ -342,7 +342,9 @@ function asenha_add_settings_page() {
 				<div class="asenha-upgrade-nudge-bottom__message"><?php 
     echo __( 'Do more with <a href="https://www.wpase.com/upgrade-ndg-btm" target="_blank">ASE Pro</a>. Lifetime deal (LTD) <a href="https://www.wpase.com/upgrade-ndg-btm-prc" target="_blank">available</a>.', 'admin-site-enhancements' );
     ?> <?php 
-    echo __( 'Currently on YEAR-END SALE. <a href="https://www.wpase.com/promo-ndg" target="_blank">20% discount</a>.', 'admin-site-enhancements' );
+    if ( $is_yearend_promo_period ) {
+        echo __( 'Currently on YEAR-END SALE. <a href="https://www.wpase.com/promo-ndg" target="_blank">20% discount</a>.', 'admin-site-enhancements' );
+    }
     ?></div>
 			</div>
 			<?php 
@@ -865,6 +867,46 @@ function asenha_admin_scripts(  $hook_suffix  ) {
         );
     }
     wp_localize_script( 'asenha-admin-page', 'asenhaStats', $asenha_stats_localized );
+}
+
+/**
+ * Inline CSS for Admin Menu Organizer in all wp-admin pages. Previously loaded externally as part of wp-admin.css file
+ * 
+ * @since 7.6.11
+ */
+function asenha_admin_menu_organizer_css() {
+    ?>
+	<style type="text/css">
+	/* Admin Interface >> Admin Menu Organizer */
+	#adminmenuwrap {
+		height: auto !important;
+	}
+
+	.toplevel_page_wpide #adminmenuwrap {
+		height: calc(100vh - var(--wpide-admin-bar-height)) !important;
+	} /* Fix for when in WPIDE plugin's menu / admin page */
+
+	.current.menu-top.hidden,
+	.wp-has-current-submenu.hidden {
+		display: list-item;
+	}
+
+	#adminmenu a.menu-top.hidden,
+	ul#adminmenu a.wp-has-current-submenu.hidden {
+		display: block;
+	}
+
+	/*! <fs_premium_only> */
+	.always-hidden {
+		display: none !important;
+	}
+
+	#adminmenu .wp-submenu a.hidden {
+		display: none;
+	}
+	/*! </fs_premium_only> */
+	</style>
+	<?php 
 }
 
 /**
