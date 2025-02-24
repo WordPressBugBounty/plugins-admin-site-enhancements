@@ -264,6 +264,7 @@
       $('.limit-login-attempts-header-override').appendTo('.fields-security .limit-login-attempts .asenha-subfields');
       $('.limit-login-attempts-header-override-description').appendTo('.fields-security .limit-login-attempts .asenha-subfields');
       $('.login-attempts-log-table').appendTo('.fields-security .limit-login-attempts .asenha-subfields');
+      
       $('.obfuscate-author-slugs').appendTo('.fields-security > table > tbody');
       $('.obfuscate-email-address').appendTo('.fields-security > table > tbody');
       $('.obfuscate-email-address-description').appendTo('.fields-security .obfuscate-email-address .asenha-subfields');
@@ -612,6 +613,7 @@
       
       subfieldsToggler( 'disable_smaller_components', 'disable-smaller-components' );
       subfieldsToggler( 'limit_login_attempts', 'limit-login-attempts' );
+      
       subfieldsToggler( 'obfuscate_email_address', 'obfuscate-email-address' );
       subfieldsToggler( 'image_upload_control', 'image-upload-control' );
       subfieldsToggler( 'enable_revisions_control', 'enable-revisions-control' );
@@ -703,6 +705,7 @@
       // Media frame handler for image selection / upload fields
       // Reference: https://plugins.trac.wordpress.org/browser/bm-custom-login/trunk/bm-custom-login.php
       function media_frame_init( selector, button_selector ) {
+         // media_frame_init( '#login-page-logo-image', '#login-page-logo-image-button' );
          var theSelector = $(selector);
          var button = $(button_selector);
 
@@ -736,6 +739,19 @@
                   var url = attachment.attributes.url;
                   url = url.replace( adminPageVars.wpcontentUrl, '' );
                   theSelector.val(url);
+
+                  if ( '#login-page-logo-image' == selector ) {
+                     var attachmentId = $('.login-page-logo-image-attachment-id input');
+                     var originalWidthInput = $('.login-page-logo-image-width-original input');
+                     var originalHeightInput = $('.login-page-logo-image-height-original input');
+                     var widthInput = $('.login-page-logo-image-width input');
+                     var heightInput = $('.login-page-logo-image-height input');
+                     attachmentId.val(attachment.attributes.id);
+                     originalWidthInput.val(attachment.attributes.width);
+                     originalHeightInput.val(attachment.attributes.height);
+                     widthInput.val(attachment.attributes.width);
+                     heightInput.val(attachment.attributes.height);                     
+                  }
                });
             };
 
@@ -744,6 +760,55 @@
             wp.media.frames.frame.open();
          });
       }
+
+      // =============== Image Ratio Calculator / Preservation for Login Page Customizer >> Logo Image =================
+
+      // Code modified from: https://codepen.io/tobiasdev/pen/XNjxdZ by Tobias Bogliolo
+
+      var initialWidth, initialHeight, newWidth, newHeight, aspectRatio;
+
+      //Get new values:
+      function getValues(){
+         initialWidth = $(".login-page-logo-image-width-original input").val();
+         initialHeight = $(".login-page-logo-image-height-original input").val();
+         newWidth = $(".login-page-logo-image-width input").val();
+         newHeight = $(".login-page-logo-image-height input").val();
+      };
+
+      //Aspect ratio:
+      function getAspectRatio(){
+         // Formula: "Aspect Ratio = Width / Height".
+         return aspectRatio = initialWidth/initialHeight;
+      };
+
+      //Get new height:
+      $(".login-page-logo-image-width input").on("change keyup", function(){
+         // Refresh data.
+         getValues();
+         getAspectRatio();
+         // New height = new width / (original width / original height).
+         newHeight = Math.round(newWidth/aspectRatio);
+         // Output:
+         $(".login-page-logo-image-height input").val(newHeight);
+      });
+
+      //Get new width:
+      $(".login-page-logo-image-height input").on("change keyup", function(){
+         // Refresh data.
+         getValues();
+         getAspectRatio();
+         // New width = (original width / original height) * new height.
+         newWidth = Math.round(newHeight*aspectRatio);
+         // Output:
+         $(".login-page-logo-image-width input").val(newWidth);
+      });
+
+      //Reset:
+      $(".login-page-logo-image-width-original input, .login-page-logo-image-height-original input").on("change keyup", function(){
+         // Output:
+         $(".login-page-logo-image-width input").val("");
+         $(".login-page-logo-image-height input").val("");
+      });
             
       // =============== ASE PRO =================
 

@@ -96,7 +96,10 @@ class Common_Methods {
             return false;
         }
         // Ref: https://www.php.net/manual/en/filter.filters.validate.php
-        if ( false == filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 ) ) {
+        // Ref: https://www.php.net/manual/en/filter.constants.php#constant.filter-validate-ip
+        // No need to specify which IP type to filter/check, e.g. filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 )
+        // This should check for both IPv4 and IPv6 addresses
+        if ( false == filter_var( $ip, FILTER_VALIDATE_IP ) ) {
             return false;
         } else {
             return true;

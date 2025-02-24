@@ -238,36 +238,44 @@ function asenha_add_settings_page() {
     ?>
 					    <input id="tab-content-management" type="radio" name="tabs" checked><label for="tab-content-management"><?php 
     echo wp_kses( $icon_content_management, get_kses_with_svg_ruleset() );
+    ?><span><?php 
     echo esc_html__( 'Content Management', 'admin-site-enhancements' );
-    ?></label>
+    ?></span></label>
 					    <input id="tab-admin-interface" type="radio" name="tabs"><label for="tab-admin-interface"><?php 
     echo wp_kses( $icon_admin_interface, get_kses_with_svg_ruleset() );
+    ?><span><?php 
     echo esc_html__( 'Admin Interface', 'admin-site-enhancements' );
-    ?></label>
+    ?></span></label>
 					    <input id="tab-login-logout" type="radio" name="tabs"><label for="tab-login-logout"><?php 
     echo wp_kses( $icon_login_logout, get_kses_with_svg_ruleset() );
+    ?><span><?php 
     echo esc_html__( 'Log In/Out | Register', 'admin-site-enhancements' );
-    ?></label>
+    ?></span></label>
 					    <input id="tab-custom-code" type="radio" name="tabs"><label for="tab-custom-code"><?php 
     echo wp_kses( $icon_custom_code, get_kses_with_svg_ruleset() );
+    ?><span><?php 
     echo esc_html__( 'Custom Code', 'admin-site-enhancements' );
-    ?></label>
+    ?></span></label>
 					    <input id="tab-disable-components" type="radio" name="tabs"><label for="tab-disable-components"><?php 
     echo wp_kses( $icon_disable_components, get_kses_with_svg_ruleset() );
+    ?><span><?php 
     echo esc_html__( 'Disable Components', 'admin-site-enhancements' );
-    ?></label>
+    ?></span></label>
 					    <input id="tab-security" type="radio" name="tabs"><label for="tab-security"><?php 
     echo wp_kses( $icon_security, get_kses_with_svg_ruleset() );
+    ?><span><?php 
     echo esc_html__( 'Security', 'admin-site-enhancements' );
-    ?></label>
+    ?></span></label>
 					    <input id="tab-optimizations" type="radio" name="tabs"><label for="tab-optimizations"><?php 
     echo wp_kses( $icon_optimizations, get_kses_with_svg_ruleset() );
+    ?><span><?php 
     echo esc_html__( 'Optimizations', 'admin-site-enhancements' );
-    ?></label>
+    ?></span></label>
 					    <input id="tab-utilities" type="radio" name="tabs"><label for="tab-utilities"><?php 
     echo wp_kses( $icon_utilities, get_kses_with_svg_ruleset() );
+    ?><span><?php 
     echo esc_html__( 'Utilities', 'admin-site-enhancements' );
-    ?></label>
+    ?></span></label>
 					</div>
 					<div class="asenha-tab-contents">
 					    <section class="asenha-fields fields-content-management"> 
