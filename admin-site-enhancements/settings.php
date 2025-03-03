@@ -661,15 +661,16 @@ function asenha_admin_scripts(  $hook_suffix  ) {
             false
         );
         wp_localize_script( 'asenha-admin-page', 'adminPageVars', array(
-            'siteUrl'              => get_site_url(),
-            'wpcontentUrl'         => content_url(),
-            'mediaFrameTitle'      => __( 'Select an Image', 'admin-site-enhancements' ),
-            'mediaFrameButtonText' => __( 'Use Selected Image', 'admin-site-enhancements' ),
-            'resetMenuNonce'       => wp_create_nonce( 'reset-menu-nonce' ),
-            'sendTestEmailNonce'   => wp_create_nonce( 'send-test-email-nonce_' . get_current_user_id() ),
-            'expandText'           => __( 'Expand', 'admin-site-enhancements' ),
-            'collapseText'         => __( 'Collapse', 'admin-site-enhancements' ),
-            'dataTable'            => array(
+            'siteUrl'                       => get_site_url(),
+            'wpcontentUrl'                  => content_url(),
+            'mediaFrameTitle'               => __( 'Select an Image', 'admin-site-enhancements' ),
+            'mediaFrameButtonText'          => __( 'Use Selected Image', 'admin-site-enhancements' ),
+            'resetMenuNonce'                => wp_create_nonce( 'reset-menu-nonce' ),
+            'sendTestEmailNonce'            => wp_create_nonce( 'send-test-email-nonce_' . get_current_user_id() ),
+            'formBuilderSendTestEmailNonce' => wp_create_nonce( 'formbuilder_ajax' ),
+            'expandText'                    => __( 'Expand', 'admin-site-enhancements' ),
+            'collapseText'                  => __( 'Collapse', 'admin-site-enhancements' ),
+            'dataTable'                     => array(
                 'emptyTable'   => __( 'No data available in table', 'admin-site-enhancements' ),
                 'info'         => __( 'Showing _START_ to _END_ of _TOTAL_ entries', 'admin-site-enhancements' ),
                 'infoEmpty'    => __( 'Showing 0 to 0 of 0 entries', 'admin-site-enhancements' ),

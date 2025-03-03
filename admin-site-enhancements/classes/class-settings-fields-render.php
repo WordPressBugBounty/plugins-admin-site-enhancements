@@ -212,8 +212,7 @@ class Settings_Fields_Render {
             }
         } else {
             if ( 'altcha_secret_key' == $field_id ) {
-                $captcha_protection_altcha = new CAPTCHA_Protection_ALTCHA();
-                $field_option_value = $captcha_protection_altcha->random_secret();
+                $field_option_value = '';
             } else {
                 $field_option_value = '';
             }
@@ -610,6 +609,33 @@ class Settings_Fields_Render {
         echo esc_attr( $common_methods->sanitize_hex_color( $field_default_value ) );
         ?>" class="color-picker"/>
 		</div>
+		<?php 
+    }
+
+    /**
+     * Render text field as sub-field of a toggle/switcher checkbox
+     *
+     * @since 1.4.0
+     */
+    function render_content_toggler( $args ) {
+        $field_id = $args['field_id'];
+        $field_slug = $args['field_slug'];
+        $field_slug = str_replace( '_', '-', $field_id );
+        $show_text = ( isset( $args['show_text'] ) ? $args['show_text'] : '' );
+        $hide_text = ( isset( $args['hide_text'] ) ? $args['hide_text'] : '' );
+        $content_selector = ( isset( $args['content_selector'] ) ? $args['content_selector'] : '' );
+        ?>
+		<div class="subfield-content-toggler <?php 
+        echo esc_attr( $field_slug );
+        ?>"><a href="#" data-show-text="<?php 
+        echo esc_attr( $show_text );
+        ?>" data-hide-text="<?php 
+        echo esc_attr( $hide_text );
+        ?>" data-target-selector="<?php 
+        echo esc_attr( $content_selector );
+        ?>" class="asenha-content-toggler" data-expanded="no"><?php 
+        echo esc_html( $show_text );
+        ?> <span>▼</span></a></div>
 		<?php 
     }
 

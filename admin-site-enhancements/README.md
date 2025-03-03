@@ -5,7 +5,7 @@ Donate link: https://bowo.io/asenha-sp-rdm
 Tags: enhancements, tweaks, optimizations, tools  
 Requires at least: 4.6  
 Tested up to: 6.7.2  
-Stable tag: 7.7.0  
+Stable tag: 7.8.0  
 Requires PHP: 5.6  
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -42,8 +42,8 @@ _"ASE is an amazing plugin! **Time and money saver**. Thank you!"_ ~[Iulian Baci
 
 ### FEATURES & MODULES
 
-**66 modules** in total:  
-**55 free modules** (28 has Pro features) | **11 Pro modules**
+**67 modules** in total:  
+**55 free modules** (28 has Pro features) | **12 Pro modules**
 
 [**See all features >>**](https://www.wpase.com/features/)
 
@@ -132,6 +132,7 @@ _"ASE is an amazing plugin! **Time and money saver**. Thank you!"_ ~[Iulian Baci
 ### Utilities
 
 * **Email Delivery**. Set custom sender name and email. Optionally use external SMTP service to ensure notification and transactional emails from your site are being delivered to inboxes. [ASE Pro](https://www.wpase.com/rdme-to-web) adds the option to specify a custom reply-to name and email, Bcc address(es), disable authentication and the option to log email delivery.
+* **[[ASE Pro](https://www.wpase.com/rdme-to-web)] Form Builder**. Enable the drag-and-drop creation of various types of forms (contact, feedback, support request, application, proposal, admission, survey, etc.) on the frontend to collect information from site visitors or users or members. 33 field types are available, including Net Promoter Score (NPS), Likert, Matrix of Uniform and Variable Dropdowns and CAPTCHA fields. Support custom form styles, multi-columns layout, email notification, auto responder and conditional logic to show / hide fields.
 * **[[ASE Pro](https://www.wpase.com/rdme-to-web)] Local User Avatar**. Enable usage of any image from WordPress Media Library as user avatars.
 * **Multiple User Roles**. Enable assignment of multiple roles during user account creation and editing.
 * **Image Sizes Panel**. Display a panel showing and linking to all available sizes when viewing an image in the media library. [ASE Pro](https://www.wpase.com/rdme-to-web) adds a convenient button to copy the image URL on click.
@@ -195,41 +196,28 @@ ASE does not officially support multisite. Please use at your own risk. That sai
 
 ## Changelog
 
-**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **77 _major_ releases** (e.g. 1.1.0 ) and **137 _minor_ releases** (e.g. 4.9.1). 
+**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **78 _major_ releases** (e.g. 1.1.0 ) and **137 _minor_ releases** (e.g. 4.9.1), for a **total of 214 releases**.
 
 Each **_major release_** usually corresponds with the addition of one new module/feature. Each module/feature usually is the equivalent of one (or more) single-purpose plugin. Each **_minor release_** usually contain one or more bugfix or improvements to existing modules/features.
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). Lifetime Deal (LTD) available.
 
-### 7.7.0 (2025.02.24) - ASE Free and Pro
+### 7.8.0 (2025.03.03) - ASE Free and Pro
 
-* **[ADDED in Pro] Security >> CAPTCHA Protection**: add CAPTCHA protection to WordPress default login, password reset, registration and comment forms and WooCommerce login, password reset and registration forms. Support [ALTCHA](https://altcha.org/) self-hosted version (GDPR-compliant, open source, free), Google reCaptcha v2 and v3, and Cloudflare Turnstile.
+* **[ADDED in Pro] Utilities >> Form Builder**: Enable the creation of various types of forms on the frontend to collect information from site visitors or users or members ([more info >>](https://www.wpase.com/features/form-builder/)). This module should be stable enough but please perform some tests before using it on production sites or mission critical tasks. If you find any bugs / issues, please login to [your account](https://www.wpase.com/dashboard/) open a support ticket for it.
 
-* **[IMPROVED in Free and Pro] Admin Interface >> Hide Admin Notices**: fix for notices still showing on Hash Form form builder screen.
+* **[IMPROVED in Free and Pro] Security >> Limit Login Attempts**: improved mechanism to validate IP addresses. Props to Ivan C.d.A. and [@denisgomesfranco](https://wordpress.org/support/topic/seemingly-weird-behavior-with-limit-login-attempts/) for prompting this improvement.
 
-* **[IMPROVED in Pro] Utilities >> Maintenance Mode**: added an option to exclude certain URLs from the maintenance mode. This could be useful if you have a custom login page created outside of ASE. Props to Miriam M. and Julian S. for prompting this improvement.
+* **[FIXED in Free and Pro] Log In/Out | Register >> Login ID Type**: when login ID type is set to "email address only", logging in with an email address that contains an uppercase does not work. This is fixed now. Props to Martin H. for noticing the issue and reporting it.
 
-* **[IMPROVED amd FIXED in Pro] Admin Interface >> Admin Columns Manager**: 
-  * **improved mechanism to load original column title** when an applicable column is set as such.
-  * **fixed a conflict with PublishPress Revisions** plugin causing fatal error when viewing the revisions queue page. Props to Adam for reporting the issue with a screenshot and the error stack trace, which helped in quickly resolving the issue.
-  
-* **[IMPROVED in Pro] Log In/Out | Register >> Login Page Customizer**:
-  * Changed logo image options to site icon, media library (image) or external (image) URL. Should work with your existing settings.
-  * Added automatic image dimension detection and image ratio preserver when using media library image. Props to Max Z. for prompting this improvement.
-  * Added links to external tools to get image dimension and calculate smaller dimension when using external image URL.
+* **[FIXED in Pro] Admin Interface >> Admin Columns Manager**: fix a fatal error in a certain scenario when displaying the default Date column. Props to Alberto P. for reporting the issue with the error stack trace.
 
-* **[IMPROVED in Pro] Optimizations >> Image Upload Control**: add an option to set the JPG quality during conversion/upload of BMP, PNG and JPG files. Props to John D. for prompting this improvement.
-
-* **[FIXED in Free and Pro] Security >> Limit Login Attempts**: fix IPv6 addresses not being properly detected. Props to Mathijs v.d.B. and Jon B. for reporting the issue.
-
-* **[FIXED in Pro] Content Management >> Content Order**: fixed an issue where adjacent posts navigation (Previous / Next) is not being displayed when the Content Order module is enabled for post types that does not include the post type where such navigation is added to. Props to Glenn W. for reporting the issue in detail and facilitated the troubleshooting process.
-
-* **[FIXED in Pro] Admin Interface >> Admin Logo**: fix admin bar logo link not linking to the homepage as it should when viewed in the backend / wp-admin. Props to Max Z. for reporting the issue.
+* **[FIXED in Pro] Content Management >> Content Order**: fix PHP warning that occurs in a certain scenario. Props to Dominik K., Simon S., Benjamin O., Sander d.V., betaplus, William L., @mmjaeger and Rick H.,  for reporting the issue along with the relevant error/debug log entry.
 
 * **[TRANSLATION in Free and Pro]** ASE is now being translated into 31 languages:
   * **Added new/improved translation** for:
-    * Free: Added Bosnian, Croatian. Updated Romanian, Polish, Vietnamese, Portuguese (Brazil), Serbian
-    * Pro: Updated Romanian, Hungarian, Portuguese (Brazil)
+    * Free: Updated Spanish, Portuguese (Brazil), Polish and Norwegian
+    * Pro: Updated Polish, Portuguese (Brazil), Romanian
   * **More strings have been internationalized**. @Translators, please visit the respective project pages for the Free and Pro versions to translate the new strings, if you havent' done so already.
   * **Interested to help translate or improve the translation?** Please go to [https://translate.wpase.com](https://translate.wpase.com) for more info.
   * **Chinese (China)**: ASE Free and Pro (completed). Props to [@bricksvip](https://profiles.wordpress.org/bricksvip/) et al.

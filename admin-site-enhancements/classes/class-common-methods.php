@@ -52,8 +52,8 @@ class Common_Methods {
             } else {
                 switch ( $return_type ) {
                     case 'ip':
-                        if ( $this->is_ip_valid( trim( $ip_list[0] ) ) ) {
-                            return sanitize_text_field( $ip_list[0] );
+                        if ( $this->is_ip_valid( trim( $_SERVER[$ip_address_header] ) ) ) {
+                            return sanitize_text_field( $_SERVER[$ip_address_header] );
                         } else {
                             return '0.0.0.0';
                             // placeholder IP address
@@ -99,9 +99,10 @@ class Common_Methods {
         // Ref: https://www.php.net/manual/en/filter.constants.php#constant.filter-validate-ip
         // No need to specify which IP type to filter/check, e.g. filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 )
         // This should check for both IPv4 and IPv6 addresses
-        if ( false == filter_var( $ip, FILTER_VALIDATE_IP ) ) {
+        if ( false === filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 ) && false === filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6 ) ) {
             return false;
-        } else {
+        }
+        if ( false !== filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 ) || false !== filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6 ) ) {
             return true;
         }
     }

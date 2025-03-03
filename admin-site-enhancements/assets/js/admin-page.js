@@ -92,7 +92,55 @@
          } else {
             alert( 'Please enter destination email address first.' );
          }
+      });
 
+      // Form Builder >> Send test email
+      $('#form-builder-send-test-email').click(function(e) {
+         e.preventDefault();
+         var emailTo = $('#form-builder-test-email-to').val();
+         var emailTemplate = $('.form-builder-email-template select').val();
+         if ( emailTo ) {
+            $('#form-builder-ajax-result').show();
+            $('.form-builder-sending-test-email').show();
+            $('.test-email-result').hide();
+            $('#form-builder-test-email-success').hide();
+            $('#form-builder-test-email-failed').hide();
+            $.ajax({
+               type: 'POST',
+               url: ajaxurl,
+               data: {
+                  action: 'formbuilder_test_email_template',
+                  email_template: emailTemplate,
+                  test_email: emailTo,
+                  nonce: adminPageVars.formBuilderSendTestEmailNonce
+               },
+               success:function(data) {
+                  var response = JSON.parse(data);
+                  if ( response.success ) {
+                     setTimeout( function() {
+                        $('.form-builder-sending-test-email').hide();
+                        $('#form-builder-test-email-success').show();
+                     }, 1500);
+                  }
+                  if ( ! response.success ) {
+                     setTimeout( function() {
+                        $('.form-builder-sending-test-email').hide();
+                        $('#form-builder-test-email-failed').show();
+                     }, 1500);                     
+                  }
+               },
+               error:function(errorThrown) {
+                  console.log(errorThrown);
+                  setTimeout( function() {
+                     $('.sending-test-email').hide();
+                     $('.test-email-result').show();
+                     $('#test-email-failed').show();
+                  }, 1500);
+               }
+            });
+         } else {
+            alert( 'Please enter destination email address first.' );
+         }
       });
 
       // Initialize data tables
@@ -702,6 +750,25 @@
 
       
       
+      // Content Toggler
+      $('.asenha-body').on('click', '.asenha-content-toggler', function(e) {
+         e.preventDefault();
+         var targetSelector = $(this).data('target-selector');
+         var showText = $(this).data('show-text');
+         var hideText = $(this).data('hide-text');
+         var expanded = $(this).attr('data-expanded');
+         // $(targetSelector).toggle();
+         if (expanded == 'no') {
+            $(targetSelector).slideDown(200);
+            $(this).html(hideText + ' <span>▲</span>');
+            $(this).attr('data-expanded','yes');
+         } else {
+            $(targetSelector).slideUp(200);
+            $(this).html(showText + ' <span>▼</span>');
+            $(this).attr('data-expanded','no');
+         }
+      });
+      
       // Media frame handler for image selection / upload fields
       // Reference: https://plugins.trac.wordpress.org/browser/bm-custom-login/trunk/bm-custom-login.php
       function media_frame_init( selector, button_selector ) {
@@ -751,6 +818,11 @@
                      originalHeightInput.val(attachment.attributes.height);
                      widthInput.val(attachment.attributes.width);
                      heightInput.val(attachment.attributes.height);                     
+                  }
+
+                  if ( '#form-builder-email-header-image' == selector ) {
+                     var attachmentId = $('.form-builder-email-header-image-attachment-id input');
+                     attachmentId.val(attachment.attributes.id);
                   }
                });
             };

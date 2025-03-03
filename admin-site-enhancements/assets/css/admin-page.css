@@ -1727,7 +1727,8 @@ li[id^="separator"] .menu-item-title {
 
 /* Send test email subfield */
 
-.button.send-test-email {
+.button.send-test-email,
+.button.form-builder-send-test-email {
     margin-left: 8px;
 }
 
@@ -1738,11 +1739,13 @@ li[id^="separator"] .menu-item-title {
     padding: 12px 16px; */
 }
 
-.sending-test-email {
+.sending-test-email,
+.form-builder-sending-test-email {
     display: flex;
 }
 
-.sending-test-email img {
+.sending-test-email img,
+.form-builder-sending-test-email img {
     width: 20px;
     height: 20px;
     margin-right: 6px;
@@ -1764,6 +1767,25 @@ li[id^="separator"] .menu-item-title {
 #wpfooter {
     display: flex;
     justify-content: center;
+}
+
+/* Content Toggler */
+.subfield-content-toggler {
+    margin-bottom: 16px;
+}
+
+.subfield-content-toggler a {
+    text-decoration: none;
+}
+
+.subfield-content-toggler a:focus {
+    color: #135e96;
+    box-shadow: none;
+    outline: none;
+}
+
+.subfield-content-toggler a span {
+    font-size: 0.875em;
 }
 
 /* Utility Classes */
