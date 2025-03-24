@@ -6,6 +6,82 @@ Each **_major release_** usually corresponds with the addition of one new module
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). Lifetime Deal (LTD) available.
 
+### 7.8.3 (2025.03.24) - ASE Free and Pro
+
+* **[IMPROVED in Free and Pro] Security >> Limit Login Attempts**: added a limit of 1,000 latest entries that will be kept in the database. This should prevent the failed login attempts database table from growing too large. Props to @rodgeir for suggesting this.
+
+* **[IMPROVED and FIXED in Pro] Content Management >> Custom Content Types >> Custom Field Groups**: 
+  * **Added the update_cf() function to programmatically update the value of one or more custom fields**. [Documentation](https://www.wpase.com/documentation/custom-field-types/#functions-shortcodes) has been added as well. Props to Rajeev A., Edwin L. and @zquadmin for prompting this improvement.
+  * **Added support for nested repeaters in Bricks**. You can now use nested query loops in Bricks to get data from ASE nested (parent-child) repeaters and their sub-fields. Props to Jason L. for prompting this improvement.
+  * **Added empty choice** in the time selection dropdown with the label "Choose one". This should allow for empty value, i.e. none is selected.
+  * **Nested repeater body now has a white background** to better differentiate it with the parent repeater body.
+  * **Fixed PHP fatal error** when using Bricks template to render a related post's gallery field. Props to Aleš S. for reporting this and facilitating the troubleshooting process.
+  * **Fixed PHP warning** related to options pages that occurs in certain scenarios.
+  * **Fixed padding issue** when a hyperlink field is inside a repeater.
+  
+* **[IMPROVED in Pro] Content Management >> Content Duplication**: will now properly duplicate ASE custom fields values, including values of sub-fields in a nested repeater. Props to Mareck, Richard W. and Thomas B. for prompting this improvement.
+
+* **[IMPROVED in Pro] Admin Interface >> Admin Columns Manager**: 
+  * added **support for rendering ASE nested (parent-child) repeaters** and their sub-fields.
+  * added support for when **showing ASE time field with no value** chosen. Will now properly show blank value.
+  * **Fixed rendering of relationship, term and user fields in a repeater**. Will now correctly render all selected items.
+  
+* **[FIXED and IMPROVED in Pro] Utilities >> Form Builder**:
+  * **Implemented field tags in auto responder** subject and message. Props to Mathijs v.d.B. for suggesting this.
+  * **Added option to set custom footer text** for email notification and auto responder. This should make it easier to write a custom text in the language you need it to be. Props to Mathijs v.d.B. for prompting this improvement.
+  * **Added #page_title tag as possible default value of hidden field** which will be replaced by the title of the page where the form is being displayed on. This is useful for when you need to track where form submission is coming from. Props to Marcellus J. for suggesting this improvement.
+  * **Added option to set custom label for hidden fields**. Props to Marcellus J. for suggesting this.
+  * **Hidden fields will no longer take up vertical space**. Props to Marcellus J. for reporting the issue with screenshots.
+  * **Fixed "Hide Label" checkbox** toggling does not properly toggle show/hide of the field label in the builder preview.
+
+* **[IMPROVED in Pro] Content Management >> Media Categories**: added an option in media library list view to remove a / all category from multiple media files, i.e. bulk edit / bulk action. Props to Tony H. for prompting this improvement.
+
+* **[FIXED in Pro] Custom Code >> Code Snippets Manager**: fixed PHP warning and deprecation notices that occurs in a certain scenario.
+
+* **[FIXED in Free and Pro] Admin Interface >> Admin Menu Organizer**: fixed a couple of fatal error instances that occurs in a certain scenario. Props to Scott A. for reporting the issue with the error stack trace, which help with troubleshooting it.
+
+* **[FIXED in Pro] Custom Code >> Code Snippets Manager**: 
+  * **Added an option to compile SCSS or not** for CSS/SCSS snippet as not all snippets contains SCSS code. Props to Jim R. for prompting this improvement.
+  * **Fixed a PHP fatal error** that is triggered in a certain condition when a particular PHP snippet is executed on the frontend. Props to Dax D. for reporting the issue with the error stack trace and facilitating troubleshooting further.
+
+* **[TRANSLATION in Free and Pro]** ASE is now being translated into [31 languages](https://translate.wpase.com/):
+  * **Added new/improved translation** for:
+    * ASE Free: updated Spanish, Portuguese (Brazil), Romanian, Polish, Norwegian, Indonesian, French, Dutch, Chinese (Taiwan), Albanian
+    * ASE Pro: updated Romanian, Portuguese (Brazil), Polish
+  * **More strings have been internationalized**. @Translators, please visit the respective project pages for the Free and Pro versions to translate the new strings, if you havent' done so already.
+  * **Interested to help translate or improve the translation?** Please go to [https://translate.wpase.com](https://translate.wpase.com) for more info.
+  * **Chinese (China)**: ASE Free and Pro (completed). Props to [@bricksvip](https://profiles.wordpress.org/bricksvip/) et al.
+  * **Portuguese (Brazil)**: ASE Free and ASE Pro (completed). Props to [Valdemir M.](https://profiles.wordpress.org/valdemirmaran/), [Dennis F.](https://profiles.wordpress.org/dnn/), [denisgomesfranco](https://profiles.wordpress.org/denisgomesfranco/), [Denison C.](https://profiles.wordpress.org/denisoncarlos/) and [@ofmarconi](https://profiles.wordpress.org/ofmarconi/).
+  * **Hungarian**: ASE Free and Pro (completed). Props to [R. József G.](https://profiles.wordpress.org/radicsjg/) et al.
+  * **Vietnamese**: ASE Free and Pro (completed). Props to [Hoang N.Q.](https://profiles.wordpress.org/nguyenquanghoang/) et al.
+  * **Italian**: ASE Free and Pro (completed). Props to [Fabio P.](https://profiles.wordpress.org/fabioperri/) et. al.
+  * **Dutch**: ASE Free and Pro (completed). Props to [Toine R](https://profiles.wordpress.org/toineenzo/) and [Peter S.](https://profiles.wordpress.org/psmits1567/) et al.
+  * **Korean**: ASE Free and Pro (completed). Props to [@chazmlab](https://profiles.wordpress.org/chazmlab/) et al.
+  * **German (Formal)**: ASE Free and Pro (completed). Props to [@markussss](https://profiles.wordpress.org/markussss/), Bastian S. et al.
+  * **French**: ASE Free and Pro (completed). Props to [Stéphan G.](https://profiles.wordpress.org/gongonzo/), [@jeanfrancoisdelvin](https://profiles.wordpress.org/jeanfrancoisdelvin/), [@srossignol](https://profiles.wordpress.org/srossignol/), [@lucashw](https://profiles.wordpress.org/lucashw/), [@skippy43](https://profiles.wordpress.org/skippy43/), [@anlip](https://profiles.wordpress.org/anlip/), [@agencefacton](https://profiles.wordpress.org/agencefacton/), [@injsbx](https://profiles.wordpress.org/injsbx/) et al.
+  * **Polish**: ASE Free and Pro (completed). Props to [@kosmity](https://profiles.wordpress.org/kosmity/) and [Dariusz Z.](https://profiles.wordpress.org/dariobros/) et al.
+  * **Norwegian**: ASE Free and Pro (completed). Props to [Alf O.F.](https://profiles.wordpress.org/skoen/) et al.
+  * **Czech**: ASE Free and Pro (completed). Props to Jan S. et al.
+  * **Spanish**: ASE Free and Pro (completed). Props to [@marcorubiol](https://profiles.wordpress.org/marcorubiol/) et al.
+  * **Slovak**: ASE Free and Pro (completed). Props to [Dominik K.](https://profiles.wordpress.org/dominokozmali/) et al.
+  * **Indonesian**: ASE Free and Pro (completed). Props to [@pakacil](https://profiles.wordpress.org/pakacil/), [Wawan S.](https://profiles.wordpress.org/ahmad-rafiansyah/) et al.
+  * **Portuguese (Portugal)**: ASE Free (completed) | ASE Pro (partial). Props to [Ricardo C.](https://profiles.wordpress.org/madebyuh/) et al.
+  * **Ukrainian**: ASE Free (completed) | ASE Pro (partial). Props to [Irina](https://profiles.wordpress.org/irinashl/) et al.
+  * **Urdu**: ASE Free (completed) | ASE Pro (partial). Props to [Ayyaz A.](https://profiles.wordpress.org/ayyazahmad/) et al.
+  * **Swedish**: ASE Free (completed) | ASE Pro (partial). Props to [Robert M.](https://profiles.wordpress.org/robertmichalski/) and [Tor-Bjorn F.](https://profiles.wordpress.org/tobifjellner/).
+  * **Danish**: ASE Free (completed) | ASE Pro (partial). Props to [Morten E.L.](https://profiles.wordpress.org/ellegaarddk/), [Helgi P.](https://profiles.wordpress.org/helgipetersen/) and [Kurt M.A.](https://profiles.wordpress.org/moskjaer/) et al.
+  * **Arabic**: ASE Free (completed) | ASE Pro (completed). Props to [Mohammed J.](https://profiles.wordpress.org/ih4xz/), Yaser M., et al.
+  * **Romanian**: ASE Free (completed) | ASE Pro (partial). Props to [Dan C.](https://profiles.wordpress.org/dancaragea/), [@ravishi](https://profiles.wordpress.org/ravishi/) and [@catalinx777](https://profiles.wordpress.org/catalinx777/).
+  * **Turkish**: ASE Free (completed). Props to [@saeead](https://wordpress.org/support/users/saeead/), [@serdaroztrk](https://profiles.wordpress.org/serdaroztrk/) et al.
+  * **Chinese (Taiwan)**: ASE Free (completed). Props to [@gordon168](https://profiles.wordpress.org/gordon168/) and [Hedula](https://profiles.wordpress.org/hedula/).
+  * **Spanish (Chile)**: ASE Free (completed). Props to [@srgio](https://profiles.wordpress.org/srgio/).
+  * **Serbian**: ASE Free (partial). Props to [Igor E.](https://wordpress.org/support/users/igorel/) and [@plug-n-play](https://profiles.wordpress.org/plug-n-play/).
+  * **Albanian**: ASE Free (partial). Props to [@algertpateqi](https://profiles.wordpress.org/algertpateqi/).
+  * **Persian**: ASE Free (completed). Props to [@saeead](https://profiles.wordpress.org/saeead/) et al.
+  * **Russian**: ASE Free (completed). Props to [@sergey369](https://profiles.wordpress.org/sergey369/), [@pfgr](https://profiles.wordpress.org/pfgr/) et al.
+  * **Bosnian**: ASE Free (completed). Props to [@plug-n-play](https://profiles.wordpress.org/plug-n-play/) et al.
+  * **Croatian**: ASE Free (completed). Props to [@plug-n-play](https://profiles.wordpress.org/plug-n-play/).
+
 ### 7.8.2 (2025.03.03) - ASE Free and Pro
 
 * **[ADDED in Free and Pro] Disable Components >> Disable Smaller Components**: added an option to disable the Application Passwords feature in WordPress. Props to [DJABHipHop](https://wordpress.org/support/users/pressthemes1/) for [suggesting this](https://wordpress.org/support/topic/add-options-to-disable-wp_is_application_passwords_available/).

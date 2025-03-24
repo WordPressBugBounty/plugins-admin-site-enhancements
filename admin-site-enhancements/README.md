@@ -5,7 +5,7 @@ Donate link: https://bowo.io/asenha-sp-rdm
 Tags: enhancements, tweaks, optimizations, tools  
 Requires at least: 4.6  
 Tested up to: 6.7.2  
-Stable tag: 7.8.2  
+Stable tag: 7.8.3  
 Requires PHP: 5.6  
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -202,39 +202,49 @@ Each **_major release_** usually corresponds with the addition of one new module
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). Lifetime Deal (LTD) available.
 
-### 7.8.2 (2025.03.17) - ASE Free and Pro
+### 7.8.3 (2025.03.24) - ASE Free and Pro
 
-* **[ADDED in Free and Pro] Disable Components >> Disable Smaller Components**: added an option to disable the Application Passwords feature in WordPress. Props to [DJABHipHop](https://wordpress.org/support/users/pressthemes1/) for [suggesting this](https://wordpress.org/support/topic/add-options-to-disable-wp_is_application_passwords_available/).
+* **[IMPROVED in Free and Pro] Security >> Limit Login Attempts**: added a limit of 1,000 latest entries that will be kept in the database. This should prevent the failed login attempts database table from growing too large. Props to @rodgeir for suggesting this.
 
-* **[IMPROVED in Pro] Optimizations >> Image Upload Control**: add an option to disable generation of intermediate sizes. Props to Wilbert S., [@visedfaq](https://wordpress.org/support/topic/feature-suggestion-remove-image-sizes/), [@bradhazel](https://wordpress.org/support/topic/feature-request-i-have-two/), Stijn V., Jake H. and [@luislu](https://wordpress.org/support/topic/add-function-to-disable-thumbnail-size/) for suggesting this feature.
-
-* **[IMPROVED in Pro] Content Management >> Custom Content Types >> Custom Field Groups**: 
-  * **Added a new field type: time**. This has been integrated with Oxygen (classic), Bricks, Breakdance and Elementor. [Documentation](https://www.wpase.com/documentation/custom-field-types/) has also been updated. Props to Jim R. and Rlaf L. for prompting this imprvement.
-  * **Improved color field**. Color picker now supports transparency, which outputs the color in RGBA format, e.g. rgba(108, 19, 135, 0.9). Non-transparent color will be in HEX format, e.g. #333333.
-  * **Improved UI for relationship field**. Posts are now categorized under the post type label, and the post type label preppended on the selected posts. This is especially useful if you have multiple post types enabled. Props to @yankiara for suggesting this improvement.
-  * **Improved UI for term field**. Terms are now categorized under the taxonomy label, and the taxonomy label preppended on the selected terms.
-  * **Improved UI for user field**. Will now include display name and email address. This makes it easier to search / filter users.
-
-* **[CHANGED and IMPROVED in Pro] Admin Interface >> Admin Columns Manager**: 
-  * **Added rendering of column values for the new time field in ASE** custom field groups.
-  * Added "!important" for the "overflow-y:hidden" attribute for the #list-table-wrapper div, to **better guarantee horizontal scrolling will work** when other CSS rules try to override this attribute.
-
-* **[FIXED and IMPROVED in Pro] Utilities >> Form Builder**:
-  * **Added option to not save form submissions** in the database. This may be useful for scenarios where privacy is of a concern. Props to Marcellus J. for suggesting this.
-  * **Added option to set which field of each form to use for previewing entries** on the Entries listing page. This should make the Entries page more useful.
-  * **Added #page_url tag as possible default value of hidden field** which will be replaced by the permalink of the page where the form is being displayed on. This is useful for when you need to track where form submission is coming from. Props to Ralf L. for suggesting this improvement.
-  * **Fixed an issue where Screen Options panel is gone** from all admin pages when Form Builder is enabled. Props to Susanne R. for reporting the issue.
+* **[IMPROVED and FIXED in Pro] Content Management >> Custom Content Types >> Custom Field Groups**: 
+  * **Added the update_cf() function to programmatically update the value of one or more custom fields**. [Documentation](https://www.wpase.com/documentation/custom-field-types/#functions-shortcodes) has been added as well. Props to Rajeev A., Edwin L. and @zquadmin for prompting this improvement.
+  * **Added [documentation](https://www.wpase.com/documentation/custom-field-types/#functions-shortcodes) for get_cf_info()** to retrive the settings / info of one or all custom fields in a post.
+  * **Added support for nested repeaters in Bricks**. You can now use nested query loops in Bricks to get data from ASE nested (parent-child) repeaters and their sub-fields. Props to Jason L. for prompting this improvement.
+  * **Added empty choice** in the time selection dropdown with the label "Choose one". This should allow for empty value, i.e. none is selected.
+  * **Nested repeater body now has a white background** to better differentiate it with the parent repeater body.
+  * **Fixed PHP fatal error** when using Bricks template to render a related post's gallery field. Props to Aleš S. for reporting this and facilitating the troubleshooting process.
+  * **Fixed PHP warning** related to options pages that occurs in certain scenarios.
+  * **Fixed padding issue** when a hyperlink field is inside a repeater.
   
-* **[FIXED in Pro] Security >> CAPTCHA Protection**: fixed PHP warning related to displaying CAPTCHA widgets on the comment form as reported by @betaplus.
+* **[IMPROVED in Pro] Content Management >> Content Duplication**: will now properly duplicate ASE custom fields values, including values of sub-fields in a nested repeater. Props to Mareck, Richard W. and Thomas B. for prompting this improvement.
 
-* **[FIXED in Pro] Admin Interface >> Admin Menu Organizer**: fixed a PHP fatal error when clicking on Yootheme menu icon, which uncommonly, links to an AJAX call URL. Props to Àlex M. for reporting the error with the complete error stack trace and facilitating the troubleshooting process.
+* **[IMPROVED in Pro] Admin Interface >> Admin Columns Manager**: 
+  * added **support for rendering ASE nested (parent-child) repeaters** and their sub-fields.
+  * added support for when **showing ASE time field with no value** chosen. Will now properly show blank value.
+  * **Fixed rendering of relationship, term and user fields in a repeater**. Will now correctly render all selected items.
+  
+* **[FIXED and IMPROVED in Pro] Utilities >> Form Builder**:
+  * **Implemented field tags in auto responder** subject and message. Props to Mathijs v.d.B. for suggesting this.
+  * **Added option to set custom footer text** for email notification and auto responder. This should make it easier to write a custom text in the language you need it to be. Props to Mathijs v.d.B. for prompting this improvement.
+  * **Added #page_title tag as possible default value of hidden field** which will be replaced by the title of the page where the form is being displayed on. This is useful for when you need to track where form submission is coming from. Props to Marcellus J. for suggesting this improvement.
+  * **Added option to set custom label for hidden fields**. Props to Marcellus J. for suggesting this.
+  * **Hidden fields will no longer take up vertical space**. Props to Marcellus J. for reporting the issue with screenshots.
+  * **Fixed "Hide Label" checkbox** toggling does not properly toggle show/hide of the field label in the builder preview.
 
-* **[FIXED in Pro] Content Management >> Content Order**: fixed a PHP error that breaks AJAX-filtering using JetSmartFilters. Props to Stijn V. for reporting the issue and facilitating the troubleshooting process.
+* **[IMPROVED in Pro] Content Management >> Media Categories**: added an option in media library list view to remove a / all category from multiple media files, i.e. bulk edit / bulk action. Props to Tony H. for prompting this improvement.
+
+* **[FIXED in Pro] Custom Code >> Code Snippets Manager**: fixed PHP warning and deprecation notices that occurs in a certain scenario.
+
+* **[FIXED in Free and Pro] Admin Interface >> Admin Menu Organizer**: fixed a couple of fatal error instances that occurs in a certain scenario. Props to Scott A. for reporting the issue with the error stack trace, which help with troubleshooting it.
+
+* **[FIXED in Pro] Custom Code >> Code Snippets Manager**: 
+  * **Added an option to compile SCSS or not** for CSS/SCSS snippet as not all snippets contains SCSS code. Props to Jim R. for prompting this improvement.
+  * **Fixed a PHP fatal error** that is triggered in a certain condition when a particular PHP snippet is executed on the frontend. Props to Dax D. for reporting the issue with the error stack trace and facilitating troubleshooting further.
 
 * **[TRANSLATION in Free and Pro]** ASE is now being translated into [31 languages](https://translate.wpase.com/):
   * **Added new/improved translation** for:
-    * ASE Free: updated Ukrainian, Spanish (Spain), Spanish (Chile), Portuguese (Brazil), Polish, Norwegian, Dutch
-    * ASE Pro: updated Arabic, Norwegian, Hungarian, Polish, Romanian, Portuguese (Brazil). Polish, Portuguese (Brazil) and Romanian are 100% translated. Special kudos to [Jarosław K.]((https://profiles.wordpress.org/kosmity/)), [Valdemir M.](https://profiles.wordpress.org/valdemirmaran/) and [Catalin T.](https://profiles.wordpress.org/catalinx777/) for the huge work of translating the new Form Builder module!
+    * ASE Free: updated Spanish, Portuguese (Brazil), Romanian, Polish, Norwegian, Indonesian, French, Dutch, Chinese (Taiwan), Albanian
+    * ASE Pro: updated Romanian, Portuguese (Brazil), Polish
   * **More strings have been internationalized**. @Translators, please visit the respective project pages for the Free and Pro versions to translate the new strings, if you havent' done so already.
   * **Interested to help translate or improve the translation?** Please go to [https://translate.wpase.com](https://translate.wpase.com) for more info.
   * **Chinese (China)**: ASE Free and Pro (completed). Props to [@bricksvip](https://profiles.wordpress.org/bricksvip/) et al.
