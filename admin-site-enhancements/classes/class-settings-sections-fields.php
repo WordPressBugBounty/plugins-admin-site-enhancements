@@ -719,6 +719,20 @@ class Settings_Sections_Fields {
                 );
             }
         }
+        $field_id = 'hide_admin_bar_description';
+        $field_slug = 'hide-admin-bar-description';
+        add_settings_field(
+            $field_id,
+            '',
+            [$render_field, 'render_description_subfield'],
+            ASENHA_SLUG,
+            'main-section',
+            array(
+                'option_name'       => ASENHA_SLUG_U,
+                'field_description' => '<div class="asenha-warning">' . __( 'The settings above will override the \'Toolbar\' settings in the user profile edit screen.', 'admin-site-enhancements' ) . '</div>',
+                'class'             => 'asenha-description login-logout ' . $field_slug,
+            )
+        );
         // Wider Admin Menu
         $field_id = 'wider_admin_menu';
         $field_slug = 'wider-admin-menu';

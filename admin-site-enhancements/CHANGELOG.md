@@ -1,10 +1,29 @@
 ## Changelog
 
-**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **78 _major_ releases** (e.g. 1.1.0 ) and **147 _minor_ releases** (e.g. 4.9.1), for a **total of 225 releases**.
+**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **78 _major_ releases** (e.g. 1.1.0 ) and **148 _minor_ releases** (e.g. 4.9.1), for a **total of 226 releases**.
 
 Each **_major release_** usually corresponds with the addition of one new module/feature. Each module/feature usually is the equivalent of one (or more) single-purpose plugin. Each **_minor release_** usually contain one or more bugfix or improvements to existing modules/features.
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). Lifetime Deal (LTD) available.
+
+### 7.8.10 (2025.05.12) - ASE Free and Pro
+
+* **[IMPROVED, CHANGED and FIXED in Pro] Content Management >> Custom Content Types**:
+  * **Added Datetime field** and integrate with Oxygen Classic, Bricks, Breakdance and Elementor. Props to Pradnya T.P. for suggesting this improvement.
+  * **Changed date picker library** froom bootstrap-datepicker to flatpickr. This is the same library used for the new datetime field, so, it streamlines assets requirements and UI/X.
+  * **Fixed date field display inaccuracy** in Bricks builder when the WP site language is set to non-English. Props to Daniel B. for reporting the issue with a screencast, which helped identify the root cause and the fix.
+  
+* **[IMPROVED in Pro] Custom Code >> Code Snippets Manager**: added "device type" conditional for CSS/JS/HTML snippets, which allows you to choose on which device(s) to load a snippet in, i.e. desktop / tablet / mobile. Props to Sreelal G. for prompting this improvement.
+
+* **[IMPROVED in Pro] Utilities >> Form Builder**: improve accessibility by adding label for attributes for the email, website/URL, phone, text, textarea, number, range slider, spinner, star, NPS, dropdown, checkboxes, radio buttons, image select, upload, date and time fields. This should also help improve Pagespeed Insights' Accessibility score for pages that has an ASE form in it. Props to Jakub X. for prompting this improvement.
+
+* **[IMPROVED in Free and Pro] Admin Interface >> Enhance List Tables & Admin Columns Manager**: the featured image column will now have the post thumbnail linking to the post edit screen. Props to Domenico M. for suggesting this.
+
+* **[IMPROVED in Free and Pro] Admin Interface >> Hide Admin Bar**: add a notice in the module settings that says "The settings above will override the ‘Toolbar’ settings in the user profile edit screen.". This should help clear up confusion on which settings will take precedence when the Hide Admin Bar module is enabled. Props to [Matt H.](https://wordpress.org/support/users/matthodder/) for [reporting the issue](https://wordpress.org/support/topic/hide-admin-bar-is-forcing-admin-bar-for-unchecked-roles/).
+
+* **[FIXED in Free and Pro] Admin Interface >> Wider Admin Menu**: fixed an issue where Gravity Forms form edit screen's layout was shifted partially to the right. Props to Marv D. for repoerting the issue and facilitating the troubleshooting process.
+
+* **[FIXED in Pro] Content Management >> Content Duplication**: fixed a PHP fatal error that occurs in a certain scenario when ASE custom field group is attached to a post. Props to Wilbert S. for reporting the issue.
 
 ### 7.8.9 (2025.05.05) - ASE Free and Pro
 
