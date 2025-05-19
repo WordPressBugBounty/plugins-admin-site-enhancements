@@ -940,57 +940,64 @@
             
       // =============== ASE PRO =================
 
-      // Upgrade nudge to Pro
-      if ( asenhaStats.hideUpgradeNudge ) {
-         $('.asenha-upgrade-nudge').hide();
-         $('#bottom-upgrade-nudge').show();
-      } else {
-         $('.asenha-upgrade-nudge').show();
-         $('#bottom-upgrade-nudge').hide();
-      }
+      if ( asenhaStats.isYearEndPromoPeriod ) {
 
-      $('#dismiss-upgrade-nudge').click(function(e) {
-         e.preventDefault();
-         $.ajax({
-            url: ajaxurl,
-            data: {
-               'action':'dismiss_upgrade_nudge'
-            },
-            success:function(data) {
-               $('.asenha-upgrade-nudge').hide();
-               // $('#bottom-upgrade-nudge').show();
-            },
-            error:function(errorThrown) {
-               console.log(errorThrown);
-            }
+         // Promo nudge
+         if ( asenhaStats.hidePromoNudge ) {
+            $('.asenha-promo-nudge').hide();
+            $('#bottom-upgrade-nudge').show();
+         } else {
+            $('.asenha-promo-nudge').show();
+            $('#bottom-upgrade-nudge').hide();
+         }
+         
+         $('#dismiss-promo-nudge').click(function(e) {
+            e.preventDefault();
+            $.ajax({
+               url: ajaxurl,
+               data: {
+                  'action':'dismiss_promo_nudge',
+                  'nonce': adminPageVars.nonce
+               },
+               success:function(data) {
+                  $('.asenha-promo-nudge').hide();
+               },
+               error:function(errorThrown) {
+                  console.log(errorThrown);
+               }
+            });
          });
-      });
-      
-      // Promo nudge
-
-      if ( asenhaStats.hidePromoNudge ) {
-         $('.asenha-promo-nudge').hide();
-         $('#bottom-upgrade-nudge').show();
+         
       } else {
-         $('.asenha-promo-nudge').show();
-         $('#bottom-upgrade-nudge').hide();
-      }
-      
-      $('#dismiss-promo-nudge').click(function(e) {
-         e.preventDefault();
-         $.ajax({
-            url: ajaxurl,
-            data: {
-               'action':'dismiss_promo_nudge'
-            },
-            success:function(data) {
-               $('.asenha-promo-nudge').hide();
-            },
-            error:function(errorThrown) {
-               console.log(errorThrown);
-            }
+
+         // Upgrade nudge to Pro
+         if ( asenhaStats.hideUpgradeNudge ) {
+            $('.asenha-upgrade-nudge').hide();
+            $('#bottom-upgrade-nudge').show();
+         } else {
+            $('.asenha-upgrade-nudge').show();
+            $('#bottom-upgrade-nudge').hide();
+         }
+
+         $('#dismiss-upgrade-nudge').click(function(e) {
+            e.preventDefault();
+            $.ajax({
+               url: ajaxurl,
+               data: {
+                  'action':'dismiss_upgrade_nudge',
+                  'nonce': adminPageVars.nonce
+               },
+               success:function(data) {
+                  $('.asenha-upgrade-nudge').hide();
+                  // $('#bottom-upgrade-nudge').show();
+               },
+               error:function(errorThrown) {
+                  console.log(errorThrown);
+               }
+            });
          });
-      });
+
+      }
       
       // =============== SPONSORSHIP =================
 
@@ -1005,16 +1012,17 @@
 
       $('#have-shared,#have-reviewed').click(function(e) {
          e.preventDefault();
-         $.ajax({
-            url: 'https://bowo.io/asenha-sp-ndg',
-            method: 'GET',
-            dataType: 'jsonp',
-            crossDomain: true
-         });
+         // $.ajax({
+         //    url: 'https://bowo.io/asenha-sp-ndg',
+         //    method: 'GET',
+         //    dataType: 'jsonp',
+         //    crossDomain: true
+         // });
          $.ajax({
             url: ajaxurl,
             data: {
-               'action':'have_supported'
+               'action':'have_supported',
+               'nonce': adminPageVars.nonce
             },
             success:function(data) {
                $('.asenha-support-nudge').hide();
@@ -1027,16 +1035,17 @@
       
       $('#support-nudge-dismiss').click(function(e) {
          e.preventDefault();
-         $.ajax({
-            url: 'https://bowo.io/asenha-sp-ndg',
-            method: 'GET',
-            dataType: 'jsonp',
-            crossDomain: true
-         });
+         // $.ajax({
+         //    url: 'https://bowo.io/asenha-sp-ndg',
+         //    method: 'GET',
+         //    dataType: 'jsonp',
+         //    crossDomain: true
+         // });
          $.ajax({
             url: ajaxurl,
             data: {
-               'action':'dismiss_support_nudge'
+               'action':'dismiss_support_nudge',
+               'nonce': adminPageVars.nonce
             },
             success:function(data) {
                $('.asenha-support-nudge').hide();
