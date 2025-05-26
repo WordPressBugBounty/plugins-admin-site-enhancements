@@ -1,10 +1,22 @@
 ## Changelog
 
-**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **78 _major_ releases** (e.g. 1.1.0 ) and **150 _minor_ releases** (e.g. 4.9.1), for a **total of 228 releases**.
+**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **78 _major_ releases** (e.g. 1.1.0 ) and **151 _minor_ releases** (e.g. 4.9.1), for a **total of 229 releases**.
 
 Each **_major release_** usually corresponds with the addition of one new module/feature. Each module/feature usually is the equivalent of one (or more) single-purpose plugin. Each **_minor release_** usually contain one or more bugfix or improvements to existing modules/features.
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). Lifetime Deal (LTD) available.
+
+### 7.8.12 (2025.05.26) - ASE Free and Pro
+
+* **[IMPROVED in Pro] Content Management >> Custom Content Types**:
+  * **Implement custom field groups for taxonomy terms**. You can now attach custom fields directly on taxonomy terms. This is also integrated with Oxygen Classic, Bricks, Breakdance and Elementor when you create templates for the taxonomy (term) archive. Props to Hadar B., Yannick, Gabriel, Ayman A., Aleš S., Zubair, Ivar S., Ahmed E., Henry R. for prompting this improvement and help with early testing.
+  * **Added warning message** in the custom field groups listing when no placement rules have been set for a custom field group.
+
+* **[IMPROVED in Free and Pro] Admin Interface >> Hide Admin Bar**: add an option to always show the admin bar in the frontend. This is useful for when an admin has multiple roles and the admin bar is set to be hidden for those other role(s). Props to [@croberta84](https://wordpress.org/support/users/croberta84/) for [prompting](https://wordpress.org/support/topic/multiple-role-admin-bar-issue/) this improvement.
+
+* **[TRANSLATION in Free and Pro]** ASE is now being translated into [33 languages](https://translate.wpase.com/):
+  * **Added new/improved translation** for:
+    * ASE Free: Added Catalan. Updated Ukrainian, Spanish (Spain), Slovak, Portuguese (Brazil), Polish, Norwegian, Japanese and Indonesian.
 
 ### 7.8.11 (2025.05.19) - ASE Free and Pro
 

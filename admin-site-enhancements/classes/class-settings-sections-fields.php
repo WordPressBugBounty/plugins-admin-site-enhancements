@@ -719,6 +719,23 @@ class Settings_Sections_Fields {
                 );
             }
         }
+        $field_id = 'hide_admin_bar_always_show_for_admins';
+        $field_slug = 'hide-admin-bar-always-show-for-admins';
+        add_settings_field(
+            $field_id,
+            '',
+            // Field title
+            [$render_field, 'render_checkbox_plain'],
+            ASENHA_SLUG,
+            'main-section',
+            array(
+                'option_name' => ASENHA_SLUG_U,
+                'field_id'    => $field_id,
+                'field_name'  => ASENHA_SLUG_U . '[' . $field_id . ']',
+                'field_label' => __( 'Always show the admin bar for administrators on the frontend. Useful for when an administrator has multiple user roles, and the admin bar is set to be hidden for the other user role(s).', 'admin-site-enhancements' ),
+                'class'       => 'asenha-checkbox asenha-hide-th asenha-th-border-top admin-interface ' . $field_slug,
+            )
+        );
         $field_id = 'hide_admin_bar_description';
         $field_slug = 'hide-admin-bar-description';
         add_settings_field(

@@ -269,6 +269,7 @@
       $('.hide-admin-bar').appendTo('.fields-admin-interface > table > tbody');
       
       $('.hide-admin-bar-for').appendTo('.fields-admin-interface .hide-admin-bar .asenha-subfields');
+      $('.hide-admin-bar-always-show-for-admins').appendTo('.fields-admin-interface .hide-admin-bar .asenha-subfields');
       
       $('.hide-admin-bar-description').appendTo('.fields-admin-interface .hide-admin-bar .asenha-subfields');
       
