@@ -1,10 +1,29 @@
 ## Changelog
 
-**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **78 _major_ releases** (e.g. 1.1.0 ) and **151 _minor_ releases** (e.g. 4.9.1), for a **total of 229 releases**.
+**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **78 _major_ releases** (e.g. 1.1.0 ) and **152 _minor_ releases** (e.g. 4.9.1), for a **total of 230 releases**.
 
 Each **_major release_** usually corresponds with the addition of one new module/feature. Each module/feature usually is the equivalent of one (or more) single-purpose plugin. Each **_minor release_** usually contain one or more bugfix or improvements to existing modules/features.
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). Lifetime Deal (LTD) available.
+
+### 7.8.13 (2025.06.02) - ASE Free and Pro
+
+* **[SECURITY FIX in Free and Pro] Custom Code >> Insert &lt;head&gt;, &lt;body&gt; and &lt;footer&gt; Code** fixed Stored XSS vulnerability responsibly disclosed by Dmitrii Ignatyev from CleanTalk Inc.
+
+* **[IMPROVED in Pro] Utilities >> Form Builder**: the associated attachment ID will now be removed when the email header image URL is deleted. This will ensure the header image will no longer be part of the email sent out from the form builder. Props to Lucas C. for reporting the issue in great detail.
+
+* **[IMPROVED in Pro] Custom Code >> Code Snippets Manager**: 
+  * **Added a mechanism to ensure that PHP snippets will have the opening <?php tag** upon publishing or updating a PHP snippet. Props to Jim W. for prompting this improvement.
+  * **Permanently deleted snippet will now have the snippet file deleted as well**. Props to Jose K.N. for prompting this improvement.
+
+* **[FIXED in Pro] Security >> Email Address Obfuscator**: fixed an issue where the obfuscation shortcode is showing instead of the obfuscated email address when an Elementor Icon List widget contains an email address text. Props to Wence W. for reporting the issue in detail and facilitating the troubleshooting process.
+
+* **[FIXED in Pro] Content Management >> Media Categories**: fixed an issue where only the first image is being uploaded when trying to upload several images into a category in the grid view. Props to Sanjeev S. for reporting the issue.
+
+* **[TRANSLATION in Free and Pro]** ASE is now being translated into [33 languages](https://translate.wpase.com/):
+  * **Added new/improved translation** for:
+    * ASE Free: Updated Vietnamese, Slovak, Portuguese (Brazil), Polish, Norwegian, Indonesian, German, Dutch, Catalan, Arabic, Albanian.
+    * ASE Pro: Added Catalan. Special props to [@lluishospital](https://profiles.wordpress.org/lluishospital/) for pushing ahead with the translation!
 
 ### 7.8.12 (2025.05.26) - ASE Free and Pro
 

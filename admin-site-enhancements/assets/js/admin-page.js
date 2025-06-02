@@ -890,6 +890,16 @@
          });
       }
 
+      // Form Builder - Empty out stored/hidden attachment ID when "Email header image" field is emptied
+      var emailHeaderImage = $('#form-builder-email-header-image');
+      var emailHeaderImageAttachmentId = $('.form-builder-email-header-image-attachment-id input');
+      
+      $(emailHeaderImage).keyup(delay(function (e) {
+         if ($(this).val().length === 0) {
+            emailHeaderImageAttachmentId.val("");
+         }
+      }, 200));
+
       // =============== Image Ratio Calculator / Preservation for Login Page Customizer >> Logo Image =================
 
       // Code modified from: https://codepen.io/tobiasdev/pen/XNjxdZ by Tobias Bogliolo
