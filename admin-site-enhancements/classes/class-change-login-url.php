@@ -211,18 +211,27 @@ class Change_Login_URL {
         $redirect_slug = 'not_found';
         // When logging-in
         if ( isset( $_POST['log'] ) && !empty( $_POST['log'] ) && isset( $_POST['pwd'] ) && !empty( $_POST['pwd'] ) || isset( $_POST['post_password'] ) && !empty( $_POST['post_password'] ) ) {
-            if ( isset( $_SERVER['HTTP_REFERER'] ) ) {
-                $http_referrer = sanitize_url( $_SERVER['HTTP_REFERER'] );
-            } else {
-                $http_referrer = '';
-            }
+            $http_referrer = ( isset( $_SERVER['HTTP_REFERER'] ) ? sanitize_url( $_SERVER['HTTP_REFERER'] ) : '' );
+            $http_user_agent = ( isset( $_SERVER['HTTP_USER_AGENT'] ) ? $_SERVER['HTTP_USER_AGENT'] : '' );
             if ( !empty( $http_referrer ) && false === strpos( $http_referrer, get_site_url() ) ) {
-                //     // The referer URL does not contain the site's URL. This is an attempt to do a login POST from an external URL / illegitimate method. Let's redirect that.
-                //     // Redirect to /not_found/
+                // The referer URL does not contain the site's URL. This is an attempt to do a login POST from an external URL / illegitimate method. Let's redirect that.
+                wp_safe_redirect( home_url( $redirect_slug . '/' ), 302 );
+                exit;
+            } elseif ( !empty( $http_user_agent ) && preg_match( '/^(curl|wget)/i', $http_user_agent ) ) {
+                // The post request is coming from a cURL or Wget request, let's redirect that.
+                wp_safe_redirect( home_url( $redirect_slug . '/' ), 302 );
+                exit;
+            } elseif ( empty( $http_referrer ) ) {
+                // The login request does not have HTTP_REFERER info. e.g. coming from cURL but with a user agent set to a browser's.
+                // Let's redirect that
+                wp_safe_redirect( home_url( $redirect_slug . '/' ), 302 );
+                exit;
+            } elseif ( !empty( $http_referrer ) && false === strpos( $http_referrer, $custom_login_slug ) ) {
+                // The referrer URL does not contain the custom login slug. Could be an attempt to login via cURL POST.
                 wp_safe_redirect( home_url( $redirect_slug . '/' ), 302 );
                 exit;
             } else {
-                // Do nothing. i.e. do not redirect to /not_found/ as this contains a login POST request
+                // Do nothing. i.e. do not redirect to /not_found/ as this contains a valin login POST request
                 // upon successful login, redirection to logged-in view of /wp-admin/ happens.
                 // Without this condition, login attempt will redirect to /not_found/
             }

@@ -1,10 +1,29 @@
 ## Changelog
 
-**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **78 _major_ releases** (e.g. 1.1.0 ) and **152 _minor_ releases** (e.g. 4.9.1), for a **total of 230 releases**.
+**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **78 _major_ releases** (e.g. 1.1.0 ) and **153 _minor_ releases** (e.g. 4.9.1), for a **total of 231 releases**.
 
 Each **_major release_** usually corresponds with the addition of one new module/feature. Each module/feature usually is the equivalent of one (or more) single-purpose plugin. Each **_minor release_** usually contain one or more bugfix or improvements to existing modules/features.
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). Lifetime Deal (LTD) available.
+
+### 7.8.14 (2025.06.09) - ASE Free and Pro
+
+* **[IMPROVED in Free and Pro] Log In/Out & Register >> Change Login URL**: will now also check if the login request is coming from cURL and properly handles it. Props to Emmanuel A. for prompting this improvement.
+
+* **[FIXED in Free and Pro] Content Management >> SVG Upload**: updated SVG sanitizer library to the latest version to resolve PHP 8.4 deprecation issue as reported by Keith H.
+
+* **[FIXED in Pro] Content Management >> Media Categories**: 
+  * fixed a JS error that occurs in post edit screen when the Meta Box plugin is active and shoing custom fields meta boxes. Props to Tanja K. for reporting the issue in detail and facilitating the troubleshooting process.
+  * uploading multiple files in the root of the media library grid view will now show the progress indicator again. Props to admin_t for prompting this fix.
+
+* **[FIXED in Pro] Custom Code >> Code Snippets Manager**: fixed PHP deprecation warning in sites running PHP 8.4. Props to Keith H. for reporting the issue.
+
+* **[FIXED in Pro] Content Management >> Media Replacement**: fixed an issue where uploading a new image during the replacement process would then reload the page taking you out of the replacement flow. Props to John B. for reporting the issue.
+
+* **[TRANSLATION in Free and Pro]** ASE is now being translated into [33 languages](https://translate.wpase.com/):
+  * **Added new/improved translation** for:
+    * ASE Free: updated Turkish, Portuguese (Brazil), Polish, Norwegian, Dutch, Chinese (Taiwan).
+    * ASE Pro: updated Spanish (Spain), Norwegian, Catalan. Special props to [@lluishospital](https://profiles.wordpress.org/lluishospital/) for completing the Catalan translation!
 
 ### 7.8.13 (2025.06.02) - ASE Free and Pro
 

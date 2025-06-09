@@ -1057,7 +1057,7 @@ function asenha_public_scripts(  $hook_suffix  ) {
     }
     // Media Replacement
     $enable_media_replacement = ( array_key_exists( 'enable_media_replacement', $options ) ? $options['enable_media_replacement'] : false );
-    if ( $enable_media_replacement && is_user_logged_in() ) {
+    if ( $enable_media_replacement && !is_admin() && is_user_logged_in() ) {
         wp_enqueue_style(
             'asenha-media-replace-frontend',
             ASENHA_URL . 'assets/css/media-replace-frontend.css',
