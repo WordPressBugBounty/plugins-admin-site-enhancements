@@ -302,6 +302,7 @@
       // Place fields into "Log In | Log Out" tab
       $('.change-login-url').appendTo('.fields-login-logout > table > tbody');
       $('.custom-login-slug').appendTo('.fields-login-logout .change-login-url .asenha-subfields');
+      $('.custom-login-whitelist').appendTo('.fields-login-logout .change-login-url .asenha-subfields');
       $('.default-login-redirect-slug').appendTo('.fields-login-logout .change-login-url .asenha-subfields');
       $('.change-login-url-description').appendTo('.fields-login-logout .change-login-url .asenha-subfields');
       $('.login-id-type-restriction').appendTo('.fields-login-logout > table > tbody');

@@ -1760,6 +1760,10 @@ input[type="search"]#module-search-input.has-text-input {
     width: 100%;
 }
 
+.weight-normal {
+    font-weight: normal !important;
+}
+
 
 
 /* WPML + WPML String Translation */

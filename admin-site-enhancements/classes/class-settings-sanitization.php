@@ -298,6 +298,10 @@ class Settings_Sanitization {
             $options['custom_login_slug'] = 'backend';
         }
         $options['custom_login_slug'] = ( !empty( $options['custom_login_slug'] ) ? sanitize_text_field( trim( $options['custom_login_slug'], '/' ) ) : 'backend' );
+        if ( !isset( $options['custom_login_whitelist'] ) ) {
+            $options['custom_login_whitelist'] = '';
+        }
+        $options['custom_login_whitelist'] = ( !empty( $options['custom_login_whitelist'] ) ? sanitize_textarea_field( $options['custom_login_whitelist'] ) : '' );
         // Login ID Type
         if ( !isset( $options['login_id_type_restriction'] ) ) {
             $options['login_id_type_restriction'] = false;
