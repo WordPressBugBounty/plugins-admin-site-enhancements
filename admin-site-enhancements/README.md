@@ -5,7 +5,7 @@ Donate link: https://bowo.io/asenha-sp-rdm
 Tags: enhancements, tweaks, optimizations, tools  
 Requires at least: 4.6  
 Tested up to: 6.8.1  
-Stable tag: 7.8.17  
+Stable tag: 7.8.18  
 Requires PHP: 5.6  
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -196,24 +196,32 @@ ASE does not officially support multisite. Please use at your own risk. That sai
 
 ## Changelog
 
-**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **78 _major_ releases** (e.g. 1.1.0 ) and **156 _minor_ releases** (e.g. 4.9.1), for a **total of 234 releases**.
+**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **78 _major_ releases** (e.g. 1.1.0 ) and **157 _minor_ releases** (e.g. 4.9.1), for a **total of 235 releases**.
 
 Each **_major release_** usually corresponds with the addition of one new module/feature. Each module/feature usually is the equivalent of one (or more) single-purpose plugin. Each **_minor release_** usually contain one or more bugfix or improvements to existing modules/features.
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). Lifetime Deal (LTD) available.
 
-### 7.8.17 (2025.06.16) - ASE Free and Pro
+### 7.8.18 (2025.06.30) - ASE Free and Pro
 
-* **[IMPROVED in Free and Pro] Log In/Out & Register >> Change Login URL**: make login failure process compatible with Bedrock installation where WP core is installed in a sub-directory (/wp/). Props to [@shadyshane](https://wordpress.org/support/users/shadyshane/) for [prompting](https://wordpress.org/support/topic/wp-bedrock-support-for-custom-login-url/) this improvement.
+* **[IMPROVED in Free and Pro] Custom Code >> Insert &lt;head&gt;, &lt;body&gt; and &lt;footer&gt; Code**: add an option to disable removal of backslashes from frontend code output. This would be useful if your code contains, for example, some sort of regex pattern. Props to [@rjwilt](https://wordpress.org/support/users/rjwilt/) for [prompting](https://wordpress.org/support/topic/custom-code-backslash-in-javascript-code-removed/) this improvement.
 
-* **[FIXED in Pro] Utilities >> Form Builder**:
-  * Fixed an issue where if checkbox and radio fields are marked as required in sites still on PHP 7.4, the form will fail submitting even if the checkbox and/or radio fields have been checked / selected. Props to Pierro B. and Leon S. for reporting the issue in detail, and especially for Leon who discovered that it only happened on sites still on PHP 7.4.
-  * Fixed an issue where if choice and matrix fields labels contain an apostrophe, e.g. I'm satisfied with the customer service, the submission data gets malformed.
+* **[IMPROVED in Pro] Custom Code >> Code Snippets Manager**: when a PHP fatal error occur, the module will now catch more type of errors and properly record it in the PHP snippet edit screen. Props to Jim R. for reporting a related issue in great detail and facilitating the troubleshooting process.
+
+* **[IMPROVED in Pro] Content Management >> Content Order**: the 'Order' button on posts lists table will now be visible for editors as well. Props to Markus R. for prompting this improvement.
+
+* **[IMPROVED in Pro] Optimizations >> Image Upload Control**: add an option to disable conversion to JPG / WebP, but still allow to resize image dimension and disable generation of intermediary sizes. Props to Himanshu A. for prompting this improvement.
+
+* **[FIXED in Pro] Admin Interface >> Admin Columns Manager**: 
+  * **Fixed the rendering of date, time and datetime fields when the admin is in a non-English language**. This sometimes resulted in a date or time column returning empty values. Props to Killian H. for reporting the issue and facilitating the troubleshooting process.
+  * **Fixed a JS error** that occurs when a custom field column's title is a number. This prevented the admin columns manager screen from being usable / functional, e.g. when managing the Courses post type (WPLMS) admin columns screen. Props to Stefanie N. for reporting this issue and facilitating the troubleshooting process.
+
+* **[FIXED in Pro] Content Management >> Custom Content Types >> Custom Field Groups**: link button in the WYSIWYG field inside a CFG placed on taxonomy terms will now work properly.
 
 * **[TRANSLATION in Free and Pro]** ASE is now being translated into [33 languages](https://translate.wpase.com/):
   * **Added new/improved translation** for:
-    * ASE Free: updated Vietnamese, Portuguese (Brazil), Polish, Norwegian, Japanese, Indonesian, Dutch.
-    * ASE Pro: updated Hungarian, Vietnamese.
+    * ASE Free: ASE Free: update Portuguese (Brazil), Polish, Norwegian, Japanese, Indonesian, French, Arabic
+    * ASE Pro: update Spanish (Spain), Hungarian
   * **More strings have been internationalized**. @Translators, please visit the respective project pages for the Free and Pro versions to translate the new strings, if you havent' done so already.
   * **Interested to help translate or improve the translation?** Please go to [https://translate.wpase.com](https://translate.wpase.com) for more info.
   * **[Chinese (China)](https://translate.wordpress.org/locale/zh-cn/default/wp-plugins/admin-site-enhancements/)**: ASE Free and Pro (completed). Props to [@bricksvip](https://profiles.wordpress.org/bricksvip/) et al. Current status: [51 strings untranslated](https://translate.wordpress.org/projects/wp-plugins/admin-site-enhancements/stable/zh-cn/default/?filters%5Bstatus%5D=untranslated).
@@ -236,7 +244,7 @@ Each **_major release_** usually corresponds with the addition of one new module
   * **[Urdu](https://translate.wordpress.org/locale/ur/default/wp-plugins/admin-site-enhancements/)**: ASE Free (completed) | ASE Pro (partial). Props to [Ayyaz A.](https://profiles.wordpress.org/ayyazahmad/) et al. Current status: [82 strings untranslated](https://translate.wordpress.org/projects/wp-plugins/admin-site-enhancements/stable/ur/default/?filters%5Bstatus%5D=untranslated).
   * **[Swedish](https://translate.wordpress.org/locale/sv/default/wp-plugins/admin-site-enhancements/)**: ASE Free (completed) | ASE Pro (partial). Props to [Robert M.](https://profiles.wordpress.org/robertmichalski/) and [Tor-Bjorn F.](https://profiles.wordpress.org/tobifjellner/). Current status: [21 strings untranslated](https://translate.wordpress.org/projects/wp-plugins/admin-site-enhancements/stable/sv/default/?filters%5Bstatus%5D=untranslated).
   * **[Danish](https://translate.wordpress.org/locale/da/default/wp-plugins/admin-site-enhancements/)**: ASE Free (completed) | ASE Pro (partial). Props to [Morten E.L.](https://profiles.wordpress.org/ellegaarddk/), [Helgi P.](https://profiles.wordpress.org/helgipetersen/) and [Kurt M.A.](https://profiles.wordpress.org/moskjaer/) et al. Current status: [1 strings untranslated](https://translate.wordpress.org/projects/wp-plugins/admin-site-enhancements/stable/da/default/?filters%5Bstatus%5D=untranslated).
-  * **[Arabic](https://translate.wordpress.org/locale/ar/default/wp-plugins/admin-site-enhancements/)**: ASE Free (completed) | ASE Pro (completed). Props to [Mohammed J.](https://profiles.wordpress.org/ih4xz/), Yaser M., et al. Current status: [3 strings untranslated](https://translate.wordpress.org/projects/wp-plugins/admin-site-enhancements/stable/ar/default/?filters%5Bstatus%5D=untranslated).
+  * **[Arabic](https://translate.wordpress.org/locale/ar/default/wp-plugins/admin-site-enhancements/)**: ASE Free (completed) | ASE Pro (completed). Props to [Mohammed J.](https://profiles.wordpress.org/ih4xz/), Yaser M., et al. Current status: [0 strings untranslated](https://translate.wordpress.org/projects/wp-plugins/admin-site-enhancements/stable/ar/default/?filters%5Bstatus%5D=untranslated).
   * **[Romanian](https://translate.wordpress.org/locale/ro/default/wp-plugins/admin-site-enhancements/)**: ASE Free (completed) | ASE Pro (partial). Props to [Dan C.](https://profiles.wordpress.org/dancaragea/), [@ravishi](https://profiles.wordpress.org/ravishi/) and [@catalinx777](https://profiles.wordpress.org/catalinx777/). Current status: [18 strings untranslated](https://translate.wordpress.org/projects/wp-plugins/admin-site-enhancements/stable/ro/default/?filters%5Bstatus%5D=untranslated).
   * **[Turkish](https://translate.wordpress.org/locale/tr/default/wp-plugins/admin-site-enhancements/)**: ASE Free (completed). Props to [@saeead](https://wordpress.org/support/users/saeead/), [@serdaroztrk](https://profiles.wordpress.org/serdaroztrk/) et al. Current status: [3 strings untranslated](https://translate.wordpress.org/projects/wp-plugins/admin-site-enhancements/stable/tr/default/?filters%5Bstatus%5D=untranslated).
   * **[Chinese (Taiwan)](https://translate.wordpress.org/locale/zh-tw/default/wp-plugins/admin-site-enhancements/)**: ASE Free (completed). Props to [@gordon168](https://profiles.wordpress.org/gordon168/) and [Hedula](https://profiles.wordpress.org/hedula/). Current status: [3 strings untranslated](https://translate.wordpress.org/locale/zh-tw/default/wp-plugins/admin-site-enhancements/)
@@ -247,7 +255,7 @@ Each **_major release_** usually corresponds with the addition of one new module
   * **[Russian](https://translate.wordpress.org/locale/ru/default/wp-plugins/admin-site-enhancements/)**: ASE Free (completed). Props to [@sergey369](https://profiles.wordpress.org/sergey369/), [@pfgr](https://profiles.wordpress.org/pfgr/) et al. Current status: [38 strings untranslated](https://translate.wordpress.org/projects/wp-plugins/admin-site-enhancements/stable/ru/default/?filters%5Bstatus%5D=untranslated).
   * **[Bosnian](https://translate.wordpress.org/locale/bs/default/wp-plugins/admin-site-enhancements/)**: ASE Free (completed). Props to [@plug-n-play](https://profiles.wordpress.org/plug-n-play/) et al. Current status: [20 strings untranslated](https://translate.wordpress.org/projects/wp-plugins/admin-site-enhancements/stable/bs/default/?filters%5Bstatus%5D=untranslated).
   * **[Croatian](https://translate.wordpress.org/locale/hr/default/wp-plugins/admin-site-enhancements/)**: ASE Free (completed). Props to [@plug-n-play](https://profiles.wordpress.org/plug-n-play/). Current status: [23 strings untranslated](https://translate.wordpress.org/projects/wp-plugins/admin-site-enhancements/stable/hr/default/?filters%5Bstatus%5D=untranslated).
-  * **[Japanese](https://translate.wordpress.org/locale/ja/default/wp-plugins/admin-site-enhancements/)**: ASE Free (completed). Props to [@zionote](https://profiles.wordpress.org/zionote/) et al. Current status: [4 strings untranslated](https://translate.wordpress.org/projects/wp-plugins/admin-site-enhancements/stable/ja/default/?filters%5Bstatus%5D=untranslated).
+  * **[Japanese](https://translate.wordpress.org/locale/ja/default/wp-plugins/admin-site-enhancements/)**: ASE Free (completed). Props to [@zionote](https://profiles.wordpress.org/zionote/) et al. Current status: [0 strings untranslated](https://translate.wordpress.org/projects/wp-plugins/admin-site-enhancements/stable/ja/default/?filters%5Bstatus%5D=untranslated).
   * **[Catalan](https://translate.wordpress.org/locale/ca/default/wp-plugins/admin-site-enhancements/)**: ASE Free and Pro (completed). Props to [@agendablanca](https://profiles.wordpress.org/agendablanca/), [@lluishospital](https://profiles.wordpress.org/lluishospital/) et al. Current status: [0 strings untranslated](https://translate.wordpress.org/projects/wp-plugins/admin-site-enhancements/stable/ca/default/?filters%5Bstatus%5D=untranslated).
   
 [**See the full changelog >>**](https://www.wpase.com/documentation/changelog/)

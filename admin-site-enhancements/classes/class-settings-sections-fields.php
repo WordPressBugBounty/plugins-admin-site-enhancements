@@ -1653,6 +1653,22 @@ class Settings_Sections_Fields {
                 'class'                  => 'asenha-toggle custom-code ' . $field_slug,
             )
         );
+        $field_id = 'disable_code_unslash';
+        $field_slug = 'disable-code-unslash';
+        add_settings_field(
+            $field_id,
+            '',
+            [$render_field, 'render_checkbox_plain'],
+            ASENHA_SLUG,
+            'main-section',
+            array(
+                'option_name' => ASENHA_SLUG_U,
+                'field_id'    => $field_id,
+                'field_name'  => ASENHA_SLUG_U . '[' . $field_id . ']',
+                'field_label' => __( 'Do not remove backslashes from the code output on the frontend', 'admin-site-enhancements' ),
+                'class'       => 'asenha-checkbox asenha-hide-th asenha-th-border-bottom custom-code ' . $field_slug,
+            )
+        );
         $field_id = 'head_code_priority';
         $field_slug = 'head-code-priority';
         add_settings_field(

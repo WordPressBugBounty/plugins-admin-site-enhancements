@@ -459,6 +459,10 @@ class Settings_Sanitization {
             $options['insert_head_body_footer_code'] = false;
         }
         $options['insert_head_body_footer_code'] = ( 'on' == $options['insert_head_body_footer_code'] ? true : false );
+        if ( !isset( $options['disable_code_unslash'] ) ) {
+            $options['disable_code_unslash'] = false;
+        }
+        $options['disable_code_unslash'] = ( 'on' == $options['disable_code_unslash'] ? true : false );
         if ( !isset( $options['head_code_priority'] ) ) {
             $options['head_code_priority'] = 10;
         }

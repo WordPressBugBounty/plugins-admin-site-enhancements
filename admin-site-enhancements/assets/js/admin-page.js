@@ -332,6 +332,7 @@
       
       $('.custom-frontend-css').appendTo('.fields-custom-code .enable-custom-frontend-css .asenha-subfields');
       $('.insert-head-body-footer-code').appendTo('.fields-custom-code > table > tbody');
+      $('.disable-code-unslash').appendTo('.fields-custom-code .insert-head-body-footer-code .asenha-subfields');
       $('.head-code-priority').appendTo('.fields-custom-code .insert-head-body-footer-code .asenha-subfields');
       $('.head-code').appendTo('.fields-custom-code .insert-head-body-footer-code .asenha-subfields');
       $('.body-code-priority').appendTo('.fields-custom-code .insert-head-body-footer-code .asenha-subfields');
