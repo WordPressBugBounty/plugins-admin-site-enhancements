@@ -1,10 +1,23 @@
 ## Changelog
 
-**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **78 _major_ releases** (e.g. 1.1.0 ) and **157 _minor_ releases** (e.g. 4.9.1), for a **total of 235 releases**.
+**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **79 _major_ releases** (e.g. 1.1.0 ) and **157 _minor_ releases** (e.g. 4.9.1), for a **total of 236 releases**.
 
 Each **_major release_** usually corresponds with the addition of one new module/feature. Each module/feature usually is the equivalent of one (or more) single-purpose plugin. Each **_minor release_** usually contain one or more bugfix or improvements to existing modules/features.
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). Lifetime Deal (LTD) available.
+
+### 7.9.0 (2025.07.07) - ASE Free and Pro
+
+* **[ADDED in Free and Pro] Disable Components >> Disable Author Archvies**: Return 404 (Not Found) error when trying to load author archives. Remove or disable links to author archives. Remove author archives from the sitemap.
+
+* **[IMPROVED in Pro] Content Management >> Media Categories**: add an option to set the width of the categories panel, or to hide it. Props to Darren L. and Satoshi F. for prompting this improvement.
+
+* **[FIXED in Pro] Content Management >> Custom Content Types >> Custom Field Groups**: fixed an issue with ASE Repeater only showing the first 10 rows of data in Elementor Loop Grid. Props to Pierre A. for reporting the issue and facilitating the troubleshooting process.
+
+* **[TRANSLATION in Free and Pro]** ASE is now being translated into [33 languages](https://translate.wpase.com/):
+  * **Added new/improved translation** for:
+    * ASE Free: updated Vietnamese, Russian, Portuguese (Brazil), Polish, German, Danish, Catalan
+    * ASE Pro: updated Spanish.
 
 ### 7.8.18 (2025.06.30) - ASE Free and Pro
 
