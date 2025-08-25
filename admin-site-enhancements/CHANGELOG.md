@@ -1,10 +1,21 @@
 ## Changelog
 
-**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **79 _major_ releases** (e.g. 1.1.0 ) and **163 _minor_ releases** (e.g. 4.9.1), for a **total of 242 releases**.
+**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **79 _major_ releases** (e.g. 1.1.0 ) and **164 _minor_ releases** (e.g. 4.9.1), for a **total of 243 releases**.
 
 Each **_major release_** usually corresponds with the addition of one new module/feature. Each module/feature usually is the equivalent of one (or more) single-purpose plugin. Each **_minor release_** usually contain one or more bugfix or improvements to existing modules/features.
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). Lifetime Deal (LTD) available.
+
+### 7.9.7 (2025.08.25) - ASE Free and Pro
+
+* **[FIXED in Free and Pro] Admin Interface >> Admin Menu Organizer**: fixed PHP notice "\_load_textdomain_just_in_time was called incorrectly". Props to Matteo for reporting the issue.
+
+* **[FIXED in Pro] Content Management >> Custom Content Types**: fixed PHP warning and error that occurs in a certain scenario when viewing the Custom Post Types listing page. Props to Kol N. for reporting the issue and facilitating the troubleshooting process.
+
+* **[TRANSLATION in Free and Pro]** ASE is now being translated into [34 languages](https://translate.wpase.com/):
+  * **Added new/improved translation** for:
+    * ASE Free: Updated Vietnamese, Slovak, Portuguese (Brazil), Polish, Norwegian, Dutch, Danish.
+    * ASE Pro: Updated Hungarian.
 
 ### 7.9.6 (2025.08.18) - ASE Free and Pro
 
