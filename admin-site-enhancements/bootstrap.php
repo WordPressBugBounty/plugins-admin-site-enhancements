@@ -187,6 +187,12 @@ class Admin_Site_Enhancements {
             );
             add_filter( 'wp_handle_sideload_prefilter', [$svg_upload, 'sanitize_and_maybe_allow_svg_upload'] );
             add_filter( 'wp_handle_upload_prefilter', [$svg_upload, 'sanitize_and_maybe_allow_svg_upload'] );
+            add_filter(
+                'xmlrpc_prepare_media_item',
+                [$svg_upload, 'sanitize_xmlrpc_svg_upload'],
+                10,
+                2
+            );
             add_action(
                 'rest_insert_attachment',
                 [$svg_upload, 'sanitize_after_upload'],

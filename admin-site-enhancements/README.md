@@ -5,7 +5,7 @@ Donate link: https://bowo.io/asenha-sp-rdm
 Tags: enhancements, tweaks, optimizations, tools  
 Requires at least: 4.6  
 Tested up to: 6.8.2  
-Stable tag: 7.9.7  
+Stable tag: 7.9.8  
 Requires PHP: 5.6  
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -197,22 +197,21 @@ ASE does not officially support multisite. Please use at your own risk. That sai
 
 ## Changelog
 
-**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **79 _major_ releases** (e.g. 1.1.0 ) and **164 _minor_ releases** (e.g. 4.9.1), for a **total of 243 releases**.
+**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **79 _major_ releases** (e.g. 1.1.0 ) and **165 _minor_ releases** (e.g. 4.9.1), for a **total of 244 releases**.
 
 Each **_major release_** usually corresponds with the addition of one new module/feature. Each module/feature usually is the equivalent of one (or more) single-purpose plugin. Each **_minor release_** usually contain one or more bugfix or improvements to existing modules/features.
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). Lifetime Deal (LTD) available.
 
-### 7.9.7 (2025.08.25) - ASE Free and Pro
+### 7.9.8 (2025.09.01) - ASE Free and Pro
 
-* **[FIXED in Free and Pro] Admin Interface >> Admin Menu Organizer**: fixed PHP notice "\_load_textdomain_just_in_time was called incorrectly". Props to Matteo for reporting the issue.
+* **[SECURITY FIX in Free and Pro] Content Management >> SVG Upload**: fix Stored XSS vulnerability when a user with media upload privilege uploads a malicioius SVG via xmlrpc.php. Props to Willow, a security researcher from WPScan and Jetpack for responsibly disclosing the vulnerability.
 
-* **[FIXED in Pro] Content Management >> Custom Content Types**: fixed PHP warning and error that occurs in a certain scenario when viewing the Custom Post Types listing page. Props to Kol N. for reporting the issue and facilitating the troubleshooting process.
+* **[IMPROVED in Free and Pro] Log In/Out and Register >> Change Login URL**: legitimate cURL requests to /wp-admin/admin-post.php is now allowed when Change Login URL is enabled. This is sometimes needed to utilize the admin_post_nopriv_action hook. Props to Maxime for prompting this improvement.
 
 * **[TRANSLATION in Free and Pro]** ASE is now being translated into [34 languages](https://translate.wpase.com/):
   * **Added new/improved translation** for:
-    * ASE Free: Updated Vietnamese, Slovak, Portuguese (Brazil), Polish, Norwegian, Dutch, Danish.
-    * ASE Pro: Updated Hungarian.
+    * ASE Free: Updated Portuguese (Brazil), Polish, Norwegian, German (Formal), French, Danish
   * **More strings have been internationalized**. @Translators, please visit the respective project pages for the Free and Pro versions to translate the new strings, if you havent' done so already.
   * **Interested to help translate or improve the translation?** Please go to [https://translate.wpase.com](https://translate.wpase.com) for more info.
   * **[Chinese (China)](https://translate.wordpress.org/locale/zh-cn/default/wp-plugins/admin-site-enhancements/)**: ASE Free and Pro (completed). Props to [@bricksvip](https://profiles.wordpress.org/bricksvip/) et al. Current status: [0 strings untranslated](https://translate.wordpress.org/projects/wp-plugins/admin-site-enhancements/stable/zh-cn/default/?filters%5Bstatus%5D=untranslated).
