@@ -5,7 +5,7 @@ Donate link: https://bowo.io/asenha-sp-rdm
 Tags: enhancements, tweaks, optimizations, tools  
 Requires at least: 4.6  
 Tested up to: 6.8.2  
-Stable tag: 7.9.9  
+Stable tag: 7.9.10  
 Requires PHP: 5.6  
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -197,21 +197,24 @@ ASE does not officially support multisite. Please use at your own risk. That sai
 
 ## Changelog
 
-**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **79 _major_ releases** (e.g. 1.1.0 ) and **166 _minor_ releases** (e.g. 4.9.1), for a **total of 245 releases**.
+**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **79 _major_ releases** (e.g. 1.1.0 ) and **167 _minor_ releases** (e.g. 4.9.1), for a **total of 246 releases**.
 
 Each **_major release_** usually corresponds with the addition of one new module/feature. Each module/feature usually is the equivalent of one (or more) single-purpose plugin. Each **_minor release_** usually contain one or more bugfix or improvements to existing modules/features.
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). Lifetime Deal (LTD) available.
 
-### 7.9.9 (2025.09.08) - ASE Free and Pro
+### 7.9.10 (2025.09.15) - ASE Free and Pro
 
-* **[FIXED in Free and Pro] Disable Components >> Disable Smaller Components >> Disable shortlink tag in head**: fixed priority for `remove_action()` for the `template_redirect` hook, so it is properly removed. Props to [@robertmichalski](https://wordpress.org/support/users/robertmichalski/) for [reporting the issue](https://wordpress.org/support/topic/removing-shortlink-header-fails/) and providing the fix.
+* **[FIXED in Free and Pro] Admin Interface >> Wider Admin Menu**: fixed the admin menu overlapping Formidable Form plugin's admin pages. Props to Stijn V. for reporting the issue.
 
-* **[FIXED in Pro] Admin Interface >> Show Custom Taxonomy Filters**: fixed an issue where frontend 404 page is not properly being displayed when additional filters for non-hierarchical taxonomies are set to be shown and the permalink structure is set to /%category%/%postname%/. Props to John C. for reporting the issue and facilitating the troubleshooting process.
+* **[IMPROVED in Pro] Utilities >> Form Builder**: matrix fields are now responsive (mobile-friendly). Props to Uli L. for prompting this improvement.
+
+* **[FIXED in Pro] Custom Code >> Code Snippets Manager**: fix an issue where the "is not / not any of" operator in an AND/OR conditional reverts back to "is / one of" upon saving. Props to Dexx W. for reporting the issue.
 
 * **[TRANSLATION in Free and Pro]** ASE is now being translated into [34 languages](https://translate.wpase.com/):
   * **Added new/improved translation** for:
-    * ASE Free: Updated Spanish (Spain), Portuguese (Brazil), Polish, Norwegian, Danish, Arabic
+    * ASE Free: updated Portuguese (Brazil), Polish, Norwegian, German, Danish.
+    * ASE Pro: updated German.
   * **More strings have been internationalized**. @Translators, please visit the respective project pages for the Free and Pro versions to translate the new strings, if you havent' done so already.
   * **Interested to help translate or improve the translation?** Please go to [https://translate.wpase.com](https://translate.wpase.com) for more info.
   * **[Chinese (China)](https://translate.wordpress.org/locale/zh-cn/default/wp-plugins/admin-site-enhancements/)**: ASE Free and Pro (completed). Props to [@bricksvip](https://profiles.wordpress.org/bricksvip/) et al. Current status: [0 strings untranslated](https://translate.wordpress.org/projects/wp-plugins/admin-site-enhancements/stable/zh-cn/default/?filters%5Bstatus%5D=untranslated).
