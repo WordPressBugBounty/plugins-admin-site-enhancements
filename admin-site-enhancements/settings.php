@@ -6,13 +6,28 @@
  * @since 6.4.1
  */
 if ( false === get_option( ASENHA_SLUG_U ) ) {
-    add_option( ASENHA_SLUG_U, array(), true );
+    add_option(
+        ASENHA_SLUG_U,
+        array(),
+        '',
+        true
+    );
 }
 if ( false === get_option( ASENHA_SLUG_U . '_stats' ) ) {
-    add_option( ASENHA_SLUG_U . '_stats', array(), false );
+    add_option(
+        ASENHA_SLUG_U . '_stats',
+        array(),
+        '',
+        false
+    );
 }
 if ( false === get_option( ASENHA_SLUG_U . '_extra' ) ) {
-    add_option( ASENHA_SLUG_U . '_extra', array(), true );
+    add_option(
+        ASENHA_SLUG_U . '_extra',
+        array(),
+        '',
+        true
+    );
 }
 // Bugfix in v7.1.2 for Custom Content Type module
 $options_extra = get_option( ASENHA_SLUG_U . '_extra', array() );
@@ -420,6 +435,7 @@ function asenha_add_settings_page() {
  * @since 7.8.11
  */
 function is_yearend_promo_period() {
+    // For year end promo between October 1 to December 31
     $current_month = intval( date( 'n', time() ) );
     // n is for numeric value of month, 1 to 12
     if ( $current_month >= 10 ) {
@@ -438,6 +454,34 @@ function is_yearend_promo_period() {
     } else {
         $is_yearend_promo_period = false;
     }
+    // For year end promo between November 15 to December 31
+    // $tz = wp_timezone(); // WordPress timezone; or: new DateTimeZone('UTC')
+    // $current_date = new DateTimeImmutable('now', $tz);
+    // // $current_date = new DateTimeImmutable('2025-11-15', $tz); // For testing
+    // // $current_date = new DateTimeImmutable('2026-01-01', $tz); // For testing
+    // // $current_date = new DateTimeImmutable('2027-11-15', $tz); // For testing
+    // $year  = (int) $current_date->format('Y');
+    // $start = new DateTimeImmutable("$year-11-15 00:00:00", $tz);
+    // $end   = new DateTimeImmutable("$year-12-31 23:59:59", $tz);
+    // $is_between = ($current_date >= $start && $current_date <= $end);
+    // if ( $is_between ) {
+    // 	$is_yearend_promo_period = true;
+    // } else {
+    // 	$is_yearend_promo_period = false;
+    // }
+    // // Clear out last year's promo nudge dismissal data
+    // if ( $is_yearend_promo_period ) {
+    // 	$current_year = $year;
+    // 	$asenha_stats = get_option( ASENHA_SLUG_U . '_stats', array() );
+    // 	if ( isset( $asenha_stats['promo_nudge_dismissed'] ) && $asenha_stats['promo_nudge_dismissed'] ) {
+    // 		$last_dismissed_year = date( 'Y', strtotime( $asenha_stats['promo_nudge_dismissed_date'] ) );
+    // 		if ( $current_year > $last_dismissed_year ) {
+    // 			$asenha_stats['promo_nudge_dismissed'] = false;
+    // 			$asenha_stats['promo_nudge_dismissed_date'] = '';
+    // 			update_option( ASENHA_SLUG_U . '_stats', $asenha_stats, false );
+    // 		}
+    // 	}
+    // }
     return $is_yearend_promo_period;
 }
 
@@ -637,18 +681,21 @@ function asenha_admin_scripts(  $hook_suffix  ) {
             ASENHA_VERSION,
             false
         );
-        wp_localize_script( 'asenha-admin-page', 'adminPageVars', array(
-            'nonce'                         => wp_create_nonce( 'asenha-' . get_current_user_id() ),
-            'siteUrl'                       => get_site_url(),
-            'wpcontentUrl'                  => content_url(),
-            'mediaFrameTitle'               => __( 'Select an Image', 'admin-site-enhancements' ),
-            'mediaFrameButtonText'          => __( 'Use Selected Image', 'admin-site-enhancements' ),
-            'resetMenuNonce'                => wp_create_nonce( 'reset-menu-nonce' ),
-            'sendTestEmailNonce'            => wp_create_nonce( 'send-test-email-nonce_' . get_current_user_id() ),
-            'formBuilderSendTestEmailNonce' => wp_create_nonce( 'formbuilder_ajax' ),
-            'expandText'                    => __( 'Expand', 'admin-site-enhancements' ),
-            'collapseText'                  => __( 'Collapse', 'admin-site-enhancements' ),
-            'dataTable'                     => array(
+        $jsvars = array(
+            'nonce'                          => wp_create_nonce( 'asenha-' . get_current_user_id() ),
+            'siteUrl'                        => get_site_url(),
+            'wpcontentUrl'                   => content_url(),
+            'mediaFrameTitle'                => __( 'Select an Image', 'admin-site-enhancements' ),
+            'mediaFrameButtonText'           => __( 'Use Selected Image', 'admin-site-enhancements' ),
+            'resetMenuNonce'                 => wp_create_nonce( 'reset-menu-nonce' ),
+            'sendTestEmailNonce'             => wp_create_nonce( 'send-test-email-nonce_' . get_current_user_id() ),
+            'formBuilderSendTestEmailNonce'  => wp_create_nonce( 'formbuilder_ajax' ),
+            'rescanExtraElementsWorkingText' => __( 'Rescanning…', 'admin-site-enhancements' ),
+            'rescanExtraElementsDoneText'    => __( 'Done. Reloading…', 'admin-site-enhancements' ),
+            'rescanExtraElementsFailedText'  => __( 'Rescan failed. Please try again.', 'admin-site-enhancements' ),
+            'expandText'                     => __( 'Expand', 'admin-site-enhancements' ),
+            'collapseText'                   => __( 'Collapse', 'admin-site-enhancements' ),
+            'dataTable'                      => array(
                 'emptyTable'   => __( 'No data available in table', 'admin-site-enhancements' ),
                 'info'         => __( 'Showing _START_ to _END_ of _TOTAL_ entries', 'admin-site-enhancements' ),
                 'infoEmpty'    => __( 'Showing 0 to 0 of 0 entries', 'admin-site-enhancements' ),
@@ -663,7 +710,8 @@ function asenha_admin_scripts(  $hook_suffix  ) {
                     'previous' => __( 'Previous', 'admin-site-enhancements' ),
                 ),
             ),
-        ) );
+        );
+        wp_localize_script( 'asenha-admin-page', 'adminPageVars', $jsvars );
     }
     // Enqueue on all wp-admin
     wp_enqueue_style(
@@ -969,6 +1017,11 @@ function asenha_admin_menu_organizer_css() {
 	.toplevel_page_wpide #adminmenuwrap {
 		height: calc(100vh - var(--wpide-admin-bar-height)) !important;
 	} /* Fix for when in WPIDE plugin's menu / admin page */
+
+	/* Hide "Show Less" toggle by default to avoid initial flash before JS runs. */
+	#toplevel_page_asenha_hide_hidden_menu {
+		display: none;
+	}
 
 	.current.menu-top.hidden,
 	.wp-has-current-submenu.hidden {

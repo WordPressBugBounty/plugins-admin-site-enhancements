@@ -1,10 +1,368 @@
 ## Changelog
 
-**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **80 _major_ releases** (e.g. 1.1.0 ) and **168 _minor_ releases** (e.g. 4.9.1), for a **total of 248 releases**.
+**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **83 _major_ releases** (e.g. 1.1.0 ) and **184 _minor_ releases** (e.g. 4.9.1), for a **total of 267 releases**.
 
 Each **_major release_** usually corresponds with the addition of one new module/feature. Each module/feature usually is the equivalent of one (or more) single-purpose plugin. Each **_minor release_** usually contain one or more bugfix or improvements to existing modules/features.
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). Lifetime Deal (LTD) available.
+
+### 8.3.1 (2025.02.02) - ASE Free and Pro
+
+* **[IMPROVED in Free and Pro] Admin Interface >> Hide Admin Notices**: notice/ad from BdThemes Element Pack Pro plugin is now properly moved to the notices panel. Props to Alexander P. for reporting the issue.
+
+* **[IMPROVED in Pro] Content Management >>  External Permalinks**: add an option to enable the module "only on", "except on" or "on all" post types. Props to Martin S. for prompting this improvement.
+
+* **[IMPROVED in Pro] Content Management >> Media Categories**: add an option to disable the media categories features for some or all non-administrator user roles with access to the media library, i.e. user roles with `upload_files` capability.
+
+* **[IMPROVED in Pro] Admin Interface >> Admin Logo**: add an option to replace the home icon in the admin bar with the site logo set in "Settings >> General". Props to Martin S. for prompting this improvement.
+
+* **[IMPROVED in Pro] Content Management >> Custom Content Types >> Custom Field Gropus**: 
+  - add a top sticky bar with title and publish / update button when the custom field group creation / edit screen is scrolled down.
+  - in the custom field groups listing page, for the Placement colum, labels are now added before the raw values, e.g. 'post' becomes "Post (post)".
+  
+* **[IMPROVED in Pro] Optimizations >> Image Upload Control**: when "Only apply resize and conversion to media library and block editor uploads" is checked/enabled, only uploads done directly in the media library or within the context of creating or editing pages and posts will go through conversion (to JPG or WebP). This provides better isolation, so that plugins that incorporates the block editor in creating something, e.g. MailPoet creating newsletter in wp-admin (not frontend form), will no longer have image uploads automatically converting to JPG / WebP, where conversion to WebP may result in blank image in some email clients. Props to Lee B. for prompting this improvement.
+
+* **[FIXED and IMPROVED in Pro] Admin Interface >> Clean Up Admin Bar**: 
+  * fixed an issue where admin bar menu item from the Paymattic plugin is not being properly detected and listed for removal. Props to Maik E. for reporting the issue
+  * add a button to clear and rescan the list of extra admin bar elements that may have piled up over time and no longer reflects the current state of the admin bar.
+
+* **[FIXED in Pro] Custom Code >> Code Snippets Manager**: fix category filter not working in the snippets listing page. Props to Mirko S. for reporting the issue.
+
+* **[TRANSLATION in Free and Pro]** ASE is now being translated into [38 languages](https://translate.wpase.com/):
+  * **Added new/improved translation** for:
+    * ASE Free - Updated Spanish (Spain), Portuguese (Brazil), Polish, French, Dutch,.
+    * ASE Pro - Updated Polish.
+
+### 8.3.0 (2025.01.26) - ASE Free and Pro
+
+* **[ADDED in Free and Pro] Content Management >> Media Files Visibility Control**: in ASE Free, this module will limit media library in a way that only administrators can see all media files. Non-administrator users will only see media files they uploaded themselves in the media library and in the modal window to add/insert media. ASE Pro adds an option to specify which non-administrator user roles will be limited to only seeing media files they uploaded themselves. 
+
+* **[IMPROVED in Pro] Content Management >> Custom Content Types >> Custom Field Groups**:
+  * In the Placement tab, post types now shows the label as well. e.g. 'post' now becomes 'Posts (post)'.
+  * In the Placement tab, user roles now shows the label as well. e.g. 'administrator' now becomes 'Administrator (administrator)'.
+  * Fixed PHP warnings related to custom field group creation / update process.
+
+* **[IMPROVED in Pro] Utilities >> File Manager**:
+  * Add the option to set FM_READ_ONLY constant to true in wp-config.php if you want to activate read-only mode, i.e. only Open and Download actions are available.
+  * Add a note in the module to quickly explain about enabling the read-only mode by setting FM_READ_ONLY, DISALLOW_FILE_MODS or DISALLOW_FILE_EDIT to true in wp-config.php.
+
+* **[IMPROVED in Pro] Custom Code >> Code Snippets Manager**: 
+  * add an "Export / Import Snippets" button in the snippets listing page and an "Export / Import Snippets" submenu item inside the "Code Snippets" admim menu. Both link to the snippets export / import section in the main ASE settings page, at the bottom. Props to Henry R. for prompting this improvement.
+  * for CSS snippets, there's a new option to load the snippet within the block editor. It's located under the "Frontend >> Type of page" conditional. Props to Emmanuel A. for prompting this improvement.
+  * add a note in the module about manually activating safe mode to regain access to wp-admin when a PHP snippet triggers a pervasive fatal error.
+
+* **[IMPROVED in Pro] Admin Interface >> Admin Columns Manager**: 
+  * When all active columns are set to auto width, horizontal scrolling will automatically be disabled in the list table of posts. This ensures that the righ-border-line for the first column will not be displayed in such a scenario.
+  * Add an option to make the column header row sticky (on top) on scroll.
+  * Add an option to set the number of (first) columns to freeze when horizontal scrolling is enabled.
+
+* **[TRANSLATION in Free and Pro]** ASE is now being translated into [38 languages](https://translate.wpase.com/):
+  * **Added new/improved translation** for:
+    * ASE Free - Updated Vietnamese, Russian, Portuguese (Brazil), Polish, Norwegian, Dutch (Belgian), Dutch, Bengali (Bangladesh)
+    * ASE Pro - Indonesian, Vietnamese, Polish, Norwegian, Portuguese (Brazil).
+
+### 8.2.3 (2025.01.19) - ASE Free and Pro
+
+* **[IMPROVED in Free and Pro] Admin Interface >> Admin Menu Organizer**: added an option to make the "Collapse Menu" toggler sticky at the bottom of the admin menu. Props to [@outdoorsdev1](https://wordpress.org/support/users/outdoorsdev1/) for [suggesting this](https://wordpress.org/support/topic/request-make-expand-collapse-menu-item-in-wordpress-admin-navigation-sticky/) and sharing the code snippets this improvement is based upon.
+
+* **[IMPROVED in Pro] Utilities >> File Manager**:
+  * When DISALLOW_FILE_EDIT is set to true, only 'Open' (read-only) and 'Download' actions are available within the plugins and themes folder. When DISALLOW_FILE_MODS is set to true, only 'Open' (read-only) and 'Download' actions are available across all folders and files. Props to Rob M. for prompting this improvement.
+  * 'Open' is now properly hidden in the right-click context menu for non-text files.
+  * Main folders and files list has been made more compact and styling polished to make it more useful (more items in view) and more comfortable (less busy look).
+  * Fix alphabetical sort of sub-folders on clicking a parent folder in the folder tree navigation.
+  * Right click to paste into a folder now works properly.
+
+* **[IMPROVED in Pro] Disable Components >> Disable Comments**: when comments are disabled for all post types, the admin bar counter/link and the admin menu item for comments will automatically be removed as well. Props to Kenneth S. and other users for propmpting this imprvement.
+
+* **[IMPROVED in Pro] Content Management >> Content Order**: add an option to show featured image thumbnails in the Order page. Props to Hans R. for suggesting this improvement.
+
+* **[IMPROVED in Pro] Content Management >> Custom Content Types >> Custom Field Group**: 
+  * added an option to show sequence number for repeater field row label. This is useful for when you have a lot of rows in your repeater field and would like to keep track of the sequence / position of each row. Props to Igor K. for prompting this improvement.
+  * fixed PHP fatal error that occurs in a certain scenario. Props to Stefan for reporting the issue with the debug/error log entry.
+
+* **[IMPROVED in Pro] Admin Interface >> Admin Columns Manager**: 
+  * Add a new 'Template' column within the 'Default' category for the Pages (page) post type. This will show the template in use by a page, whether in the context of a block theme, or a classic theme. Props to Hans R. for prompting this improvement.
+  * Make the first column sticky when horizontal scrolling is enabled.
+  * If a plugin registers a sortable column, it is now recognized as a column that can be used as the default sort.
+
+* **[TRANSLATION in Free and Pro]** ASE is now being translated into [38 languages](https://translate.wpase.com/):
+  * **Added new/improved translation** for:
+    * ASE Free - Updated Portuguese (Brazil), Polish, Persian, Danish.
+    * ASE Pro - Updated Portuguese (Brazil).
+
+### 8.2.2 (2025.01.12) - ASE Free and Pro
+
+* **[IMPROVED in Pro] Utilities >> File Manager**:
+  * 'Download' a file previous would open the file URL in a new browser tab for several file types. It will now properly initiate a download.
+  * When a file is selected via it's checkbox, 'Open' and 'Download' buttons will now be shown.
+  * Sync the order of actions between the toolbar buttons and right-click context menu.
+
+* **[IMPROVED in Pro] Custom Code >> Code Snippets Manager**: when creating a PHP snippet, 'Hook' is now selected by default for "Where to execute / insert".
+
+* **[IMPROVED in Pro] Optimization >> Image Upload Control**: add an option to limit resize and conversion only to media library and block editor uploads. This may be useful for a scenario where a frontend form has an upload field that was resizing and converting image files being uploaded, and that behaviour is not desired. Props to Stijn V. for prompting this improvement.
+
+* **[FIXED and IMPROVED in Pro] Content Management >> Media Categories**: 
+  * Fixed layout shift issue in the list view of the media library caused by the categories tree being loaded into view a bit late.
+  * After drag-and-drop operation to a category, the page no longer reloads and the counter for the category will be updated live.
+  * Category tree state preservation across page reloads is now more robust, making use of browser localStorage.
+  * Uploading multiple files to a specific category or sub-category now properly shows a placeholder with progress bar for each file.
+  * Categorizing via bulk select and drag-and-dropping selection to a category is now more stable, preserving the media grid in view (with infinite scrolling enabled) and keeping the bulk select mode active. This makes it easier to perform sequential categorization operations. Props to Ramyt I. for prompting this improvement.
+
+* **[FIXED in Pro] Utilities >> Local User Avatar**: fixed a typo in javascript code causing issue with updating another, non-admin user's avatar. Props to RJ Ramey for reporting the issue.
+
+* **[TRANSLATION in Free and Pro]** ASE is now being translated into [38 languages](https://translate.wpase.com/):
+  * **Added new/improved translation** for:
+    * ASE Free - Added Azerbaijani, props to [Saeid BGrn](https://profiles.wordpress.org/saeead/), and Dutch (Belgium), props to [Pieterjan D.](https://profiles.wordpress.org/nekojonez/). Updated Spanish (Spain), Portuguese (Brazil), Polish, Persian, Norwegian, Indonesian, German (Formal), Dutch, Arabic.
+    * ASE Pro - Updated Indonesian.
+
+### 8.2.1 (2025.01.06) - ASE Free and Pro
+
+* **[IMPROVED in Pro] Admin Interface >> Admin Logo**: admin logo is now loaded in a way that prevents layout shift in the admin menu panel.
+
+* **[IMPROVED in Pro] Custom Content Types, Code Snippets Manager, Form Builder**: top level admin menu icons added by these modules are now rendered with the correct admin color scheme's color on page load, no longer briefly rendered with black color.
+
+* **[IMPROVED in Free and Pro] Admin Interface >> Admin Menu Organizer**: when at least one menu item is hidden until toggled, the "Show Less" menu item is no longer briefly shown on admin page load.
+
+* **[IMPROVED in Free and Pro] Optimization >> Image Upload Control**: prevent an image (JPG, PNG or WebP) with dimension smaller than max width / max height set in the module, from being re-saved, and thus, prevent it from being re-compressed upon upload. Props to Monika W. for prompting this improvement.
+
+* **[FIXED in Pro] Content Management >> Content Order**: fixed a fatal error that occurs in a certain scenario. Props to John S. for reporting the issue in detail, copying the exact error message, which helped with troubleshooting.
+
+### 8.2.0 (2025.01.05) - ASE Free and Pro
+
+* **[ADDED in Pro] Utilities >> File Manager**: A comprehensive file manager for WordPress with folder tree navigation, file and folder operations, and code editing capabilities.
+
+* **[FIXED in Free and Pro] Admin Interface >> Enhance List Tables**: fix an issue where the Title column is no longer sortable when the Last Modified column is shown. Props to [@pierre1wp](https://wordpress.org/support/users/pierre1wp/) for spotting and [reporting](https://wordpress.org/support/topic/ase-disabled-the-ability-to-sort-posts-by-title/) this.
+
+* **[IMPROVED in Pro] Content Management >> Custom Content Types >> Custom Field Groups**: added an option to use wpLink modal (that allows for manual URL insertion, or search from existing posts) to render the hyperlink field input UI. Props to Mohammed Z. for prompting this improvement.
+
+* **[FIXED in Pro] Admin Interface >> Admin Columns Manager**: 
+  * Fixed column for an ASE repeater field showing empty value for time and datetime sub-fields.
+  * Fixed PHP deprecation notice that occurs when trying to render repeater sub-fields with `null` value.
+  
+* **[FIXED in Pro] Admin Interface >> Admin Menu Organizer**: fixed a javascript error that occurs when viewing wp-admin in a language that uses multi-bytes characters, e.g. Japanese. The error prevents the option panel to always hide menu items by user roles to properly show up and function. Props to Taro O. for reporting the issue in detail and with relevant screenshots.
+
+* **[TRANSLATION in Free and Pro]** ASE is now being translated into [36 languages](https://translate.wpase.com/):
+  * **Added new/improved translation** for:
+    * ASE Free - Updated Spanish (Spain), Chinese (Taiwan), Greek.
+    * ASE Pro - Completed Greek. Special props for [Stelio C.](https://profiles.wordpress.org/scprojectsgr/)!
+
+### 8.1.4 (2025.12.29) - ASE Free and Pro
+
+* **[IMPROVED in Free and Pro]** Prevent FOUC (Flash of Unstyled Content) in the admin (side) menu when either the Custom Content Types, Admin Menu Organizer or Admin Logo modules is active. Props to Jake H. for prompting this improvement.
+
+* **[FIXED in Free and Pro] Admin Interface >> Wider Admin Menu**: fixed admin menu overlap with several of FluentCart's admin pages. Props to Richard B. for reporting the issue.
+
+* **[FIXED in Pro] Security >> Email Address Obfuscator**: prevent removal of strings in post content that looks like an email address but is not, e.g. some-@-image.jpg, important@document.pdf, etc.. Props to Joe S. for prompting this fix.
+
+* **[FIXED in Free and Pro] Utilities >> Multiple User Roles**: fix PHP warning when an admin is viewing another user's profile screen. Props to Bas B. for reporting the issue.
+
+* **[TRANSLATION in Free and Pro]** ASE is now being translated into [36 languages](https://translate.wpase.com/):
+  * **Added new/improved translation** for:
+    * ASE Free - Updated Persian, Romanian, Hungarian, Turkish, Portuguese (Brazil), Polish, Japanese
+    * ASE Pro - Added Persion (partial). Updated Catalan, Greek, Hungarian.
+
+### 8.1.3 (2025.12.22) - ASE Free and Pro
+
+* **[IMPROVED in Free and Pro] Disable Components >> Disable Gutenberg**: fixed an issue where 'global-styles-inline-css' internal CSS is still being output despite checking "Also disable frontend block styles / CSS files for the selected post types.". Props to Mike D. for reporting the issue, facilitating the troubleshooting process, providing analysis of why it occurs in certain scenarios (e.g. Bricks builder), and proposing the fix for it!
+
+* **[FIXED in Free and Pro] Content Management >> External Permalinks**: Fixed a PHP warning. Props to Tanja K. for reporting it with the debug log entry.
+
+* **[FIXED in Free and Pro] Log In/Out | Register >> Redirect After Login / Logout**: fixed an issue where if the target has query parameters, e.g. /account/?tab=profile, the redirect will append a slash at the end, e.g. /account/?tab=profile/, which might break the functionality dependent on the query parameter value. Props to [@robo1999](https://wordpress.org/support/users/robo1999/) for [reporting this](https://wordpress.org/support/topic/redirect-on-login-trailing-slash-problem/).
+
+* **[FIXED in Free and Pro] Admin Interface >> Enhance List Tables >> Last Modified Column**: make sure the date time is using the timezone set in "Settings >> General". Props to [Mikka](https://wordpress.org/support/users/miikkamakela/) for [suggesting](https://wordpress.org/support/topic/timezone-for-last-modified/) this improvement.
+
+* **[TRANSLATION in Free and Pro]** ASE is now being translated into [36 languages](https://translate.wpase.com/):
+  * **Added new/improved translation** for:
+    * ASE Free: updated Danish, Polish, Portuguese (Brazil)
+    * ASE Pro: updated Greek
+
+### 8.1.2 (2025.12.15) - ASE Free and Pro
+
+* **[IMPROVED in Free and Pro] Admin Interface >> Hide Admin Notices**: notices on Meta Box plugin's admin screens are now properly hidden in the notices panel.
+
+* **[IMPROVED in Pro] Custom Code >> Code Snippets Manager**:
+  * Public-facing snippet category archive pages have been disabled as they do not serve any purpose. Props to Martin S. for prompting this improvement.
+  * XML sitemap for the snippet category archive pages have been removed as they do not serve any purpose. Props to Robert F. for prompting this improvement.
+  * Added an option to disable the Code Snippets Editor custom user role. Props to David M. and Martin S. for prompting this improvement.
+  
+* **[IMPROVED in Pro] Security >> Email Address Obfuscator**: add a new 'mailto' option for the 'link' parameter, that will output the plain `mailto:obfuscated@email.address` string, which may be useful for scnearios where you need this added to a block editor or page builder widget/element/component that accepts a shortcode for the URL. Props to Ramyt I. for prompting this improvement.
+
+* **[TRANSLATION in Free and Pro]** ASE is now being translated into [36 languages](https://translate.wpase.com/):
+  * **Added new/improved translation** for:
+    * ASE Free: updated Swedish, Portuguese (Brazil), Polish, Dutch, Norwegian, Korean, Italian, German (Formal)
+    * ASE Pro: updated Chinese (China), Portuguese (Brazil), Norwegian, Hungarian, Greek
+
+### 8.1.1 (2025.12.08) - ASE Free and Pro
+
+* **[IMPROVED in Free and Pro] Utilities >> Password Protection**: added a note about caching being disabled when this module is enabled. Props to Ralf L. for prompting this improvement.
+
+* **[IMPROVED and FIXED in Pro] Content Management >> Custom Content Types >> Custom Field Groups**: 
+  * the relationship field is now supported in Elementor integration, in a similar way repeater field is already integrated. You can use the Loop Grid widget to select the relationship field as data source, and a Loot Item template to display dynamic data, including ASE custom fields, for each related post. Props to Ian B. for prompting this improvement.
+  * fixed an issue where taxonomy term custom fields are not displaying their values in Bricks builder Query Loop (for terms). Props to Michael S. for reporting the issue in great detail (also with a screen recording) and facilitating the troubleshooting process.
+
+* **[FIXED in Free and Pro] ASE Settings**: in a rare scenario, ASE settings page is not properly loaded because of a Javascript error. This fix adds a simple check to prevent the error from happening. Props to Connor B. for reporting this and facilitating the troubleshooting process.
+
+* **[FIXED in Free and Pro] Utilities >> Email Delivery**: fixed an issue with [changes in WP v6.9](https://make.wordpress.org/core/2025/11/18/more-reliable-email-in-wordpress-6-9/) to ensure the `Envelope-From`, `Return-Path` is properly set via `$phpmailer->Sender` and `$phpmailer->ReturnPath`. Props to Pavlov P. for reporting the issue and doing the research towards the fix, and @denisgomesfranco for [reporting the issue](https://wordpress.org/support/topic/wordpress-6-9-changed-things-on-wp_mail-and-mail-delivery-is-causing-errors/) separately.
+
+* **[FIXED in Pro] Utilities >> Redirect Manager**: fixed a bug where redirecting to an external URL, e.g. https://www.google.com, is not working. Props to Mathijs v.d.B. for reporting the issue in detail and helping to test the fix.
+
+* **[FIXED in Pro] Utilities >> Form Builder**: 
+  * fixed raw HTMl being shown in entry listing's "Preview" column, in entry view screen's field labels, and in "Form Settings >> Entries >> Content for the Preview Column" dropdown options.
+  * fixed "Screen Options >> Pagination" not working properly in the forms listing page.
+
+* **[TRANSLATION in Free and Pro]** ASE is now being translated into [36 languages](https://translate.wpase.com/):
+  * **Added new/improved translation** for:
+    * ASE Free: updated Spanish (Spain), Spanish (Chile), Portuguese (Brazil), Polish, Norwegian, Korean, Italian, Dutch, Chinese (China)
+    * ASE Pro: updated Greek, Chinese (China), Italian, Polish, Portuguese (Brazil)
+
+### 8.1.0 (2025.12.01) - ASE Free and Pro
+
+* **[ADDED in Pro] Utilities >> Redirect Manager**: Easily manage various types of redirects with support for wildcards and regular expressions (regex).
+
+* **[SECURITY FIX in Free and Pro] Content Management >> Media Replacement**: fix for broken access control vulnerability that allows an authenticated user with author role to delete arbitrary media files owned by any user, including administrators. Props to @daroo, a security researcher responsibly disclosing this via Pathstack.
+
+* **[IMPROVED in Free and Pro] Content Management >> Media Replacement**: non-image attachments that's recently been replaced will now have timestamps added in the URL for certain scenarios. Props to Simone S. for prompting this improvement.
+
+* **[IMPROVED in Pro] Utilities >> Form Builder**: HTML are now allowed in field labels and descriptions, as well as in radio / checkbox / image select fields labels/options and matrix fields row/column labels. This can be handy for example, when adding the link tag &lt;a&gt; to your privacy policy page in a checkbox label. Props to Peter D. and Oliver S. for prompting this improvement.
+
+* **[TRANSLATION in Free and Pro]** ASE is now being translated into [36 languages](https://translate.wpase.com/):
+  * **Added new/improved translation** for:
+    * ASE Free: updated Portuguese (Brazil), Polish, Norwegian, Korean, Dutch, Danish.
+    * ASE Pro: updated Greek, Danish, Polish.
+
+### 8.0.8 (2025.11.24) - ASE Free and Pro
+
+* **[FIXED in Free and Pro] Admin Interface >> Admin Menu Organizer**: fixed an issue where backslash were added before a single quote mark when it's present in a menu title. This occurs upon saving changes. Props to Stéphane N. for reporting the issue and facilitating the troubleshooting process.
+
+* **[FIXED in Pro] Utilities >> Email Delivery**: fixed missing slash (/) in email log's attachment link, between the site domain and the 'wp-content' string, e.g. https://wwww.domain.domwp-content/uploads/the-attachment-file.pdf. Props to Florian D. for reporting the issue with a clearly annotated screenshot.
+
+* **[IMPROVED in Pro] Utilities >> Form Builder**: 
+  * Improve compatibility with WordPress installation using SQLite, e.g. WordPress Studio local installation.
+  * "Screen Options" is now hidden when viewing a single form entry.
+  * Upgrade the "Form Builder" block from API v1 to v3. Props to Fahd M. for prompting this improvement.
+  * Change "Form Builder" block to use the same icon as the "Forms" admin menu.
+  
+* **[IMPROVED in Pro] Custom Code >> Code Snippets Manager**: add an option to select which snippets to export: all snippets / only active snippets / by snippets type / by categories / manual selection. Please go to the main ASE settings page and click "Export | Import" link in the bottom-right part of the page to see the changes. Props to Jim R. for prompting this improvement.
+
+* **[TRANSLATION in Free and Pro]** ASE is now being translated into [36 languages](https://translate.wpase.com/):
+  * **Added new/improved translation** for:
+    * ASE Free: ASE Free: updated Turkish, Spanish, Portuguese (Brazil), Polish, Norwegian, Indonesian, Dutch, Bengali (Bangladesh), Albanian.
+
+### 8.0.7 (2025.11.17) - ASE Free and Pro
+
+* **[IMPROVED in Free and Pro] Admin Interface >> Hide Admin Notices**: notice from the Shortpixel plugin is now properly hidden as well.
+
+* **[FIXED in Pro] Custom Code >> Code Snippets Manager**: fixed a fatal error that occurs in a certain scenario. Props to Jannick N. for reporting the issue complete with the error stack trace and facilitating the troubleshooting process.
+
+* **[FIXED in Pro] Content Management >> Custom Content Types >> Custom Field Groups**: fixed an issue where the 'Instructions' field is not shown immediately when adding a new field in a custom field group. Props to Niels S. for investigating and reporting the issue.
+
+* **[TRANSLATION in Free and Pro]** ASE is now being translated into [36 languages](https://translate.wpase.com/):
+  * **Added new/improved translation** for:
+    * ASE Free: updated Portuguese (Portugal), Portuguese (Brazil), Polish, Norwegian, French, Dutch.
+    * ASE Pro: update Greek, Hungarian.
+
+### 8.0.6 (2025.11.10) - ASE Free and Pro
+
+* **[IMPROVED in Free and Pro] Log In/Out & Register >> Change Login URL**: login attempts from Paid Membership Pro's login form will now, always be allowed, whether the form is embedded in a page, or in a pop-up / modal window. Props to Bent F. for prompting this improvement.
+
+* **[IMPROVED in Pro] Admin Interface >> Hide Admin Notices**: add the option to also hide the 'Notices' menu in the admin bar for non-administrators. This will effectively hide all notices for non-admins. Props to Theodore for prompting this improvement.
+
+* **[IMPROVED in Pro] Content Management >> Content Order**:
+  * The "Hide child posts" checkbox will now only show up on hierarchical post types order pages
+  * When "Hide child posts" is checked, the "Has child posts" status will be shown next to the title of parent posts
+
+* **[TRANSLATION in Free and Pro]** ASE is now being translated into [35 languages](https://translate.wpase.com/):
+  * **Added new/improved translation** for:
+    * ASE Free: Updated Turkish, Spanish, German (Formal), Portuguese (Brazil), Polish, Norwegian, Dutch.
+    * ASE Pro: Updated Portuguese (Brazil), Norwegian, Danish.
+
+### 8.0.5 (2025.11.03) - ASE Free and Pro
+
+* **[FIXED in Free and Pro] Content Management >> Media Replacement**: fixed a fatal error that occurs in a certain scenario. Props to [@zadine](https://wordpress.org/support/users/zadine/) for [reporting the issue](https://wordpress.org/support/topic/fatal-error-4934/) complete with the debug.log entry details, including the stack trace.
+
+* **[FIXED in Pro] Admin Interface >> Clean Up Admin Bar**: fixed an issue with Fluent Forms admin bar menu item not being hideable, i.e. not available as a choice to be hidden. Props to Frank K. for reporting the issue.
+
+* **[FIXED in Pro] Security >> CAPTCHA Protection**: fixed a PHP warning that occurs in a certain scenario. Props to @betaplus for reporting the issue with the error/debug log entry.
+
+* **[FIXED in Pro] Content Management >> Media Categories**: Fixed a fatal error that occurs in a certain scenario when the [gallery] shortcode is in use (by a user, or via another plugin). Also fixed a related PHP warning. Props to Rauf K. for reporting the issue and suggesting the code fix!
+
+* **[IMPROVED in Pro] Content Management >> Content Order**: Added the ability to reorder and change the parent of child posts. Props to Hui C., Kees, Ole, Marco M. and Ian H. for prompting this improvement.
+
+* **[TRANSLATION in Free and Pro]** ASE is now being translated into [35 languages](https://translate.wpase.com/):
+  * **Added new/improved translation** for:
+    * ASE Free: Updated Ukrainian, Portuguese (Brazil), Polish, Norwegian, Korean, Japanese, French, Dutch, Danish, Chinese (Taiwan), Arabic
+    * ASE Pro: Updated Danish, Hungarian, Portuguese (Brazil)
+
+### 8.0.4 (2025.10.27) - ASE Free and Pro
+
+* **[IMPROVED in Free and Pro] Utilities >> Multiple User Roles**: the 'Administrator' role checkbox will now be disabled to prevent accidentally removing this role and cause the user to lose the admin role without an easy way to restore it. Props to [Edward B.](https://wordpress.org/support/users/edviser/) for [prompting](https://wordpress.org/support/topic/how-to-regain-admin-access-when-misusing-multiple-userroles-feature/) this improvement.
+
+* **[FIXED in Free and Pro] Disable Components >> Disable REST API**: 
+  * ASE Free and Pro: fixed an issue where The Events Calendar ajax-based navigation of the frontend calendar broke, because it's REST API route is disabled. The route has been automatically excluded from being disabled, i.e. automatically whitelisted. Props to Michael D. for reporting the issue.
+  * ASE Pro: fixed an issue with how excluded routes are not being properly handled and excluded due to a flawed logic in the code. Props to Eric C. for reporting the issue and suggesting a code fix for it.
+  
+* **[IMPROVED in Pro] Utilities >> Form Builder**: added feature to export and import forms. This is done via the 'Settinsg' tab. Once exported, on the target site, create a blank form and go to the 'Settings' tab to import the form. Props to Marcellus J. Hoang H., netcit, Bo M. and John E. for suggesting this improvement.
+
+* **[TRANSLATION in Free and Pro]** ASE is now being translated into [35 languages](https://translate.wpase.com/):
+  * **Added new/improved translation** for:
+    * ASE Free: Updated Slovak, Portuguese (Brazil), Polish, Japanese, Dutch, Danish, Chinese (Taiwan), Arabic.
+    * ASE Pro: Updated Portuguese (Brazil), Hungarian. 
+
+### 8.0.3 (2025.10.20) - ASE Free and Pro
+
+* **[IMPROVED in Free and Pro] Utilities >> View Admin as Role**: add an additional note to create a backup admin user before using this module. This backup admin user is useful when for whatever reason and in very rare occasions, the primary admin user is not able to return / login as an admin.
+
+* **[FIXED in Pro] Disable Components >> Disable REST API**: fixed an issue where the /wp-json route is still publicly accessible. Props to Pavan K. for reporting the issue.
+
+* **[FIXED in Pro] Admin Interface >> Admin Columns Manager**: 
+  * fix the link for "Manage Columns" button in the "All Posts" listing page.
+  * fix PHP warning that occurs in a certain scenario
+
+* **[FIXED in Pro] Utilities >> Display System Summary**: additional fix for a fatal error that occurs in a certain scenario when trying to calculate the size of a folder/file in a must-use plugin. Props to someone from creatives.hu for reporting this related, follow up issue and facilitating the troubleshooting process.
+
+* **[TRANSLATION in Free and Pro]** ASE is now being translated into [35 languages](https://translate.wpase.com/):
+  * **Added new/improved translation** for:
+    * ASE Free: Updated Spanish (Spain), Spanish (Chile), Portuguese (Brazil), Polish, Norwegian, Dutch, Chinese (Taiwan)
+    * ASE Pro: Added Bulgarian (partial).
+
+### 8.0.2 (2025.10.13) - ASE Free and Pro
+
+* **[IMPROVED in Free and Pro] Disable Components >> Disable Comments**: only post types that has support for comments will be listed as options now. Props to [DJABHipHop](https://wordpress.org/support/users/pressthemes1/) for [prompting](https://wordpress.org/support/topic/suggestion-for-the-disable-comments-feature/) this improvement.
+
+* **[IMPROVED in Pro] Disable Components >> Disable REST API**: improved the logic to always enable certain endpoints, e.g. /wp-json/wc/store/v1/cart, especially for authenticated user roles which have not been explicitly been allowed access in the module settings. Special props to Eric C. for spotting this unobvious oversight, reporting it in detail and with clarity, and on top of that, providing the code fix.
+
+* **[FIXED in Pro] Utilities >> Display System Summary**: fixed a fatal error that occurs in a certain scenario when trying to calculate the size of a folder/file in a must-use plugin. Props to someone from creatives.hu for reporting the issue and facilitating the troubleshooting process.
+
+* **[FIXED in Pro] Admin Interface >> Admin Menu Organizer**: fixed an issue where the AMO settings page is not working properly when a certain custom menu item is manually added via a PHP code snippet. Props to Theodore for reporting the issue.
+
+* **[TRANSLATION in Free and Pro]** ASE is now being translated into [35 languages](https://translate.wpase.com/):
+  * **Added new/improved translation** for:
+    * ASE Free: Updated Portuguese (Brazil), Polish, Norwegian, Korean, Japanese, German, Danish.
+    * ASE Pro: Updated Danish, Norwegian, Hungarian, Portuguese (Brazil).
+
+### 8.0.1 (2025.10.06) - ASE Free and Pro
+
+* **[FIXED in Free and Pro] Content Management >> Content Duplication**: 
+  * fixed a fatal error that occurs in a specific scenario. Props to [@afrigols](https://wordpress.org/support/users/afrigols/) for [reporting](https://wordpress.org/support/topic/php-fatal-error-in-the-latest-plugin-update-v8-0-0/) the issue.
+  * improved fix of missing admin bar duplication link in the frontend view of posts.
+
+* **[IMPROVED and FIXED in Pro] Admin Interface >> Admin Menu Organizer**: 
+  * improved reset logic to also work when no settings has been saved.
+  * prevent several of [MainWP Dashboard](https://wordpress.org/plugins/mainwp/) and [Smash Balloon Social Post Feed](https://wordpress.org/plugins/custom-facebook-feed/) submenu items from showing up blank in the AMO settings page.
+  * fixed an edge case where hidden menu item toggle (Show All/Less) was not shown in a rare scenario for users with multiple roles.
+
+* **[FIXED in Pro] Security >> CAPTCHA Protection**: fixed a CSS issue with ALTCHA, where the checkbox label turned white and unreadable. Props to Shawn B. for reporting the issue.
+
+* **[FIXED in Pro] Content Management >> Custom Content Types >> Custom Field Groups**: 
+  * fixed a fatal error when `update_cf()` is invoked. Props to Pierre A. for reporting the issue.
+  * fixed PHP warning when rendering relationship field in a certain scenario in Bricks. Props to Tadea T. for reporting the issue with the relevant error/debug log entry.
+
+* **[FIXED in Pro] Utilities >> Form Builder**: fixed a typo in the UI (English). Props to Morten E.L. for catching and reporting it.
+
+* **[TRANSLATION in Free and Pro]** ASE is now being translated into [35 languages](https://translate.wpase.com/):
+  * **Added new/improved translation** for:
+    * ASE Free: Added Bulgarian. Updated Russian, Portuguese (Portugal), Portuguese (Brazil), Polish, Norwegian, French, Dutch, Danish, Bengali (Bangladesh), Arabic.
+    * ASE Pro: Updated Danish.
 
 ### 8.0.0 (2025.09.29) - ASE Free and Pro
 

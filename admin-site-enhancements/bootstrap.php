@@ -75,6 +75,12 @@ class Admin_Site_Enhancements {
             $styles[] = 'display';
             return $styles;
         } );
+        // ===== Activate modules based on settings =====
+        // Ensure SVG admin menu icons render with the correct admin color scheme on first paint.
+        // Modules can register SVG data URI icons with this helper and then use a Dashicon placeholder.
+        if ( is_admin() ) {
+            add_action( 'admin_enqueue_scripts', array('ASENHA\\Classes\\Admin_Menu_Svg_Icon_Mask', 'enqueue_mask_css'), 99 );
+        }
         // Content Duplication
         if ( array_key_exists( 'enable_duplication', $options ) && $options['enable_duplication'] ) {
             $content_duplication = new ASENHA\Classes\Content_Duplication();
@@ -111,6 +117,12 @@ class Admin_Site_Enhancements {
                     3
                 );
             }
+        }
+        // Media Library Access Control
+        if ( array_key_exists( 'media_files_visibility_control', $options ) && $options['media_files_visibility_control'] ) {
+            $media_files_visibility_control = new ASENHA\Classes\Media_Files_Visibility_Control();
+            add_filter( 'ajax_query_attachments_args', [$media_files_visibility_control, 'filter_attachments_grid'] );
+            add_action( 'pre_get_posts', [$media_files_visibility_control, 'filter_attachments_list'] );
         }
         // Media Replacement
         if ( array_key_exists( 'enable_media_replacement', $options ) && $options['enable_media_replacement'] ) {
@@ -328,6 +340,7 @@ class Admin_Site_Enhancements {
             $hide_admin_notices = new ASENHA\Classes\Hide_Admin_Notices();
             add_action( 'admin_footer', [$hide_admin_notices, 'admin_notices_wrapper'], 9 );
             // add_action( 'all_admin_notices', [ $hide_admin_notices, 'admin_notices_wrapper' ] );
+            // add_action( 'admin_notices', [ $hide_admin_notices, 'show_test_admin_notice_for_all_user_roles' ] );
             add_action( 'admin_bar_menu', [$hide_admin_notices, 'admin_notices_menu'] );
             add_action( 'admin_print_styles', [$hide_admin_notices, 'admin_notices_menu_inline_css'] );
         }
@@ -355,6 +368,9 @@ class Admin_Site_Enhancements {
             $options_extra = get_option( ASENHA_SLUG_U . '_extra', array() );
             $admin_menu_options = ( isset( $options_extra['admin_menu'] ) ? $options_extra['admin_menu'] : array() );
             $admin_menu_organizer = new ASENHA\Classes\Admin_Menu_Organizer();
+            if ( array_key_exists( 'admin_menu_organizer_sticky_collapse_menu', $options ) && $options['admin_menu_organizer_sticky_collapse_menu'] ) {
+                add_action( 'admin_head', [$admin_menu_organizer, 'make_collapse_menu_item_sticky'] );
+            }
             add_action( 'admin_menu', [$admin_menu_organizer, 'add_menu_item'] );
             // add_action( 'wp_ajax_save_custom_menu_order', [ $admin_menu_organizer, 'save_custom_menu_order' ] );
             // add_action( 'wp_ajax_save_hidden_menu_items', [ $admin_menu_organizer, 'save_hidden_menu_items' ] );
@@ -664,6 +680,7 @@ class Admin_Site_Enhancements {
                 add_action( 'admin_print_styles', [$disable_gutenberg, 'safari_18_fix'] );
                 if ( array_key_exists( 'disable_gutenberg_frontend_styles', $options ) && $options['disable_gutenberg_frontend_styles'] ) {
                     add_action( 'wp_enqueue_scripts', [$disable_gutenberg, 'disable_gutenberg_for_post_types_frontend'], 999999 );
+                    add_action( 'wp_footer', [$disable_gutenberg, 'disable_gutenberg_for_post_types_frontend'] );
                 }
             }
         }

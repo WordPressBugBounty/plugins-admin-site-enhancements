@@ -54,6 +54,11 @@ class Settings_Sanitization {
                 }
             }
         }
+        // Media Library Access Control
+        if ( !isset( $options['media_files_visibility_control'] ) ) {
+            $options['media_files_visibility_control'] = false;
+        }
+        $options['media_files_visibility_control'] = ( 'on' == $options['media_files_visibility_control'] ? true : false );
         // Enable Media Replacement
         if ( !isset( $options['enable_media_replacement'] ) ) {
             $options['enable_media_replacement'] = false;
@@ -207,6 +212,10 @@ class Settings_Sanitization {
             $options['customize_admin_menu'] = false;
         }
         $options['customize_admin_menu'] = ( 'on' == $options['customize_admin_menu'] ? true : false );
+        if ( !isset( $options['admin_menu_organizer_sticky_collapse_menu'] ) ) {
+            $options['admin_menu_organizer_sticky_collapse_menu'] = false;
+        }
+        $options['admin_menu_organizer_sticky_collapse_menu'] = ( 'on' == $options['admin_menu_organizer_sticky_collapse_menu'] ? true : false );
         // Enhance List Tables
         if ( !isset( $options['enhance_list_tables'] ) ) {
             $options['enhance_list_tables'] = false;

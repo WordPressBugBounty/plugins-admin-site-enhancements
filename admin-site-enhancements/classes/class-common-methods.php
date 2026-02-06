@@ -144,6 +144,31 @@ class Common_Methods {
     }
 
     /**
+     * Extract readable text from a string that may contain HTML.
+     *
+     * Unlike strip_html_tags_and_content(), this method keeps the text inside tags,
+     * e.g. it will turn `<span><img ...>Paymattic</span>` into `Paymattic`.
+     *
+     * @since 8.0.2
+     *
+     * @param string|null $html A string that may contain HTML.
+     * @return string Readable plain text (may be empty).
+     */
+    public function extract_readable_text_from_html( $html ) {
+        if ( null === $html ) {
+            return '';
+        }
+        $text = wp_strip_all_tags( (string) $html, true );
+        $charset = get_bloginfo( 'charset' );
+        if ( empty( $charset ) ) {
+            $charset = 'UTF-8';
+        }
+        $text = html_entity_decode( $text, ENT_QUOTES, $charset );
+        $text = preg_replace( '/\\s+/u', ' ', $text );
+        return trim( $text );
+    }
+
+    /**
      * Get menu hidden by toggle
      * 
      * @since 5.1.0
@@ -204,14 +229,16 @@ class Common_Methods {
             "=/",
             "=",
             "&",
-            "/"
+            "/",
+            ";"
         ), array(
             "__",
             "___",
             "_______",
             "____",
             "_____",
-            "______"
+            "______",
+            "________"
         ), $menu_item_id );
         return $menu_item_id_transformed;
     }
@@ -224,6 +251,7 @@ class Common_Methods {
     public function restore_menu_item_id( $menu_item_id_transformed ) {
         // Transform e.g. edit__php___post_type____page ==> edit.php?post_type=page
         $menu_item_id = str_replace( array(
+            "________",
             "_______",
             "______",
             "_____",
@@ -231,6 +259,7 @@ class Common_Methods {
             "___",
             "__"
         ), array(
+            ";",
             "=/",
             "/",
             "&",
@@ -597,6 +626,25 @@ class Common_Methods {
             }
         }
         return $rules;
+    }
+
+    /**
+     * Get an indexed array of public post type slug => label pairs
+     * 
+     * @since 8.0.1
+     */
+    public function get_public_post_type_slugs() {
+        $asenha_public_post_types = array();
+        $public_post_type_names = get_post_types( array(
+            'public' => true,
+        ), 'names' );
+        foreach ( $public_post_type_names as $post_type_name ) {
+            $post_type_object = get_post_type_object( $post_type_name );
+            $asenha_public_post_types[$post_type_name] = $post_type_object->label;
+        }
+        asort( $asenha_public_post_types );
+        // sort by value, ascending
+        return $asenha_public_post_types;
     }
 
 }

@@ -72,15 +72,7 @@ class Settings_Sections_Fields {
         // sort by value, ascending
         // Get array of slugs and plural labels for public post types, e.g. array( 'post' => 'Posts', 'page' => 'Pages' )
         $asenha_public_post_types = array();
-        $public_post_type_names = get_post_types( array(
-            'public' => true,
-        ), 'names' );
-        foreach ( $public_post_type_names as $post_type_name ) {
-            $post_type_object = get_post_type_object( $post_type_name );
-            $asenha_public_post_types[$post_type_name] = $post_type_object->label;
-        }
-        asort( $asenha_public_post_types );
-        // sort by value, ascending
+        $asenha_public_post_types = $common_methods->get_public_post_type_slugs();
         // Get array of slugs and plural labels for non-public post types, e.g. array( 'post' => 'Posts', 'page' => 'Pages' )
         $asenha_nonpublic_post_types = array();
         $nonpublic_post_type_names = get_post_types( array(
@@ -232,7 +224,10 @@ class Settings_Sections_Fields {
         $field_id = 'content_order_for';
         $field_slug = 'content-order-for';
         if ( is_array( $asenha_all_post_types ) ) {
-            $inapplicable_post_types = array();
+            $inapplicable_post_types = array(
+                // 'asenha_code_snippet', // ASE code snippets
+                'asenha_redirect',
+            );
             foreach ( $asenha_all_post_types as $post_type_slug => $post_type_label ) {
                 // e.g. $post_type_slug is post, $post_type_label is Posts
                 $is_hierarchical_label = ( is_post_type_hierarchical( $post_type_slug ) ? ' <span class="faded">- Hierarchical</span>' : '' );
@@ -255,6 +250,31 @@ class Settings_Sections_Fields {
                 }
             }
         }
+        // Media Files Visibility Control
+        $field_id = 'media_files_visibility_control';
+        $field_slug = 'media-files-visibility-control';
+        $field_title = __( 'Media Files Visibility Control', 'admin-site-enhancements' );
+        $field_description = __( 'Limit media files visibility so only administrators can see all media files. Non-administrator users will only see media files they uploaded themselves in the media library and in the modal window to add/insert media.', 'admin-site-enhancements' );
+        $field_options_wrapper = false;
+        $field_options_moreless = false;
+        add_settings_field(
+            $field_id,
+            $field_title,
+            [$render_field, 'render_checkbox_toggle'],
+            ASENHA_SLUG,
+            'main-section',
+            array(
+                'option_name'            => ASENHA_SLUG_U,
+                'field_id'               => $field_id,
+                'field_slug'             => $field_slug,
+                'field_title'            => $field_title,
+                'field_name'             => ASENHA_SLUG_U . '[' . $field_id . ']',
+                'field_description'      => $field_description,
+                'field_options_wrapper'  => $field_options_wrapper,
+                'field_options_moreless' => $field_options_moreless,
+                'class'                  => 'asenha-toggle content-management ' . $field_slug,
+            )
+        );
         // Media Replacement
         $field_id = 'enable_media_replacement';
         $field_slug = 'enable-media-replacement';
@@ -411,7 +431,7 @@ class Settings_Sections_Fields {
                             'field_id'        => $post_type_slug,
                             'field_name'      => ASENHA_SLUG_U . '[' . $field_id . '][' . $post_type_slug . ']',
                             'field_label'     => $post_type_label . ' <span class="faded">(' . $post_type_slug . ')</span>',
-                            'class'           => 'asenha-checkbox asenha-hide-th asenha-half content-management ' . $field_slug . ' ' . $post_type_slug,
+                            'class'           => 'asenha-checkbox asenha-checkbox-item asenha-hide-th asenha-half content-management ' . $field_slug . ' ' . $post_type_slug,
                         )
                     );
                 }
@@ -570,6 +590,7 @@ class Settings_Sections_Fields {
         );
         $field_id = 'hide_ab_comments_menu';
         $field_slug = 'hide-ab-comments-menu';
+        $field_label = __( 'Remove comments counter/link', 'admin-site-enhancements' );
         add_settings_field(
             $field_id,
             '',
@@ -580,7 +601,7 @@ class Settings_Sections_Fields {
                 'option_name' => ASENHA_SLUG_U,
                 'field_id'    => $field_id,
                 'field_name'  => ASENHA_SLUG_U . '[' . $field_id . ']',
-                'field_label' => __( 'Remove comments counter/link', 'admin-site-enhancements' ),
+                'field_label' => $field_label,
                 'class'       => 'asenha-checkbox asenha-hide-th admin-interface ' . $field_slug,
             )
         );
@@ -869,9 +890,25 @@ class Settings_Sections_Fields {
                     __( 'Once enabled, you can find the <a href="%s">Admin Menu</a> item under the Settings menu.', 'admin-site-enhancements' ),
                     admin_url( 'options-general.php?page=admin-menu-organizer' )
                  ),
-                'field_options_wrapper'  => false,
-                'field_options_moreless' => false,
+                'field_options_wrapper'  => true,
+                'field_options_moreless' => true,
                 'class'                  => 'asenha-toggle admin-interface ' . $field_slug,
+            )
+        );
+        $field_id = 'admin_menu_organizer_sticky_collapse_menu';
+        $field_slug = 'admin-menu-organizer-sticky-collapse-menu';
+        add_settings_field(
+            $field_id,
+            '',
+            [$render_field, 'render_checkbox_plain'],
+            ASENHA_SLUG,
+            'main-section',
+            array(
+                'option_name' => ASENHA_SLUG_U,
+                'field_id'    => $field_id,
+                'field_name'  => ASENHA_SLUG_U . '[' . $field_id . ']',
+                'field_label' => __( 'Make "Collapse Menu" sticky at the bottom of the admin menu', 'admin-site-enhancements' ),
+                'class'       => 'asenha-checkbox asenha-hide-th admin-interface ' . $field_slug,
             )
         );
         // Show Custom Taxonomy Filters
@@ -2072,21 +2109,23 @@ class Settings_Sections_Fields {
         if ( is_array( $asenha_public_post_types ) ) {
             foreach ( $asenha_public_post_types as $post_type_slug => $post_type_label ) {
                 // e.g. $post_type_slug is post, $post_type_label is Posts
-                add_settings_field(
-                    $field_id . '_' . $post_type_slug,
-                    '',
-                    [$render_field, 'render_checkbox_subfield'],
-                    ASENHA_SLUG,
-                    'main-section',
-                    array(
-                        'option_name'     => ASENHA_SLUG_U,
-                        'parent_field_id' => $field_id,
-                        'field_id'        => $post_type_slug,
-                        'field_name'      => ASENHA_SLUG_U . '[' . $field_id . '][' . $post_type_slug . ']',
-                        'field_label'     => $post_type_label . ' <span class="faded">(' . $post_type_slug . ')</span>',
-                        'class'           => 'asenha-checkbox asenha-checkbox-item asenha-hide-th asenha-half disable-components ' . $field_slug . ' ' . $post_type_slug,
-                    )
-                );
+                if ( post_type_supports( $post_type_slug, 'comments' ) ) {
+                    add_settings_field(
+                        $field_id . '_' . $post_type_slug,
+                        '',
+                        [$render_field, 'render_checkbox_subfield'],
+                        ASENHA_SLUG,
+                        'main-section',
+                        array(
+                            'option_name'     => ASENHA_SLUG_U,
+                            'parent_field_id' => $field_id,
+                            'field_id'        => $post_type_slug,
+                            'field_name'      => ASENHA_SLUG_U . '[' . $field_id . '][' . $post_type_slug . ']',
+                            'field_label'     => $post_type_label . ' <span class="faded">(' . $post_type_slug . ')</span>',
+                            'class'           => 'asenha-checkbox asenha-checkbox-item asenha-hide-th asenha-half disable-components ' . $field_slug . ' ' . $post_type_slug,
+                        )
+                    );
+                }
             }
         }
         // Disable REST API
@@ -3348,7 +3387,7 @@ class Settings_Sections_Fields {
                     /* translators: %s is URL of the role reset link */
                     __( 'If something goes wrong</strong> and you need to regain access to your account as an administrator, please visit the following URL: <br /><strong>%s</strong><br /><br />If you use <strong>Ninja Firewall</strong>, please uncheck "Block attempts to gain administrative privileges" in the Firewall Policies settings before you try to view as a non-admin user role to <strong>prevent being locked out</strong> of your admin account.', 'admin-site-enhancements' ),
                     $role_reset_link
-                 ) . '</div>',
+                 ) . '<br /><br />' . __( 'In any case, please also <strong>create at least one backup admin user</strong> as a last resort should your primary admin user fails to properly login as admin. With this second admin user, you can also restore the admin role for your primary admin user.', 'admin-site-enhancements' ) . '</div>',
                 'class'             => 'asenha-description utilities ' . $field_slug,
             )
         );
@@ -3391,6 +3430,24 @@ class Settings_Sections_Fields {
                 'field_suffix'      => '<span class="faded">' . __( '(Default is \'secret\')', 'admin-site-enhancements' ) . '</span>',
                 'field_description' => '',
                 'class'             => 'asenha-text with-prefix-suffix utilities ' . $field_slug,
+            )
+        );
+        $field_id = 'password_protection_notes';
+        $field_slug = 'password-protection-notes';
+        add_settings_field(
+            $field_id,
+            '',
+            [$render_field, 'render_description_subfield'],
+            ASENHA_SLUG,
+            'main-section',
+            array(
+                'option_name'       => ASENHA_SLUG_U,
+                'field_description' => sprintf( 
+                    /* translators: %s is URL to the documentation for nocache_headers() */
+                    __( '<div class="asenha-warning">When password protection is enabled and the password input form is displayed, caching is disabled using <a href="%s"><code>nocache_headers()</code></a>. Caching remains disabled after submitting the valid password and seeing the actual page content.</div>', 'admin-site-enhancements' ),
+                    'https://developer.wordpress.org/reference/functions/nocache_headers/'
+                 ),
+                'class'             => 'asenha-description login-logout ' . $field_slug,
             )
         );
         // Maintenance Mode

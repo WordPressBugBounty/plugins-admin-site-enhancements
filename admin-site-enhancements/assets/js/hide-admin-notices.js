@@ -13,8 +13,8 @@
 
 		var interval = setInterval(function () {
 
-			// Stop monitoring after 5 seconds
-			if (new Date().getTime() - startTime > 1000) {
+			// Stop monitoring after 1,05 seconds (some notices has a 1 second delay, so, we make this slightly longer)
+			if (new Date().getTime() - startTime > 1050) {
 				clearInterval(interval);
 
 		   		// Count hidden notices and append into admin bar counter
@@ -44,14 +44,14 @@
 			// TotalPress Custom post types - https://wordpress.org/plugins/custom-post-types/
 
 			// Reposition notices with the following selectors. Excluding 'notice-system'.
-			$('#wpbody-content > .wrap > .notice:not(.system-notice,.hidden,.wcml-notice),'
+			$('#wpbody-content > .wrap > .notice:not(#plugin-activated-successfully,.system-notice,.updated,.hidden,.inline,.wcml-notice,.asenha-media-replacement-notice),'
 			+ '#wpbody-content > .wrap > .notice-error,'
 			+ '#wpbody-content > .wrap > .error:not(.hidden),'
 			+ '#wpbody-content > .wrap > .notice-info,'
 			+ '#wpbody-content > .wrap > .notice-information,'
-			+ '#wpbody-content > .wrap > #message,'
+			+ '#wpbody-content > .wrap > #message:not(.updated,.asenha-media-replacement-notice),'
 			+ '#wpbody-content > .wrap > .notice-warning:not(.hidden),'
-			+ '#wpbody-content > .wrap > .notice-success,'
+			+ '#wpbody-content > .wrap > .notice-success:not(.updated,#plugin-activated-successfully,.asenha-media-replacement-notice),'
 			+ '#wpbody-content > .wrap > .notice-updated,'
 			+ '#wpbody-content > .wrap > .updated:not(.inline),'
 			+ '#wpbody-content > .wrap > .update-nag,'
@@ -173,6 +173,30 @@
 			+ '#wpbody-content .pods-submittable-fields > .notice-updated,'
 			+ '#wpbody-content .pods-submittable-fields > .updated:not(.inline),'
 			+ '#wpbody-content .pods-submittable-fields > .update-nag,'
+			// Meta Box Lite
+			+ '.mb-main > .notice:not(.system-notice,.hidden,.wcml-notice),'
+			+ '.mb-main > .notice-error,'
+			+ '.mb-main > .error:not(.hidden),'
+			+ '.mb-main > .notice-info,'
+			+ '.mb-main > .notice-information,'
+			+ '.mb-main > #message,'
+			+ '.mb-main > .notice-warning:not(.hidden),'
+			+ '.mb-main > .notice-success,'
+			+ '.mb-main > .notice-updated,'
+			+ '.mb-main > .updated:not(.inline),'
+			+ '.mb-main > .update-nag,'
+			// Meta Box AIO
+			+ '.mb-header__left > .notice:not(.system-notice,.hidden,.wcml-notice),'
+			+ '.mb-header__left > .notice-error,'
+			+ '.mb-header__left > .error:not(.hidden),'
+			+ '.mb-header__left > .notice-info,'
+			+ '.mb-header__left > .notice-information,'
+			+ '.mb-header__left > #message,'
+			+ '.mb-header__left > .notice-warning:not(.hidden),'
+			+ '.mb-header__left > .notice-success,'
+			+ '.mb-header__left > .notice-updated,'
+			+ '.mb-header__left > .updated:not(.inline),'
+			+ '.mb-header__left > .update-nag,'
 			// Funnel Builder for WordPress by FunnelKit
 			+ '#wpbody-content > .bwfan_header > .notice:not(.system-notice,.hidden),'
 			+ '#wpbody-content > .bwfan_header > .notice-error,'
@@ -212,6 +236,10 @@
 			+ '#wpbody-content > .wrap > .ssgs-influencer-banner,'
 			+ '#wpbody-content > .wrap > .ssgs-upgrade-banner,'
 			+ '#wpbody-content > .wrap > .ssgs-rating-banner,'
+			// Shortpixel
+			+ '#wpbody-content > .shortpixel-notice,'
+			// BdThemes Element Pack Pro
+			+ '#wpbody-content > .wrap > .biggopti,'
 			// Dokan
 			+ '#wpbody-content > .wrap .dokan-dashboard .notice:not(.system-notice,.hidden,.wcml-notice),'
 			+ '#wpbody-content > .wrap .dokan-dashboard .notice-error,'

@@ -157,7 +157,7 @@ class Enhance_List_Tables {
                 10,
                 2
             );
-            add_action(
+            add_filter(
                 'manage_edit-' . $post_type . '_sortable_columns',
                 [$this, 'make_last_modified_column_sortable'],
                 10,
@@ -189,7 +189,7 @@ class Enhance_List_Tables {
      */
     public function show_last_modified_datetime( $column_name, $id ) {
         if ( 'asenha-last-modified' == $column_name ) {
-            $modified_date_time_unix = strtotime( get_the_modified_date( 'F j, Y' ) . ' ' . get_the_modified_time( 'H:i:s' ) );
+            $modified_date_time_unix = strtotime( get_post_field( 'post_modified_gmt', $id ) );
             echo '<span class="last-modified-timestamp">' . wp_date( get_option( 'date_format' ), $modified_date_time_unix ) . '<br />' . wp_date( get_option( 'time_format' ), $modified_date_time_unix ) . '</span>';
         }
     }
@@ -199,7 +199,7 @@ class Enhance_List_Tables {
      * 
      * @since 7.4.0
      */
-    public function make_last_modified_column_sortable() {
+    public function make_last_modified_column_sortable( $columns ) {
         $columns['asenha-last-modified'] = 'modified';
         return $columns;
     }
