@@ -1,10 +1,39 @@
 ## Changelog
 
-**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **83 _major_ releases** (e.g. 1.1.0 ) and **184 _minor_ releases** (e.g. 4.9.1), for a **total of 267 releases**.
+**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **83 _major_ releases** (e.g. 1.1.0 ) and **185 _minor_ releases** (e.g. 4.9.1), for a **total of 268 releases**.
 
 Each **_major release_** usually corresponds with the addition of one new module/feature. Each module/feature usually is the equivalent of one (or more) single-purpose plugin. Each **_minor release_** usually contain one or more bugfix or improvements to existing modules/features.
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). Lifetime Deal (LTD) available.
+
+### 8.3.2 (2025.02.09) - ASE Free and Pro
+
+* **[IMPROVED in Free and Pro] Security >> Limit Login Attempts**:
+  * ASE Free: when an IP address is locked out because it's exceeded the allowed failed login attempts amount, there will be a "Release Lock" button shown in a new "Actions" column in the "Failed login attempts" list within the Limit Login Attempts module. This will easily remove the IP address from lockout and allow the user on that IP address to attempt another set of login attempts. Props to [Michael K.](https://wordpress.org/support/users/michoscopic/) for [prompting](https://wordpress.org/support/topic/any-way-to-unblock-user-after-limit-login-attempts/) this improvement.
+  * ASE Pro: in addition to the "Release Lock" button, there will also be a "Whitelist" button that will automatically copy the IP address to the "Never block the following IP addresses" section.
+
+* **[IMPROVED in Free and Pro] Content Management >> SVG Upload**: when an SVG has the width and height attributes at 100%, the width and height is now going to be detected from the viewBox attribute and properly saved in the attachment metadata (width, height, dimensions).
+  
+* **[IMPROVED and FIXED in Pro] Custom Code >> Code Snippets Manager**: 
+  * To date, each revision is saved as a new file in the snippets folder. Going forward snippet creation and update will trigger a process to ensure only one file exists for each snippet and snippet deletion will remove snippet revision files, while ensuring the revisions feature will continue to work. Props to Claudio P. for prompting this improvement.
+  * Fixed an issue in a certain scenario where snippets filtering and search are not working properly. Props to Oliver S. for reporting this.
+
+* **[IMPROVED in Pro] Content Management >> Custom Content Types >> Custom Field Groups**: added `m.d.Y` format, e.g. `12.31.2025` for the date field's output format. This format is commonly used in Germany. Props to Oliver Z. for prompting this improvement.
+
+* **[IMPROVED in Pro] Utilities >> Form Builder**: the date picker now shows the year as a dropdown, making it easier to select a particular year. Props to Richard L. for prompting this improvement. Also improved the UI to remove extra white space on the right hand side of the day numerals.
+
+* **[IMPROVED in Pro] Admin Interface >> Hide Admin Bar**: add a new option to "always show the admin bar for administrators on the backend", which is useful for scenarios when an administrator user is also assigned other roles for which the admin bar is being hidden on the backend. Props to André C. for prompting this improvement via a comprehensive feedback (setup, observed behaviour, expected behaviour) and useful screenshots.
+
+* **[IMPROVED in Pro] Utilities >> Form Builder**:
+  * Improve mechanism to prevent file of the same name being overwritten via the file upload field. Props to Ingo R. for prompting this improvement.
+  * Add a way to choose webhook payload structure so it is more compatible with various requirements. Props to Ingo R. for prompting this imprvement.
+
+* **[FIXED in Pro] Admin Interface >> Admin Logo**: fixed an issue when certain types of SVGs are used for admin menu logo, there are extra-wide spacing at the top and bottom of the logo image. Props to Henry R. for reporting this issue.
+
+* **[TRANSLATION in Free and Pro]** ASE is now being translated into [38 languages](https://translate.wpase.com/):
+  * **Added new/improved translation** for:
+    * ASE Free - Update Ukrainian, Spanish (Spain), Portuguese (Brazil), Polish, Norwegian, French, Dutch, Arabic.
+    * ASE Pro - Update Norwegian, Portuguese (Brazil), Polish.
 
 ### 8.3.1 (2025.02.02) - ASE Free and Pro
 
@@ -474,7 +503,7 @@ Each **_major release_** usually corresponds with the addition of one new module
 
 * **[TRANSLATION in Free and Pro]** ASE is now being translated into [34 languages](https://translate.wpase.com/):
   * **Added new/improved translation** for:
-    * ASE Free: Added Bengali (Bangladesh, completed). Updated German, Polish and Portuguese (Brazil).
+    * ASE Free: Added Bengali (Bangladesh, completed) with special props to [Ruhani R.](https://profiles.wordpress.org/ruhanirabin/) for speedily completing this translation. Updated German, Polish and Portuguese (Brazil).
     * ASE Pro: Added Bengali (Bangladesh, partial). Updated Spanish and Japanese.
 
 ### 7.9.3 (2025.07.28) - ASE Free and Pro
