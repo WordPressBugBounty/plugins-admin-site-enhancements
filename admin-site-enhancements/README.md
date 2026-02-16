@@ -5,7 +5,7 @@ Donate link: https://bowo.io/asenha-sp-rdm
 Tags: enhancements, tweaks, optimizations, tools  
 Requires at least: 4.6  
 Tested up to: 6.9.1  
-Stable tag: 8.3.2  
+Stable tag: 8.4.0  
 Requires PHP: 5.6  
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -42,8 +42,8 @@ _"ASE is an amazing plugin! **Time and money saver**. Thank you!"_ ~[Iulian Baci
 
 ### FEATURES & MODULES
 
-**71 modules** in total:  
-**57 free modules** (30 has Pro features) | **14 Pro modules**
+**72 modules** in total:  
+**57 free modules** (30 has Pro features) | **15 Pro modules**
 
 [**See all features >>**](https://www.wpase.com/features/)
 
@@ -122,6 +122,7 @@ _"ASE is an amazing plugin! **Time and money saver**. Thank you!"_ ~[Iulian Baci
 
 * **Limit Login Attempts**. Prevent brute force attacks by limiting the number of failed login attempts allowed per IP address. [ASE Pro](https://www.wpase.com/rdme-to-web) adds IP whitelisting, which is also useful to unblock users.
 **[[ASE Pro](https://www.wpase.com/rdme-to-web)] CAPTCHA Protection**. Support for [ALTCHA](https://altcha.org/) self-hosted version (GDPR-compliant, open source, free), Google reCaptcha v2 and v3, and Cloudflare Turnstile for WordPress default login, password reset, registration and comment forms and WooCommerce login, password reset and registration forms.
+**[[ASE Pro](https://www.wpase.com/rdme-to-web)] Two-Factor Authentication (2FA)**. Add an extra verification step during login for some or all user roles with grace period settings. Supported methods are authenticator app (TOTP), recovery codes and email. Compatible with the Change Login URL, Limit Login Attempts and CAPTCHA Protection modules.
 * **Obfuscate Author Slugs**. Obfuscate publicly exposed author page URLs that shows the user slugs / usernames.
 * **Email Address Obfuscator**. Obfuscate email address to prevent spam bots from harvesting them,. [ASE Pro](https://www.wpase.com/rdme-to-web) enables output of obfuscated mailto: link and also auto-obfuscation of email addresses in post content.
 * **Disable XML-RPC**. Protect your site from brute force, DOS and DDOS attacks via XML-RPC. Also disables trackbacks and pingbacks.
@@ -201,40 +202,22 @@ ASE does not officially support multisite. Please use at your own risk. That sai
 
 ## Changelog
 
-**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **83 _major_ releases** (e.g. 1.1.0 ) and **185 _minor_ releases** (e.g. 4.9.1), for a **total of 268 releases**.
+**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **84 _major_ releases** (e.g. 1.1.0 ) and **185 _minor_ releases** (e.g. 4.9.1), for a **total of 269 releases**.
 
 Each **_major release_** usually corresponds with the addition of one new module/feature. Each module/feature usually is the equivalent of one (or more) single-purpose plugin. Each **_minor release_** usually contain one or more bugfix or improvements to existing modules/features.
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). Lifetime Deal (LTD) available.
 
-### 8.3.2 (2025.02.09) - ASE Free and Pro
+### 8.4.0 (2026.02.16) - ASE Free and Pro
 
-* **[IMPROVED in Free and Pro] Security >> Limit Login Attempts**:
-  * ASE Free: when an IP address is locked out because it's exceeded the allowed failed login attempts amount, there will be a "Release Lock" button shown in a new "Actions" column in the "Failed login attempts" list within the Limit Login Attempts module. This will easily remove the IP address from lockout and allow the user on that IP address to attempt another set of login attempts. Props to [Michael K.](https://wordpress.org/support/users/michoscopic/) for [prompting](https://wordpress.org/support/topic/any-way-to-unblock-user-after-limit-login-attempts/) this improvement.
-  * ASE Pro: in addition to the "Release Lock" button, there will also be a "Whitelist" button that will automatically copy the IP address to the "Never block the following IP addresses" section.
+* **[ADDED in Pro] Security >> Two-Factor Authentication**: Add an extra verification step during login for some or all user roles with grace period settings. Supported methods are authenticator app (TOTP), recovery codes and email. Compatible with the Change Login URL, Limit Login Attempts and CAPTCHA Protection modules. Props to Sebastian, Laurent F., Jonathan, Carlos d.A. Silvan L., Luethi, Ramyt I., Ammar, Marcel S., Drijen S., Stefan B., Timothy L. and Cory V. for prompting this addition.
 
-* **[IMPROVED in Free and Pro] Content Management >> SVG Upload**: when an SVG has the width and height attributes at 100%, the width and height is now going to be detected from the viewBox attribute and properly saved in the attachment metadata (width, height, dimensions).
-  
-* **[IMPROVED and FIXED in Pro] Custom Code >> Code Snippets Manager**: 
-  * To date, each revision is saved as a new file in the snippets folder. Going forward snippet creation and update will trigger a process to ensure only one file exists for each snippet and snippet deletion will remove snippet revision files, while ensuring the revisions feature will continue to work. Props to Claudio P. for prompting this improvement.
-  * Fixed an issue in a certain scenario where snippets filtering and search are not working properly. Props to Oliver S. for reporting this.
-
-* **[IMPROVED in Pro] Content Management >> Custom Content Types >> Custom Field Groups**: added `m.d.Y` format, e.g. `12.31.2025` for the date field's output format. This format is commonly used in Germany. Props to Oliver Z. for prompting this improvement.
-
-* **[IMPROVED in Pro] Utilities >> Form Builder**: the date picker now shows the year as a dropdown, making it easier to select a particular year. Props to Richard L. for prompting this improvement. Also improved the UI to remove extra white space on the right hand side of the day numerals.
-
-* **[IMPROVED in Pro] Admin Interface >> Hide Admin Bar**: add a new option to "always show the admin bar for administrators on the backend", which is useful for scenarios when an administrator user is also assigned other roles for which the admin bar is being hidden on the backend. Props to André C. for prompting this improvement via a comprehensive feedback (setup, observed behaviour, expected behaviour) and useful screenshots.
-
-* **[IMPROVED in Pro] Utilities >> Form Builder**:
-  * Improve mechanism to prevent file of the same name being overwritten via the file upload field. Props to Ingo R. for prompting this improvement.
-  * Add a way to choose webhook payload structure so it is more compatible with various requirements. Props to Ingo R. for prompting this imprvement.
-
-* **[FIXED in Pro] Admin Interface >> Admin Logo**: fixed an issue when certain types of SVGs are used for admin menu logo, there are extra-wide spacing at the top and bottom of the logo image. Props to Henry R. for reporting this issue.
+* **[FIXED in Free and Pro] Disable Components >> Disable Gutenberg**: fixed a PHP fatal error that occurs in a certain scenario. Props to [@d79](https://wordpress.org/support/users/d79/) for [reporting](https://wordpress.org/support/topic/bug-disable-gutenberg-%e2%86%92-fatal-error/) this in detail with the error entry log.
 
 * **[TRANSLATION in Free and Pro]** ASE is now being translated into [38 languages](https://translate.wpase.com/):
   * **Added new/improved translation** for:
-    * ASE Free - Update Ukrainian, Spanish (Spain), Portuguese (Brazil), Polish, Norwegian, French, Dutch, Arabic.
-    * ASE Pro - Update Norwegian, Portuguese (Brazil), Polish.
+    * ASE Free: updated Danish, Spanish (Chile), Russian, Portuguese (Brazil), Polish, Persian, German, Dutch (Netherlands), Dutch (Belgium)
+    * ASE Pro: updated Danish, Portuguese (Brazil)
   * **More strings have been internationalized**. @Translators, please visit the respective project pages for the Free and Pro versions to translate the new strings, if you havent' done so already.
   * **Interested to help translate or improve the translation?** Please go to [https://translate.wpase.com](https://translate.wpase.com) for more info.
   * **[Chinese (China)](https://translate.wordpress.org/locale/zh-cn/default/wp-plugins/admin-site-enhancements/)**: ASE Free and Pro (completed). Props to [@bricksvip](https://profiles.wordpress.org/bricksvip/) et al. Current status: [12 strings untranslated](https://translate.wordpress.org/projects/wp-plugins/admin-site-enhancements/stable/zh-cn/default/?filters%5Bstatus%5D=untranslated).

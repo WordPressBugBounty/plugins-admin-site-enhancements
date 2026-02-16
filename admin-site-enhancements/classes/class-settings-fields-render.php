@@ -159,6 +159,12 @@ class Settings_Fields_Render {
         $layout = ( !empty( $args['layout'] ) ? $args['layout'] : 'horizontal' );
         $default_value = ( !empty( $args['field_default'] ) ? $args['field_default'] : array() );
         $field_option_value = ( isset( $options[$field_id] ) ? (array) $options[$field_id] : $default_value );
+        // Back-compat: legacy naming for Two-Factor Recovery Codes.
+        if ( 'two_factor_available_providers' === $field_id && is_array( $field_option_value ) ) {
+            $field_option_value = array_map( static function ( $provider_key ) {
+                return ( 'backup_codes' === $provider_key ? 'recovery_codes' : $provider_key );
+            }, $field_option_value );
+        }
         echo '<div class="wrapper-for-checkboxes ' . esc_attr( $layout ) . '">';
         foreach ( $field_options as $option_label => $option_value ) {
             echo '<div>';

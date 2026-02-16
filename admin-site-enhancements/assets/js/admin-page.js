@@ -818,6 +818,22 @@
          $('.heartbeat-interval-for-admin-pages .asenha-subfield-select-inner').show();
       }
 
+      // Two-Factor Authentication (2FA) => Show "Email code validity" only when Email codes is enabled.
+      function toggleTwoFactorEmailTokenTtlVisibility() {
+         var emailCodesEnabled = $( '#two_factor_available_providers_email' ).is( ':checked' );
+
+         if ( emailCodesEnabled ) {
+            $( '.two-factor-email-token-ttl' ).show();
+         } else {
+            $( '.two-factor-email-token-ttl' ).hide();
+         }
+      }
+
+      toggleTwoFactorEmailTokenTtlVisibility();
+
+      $( document ).on( 'change', '#two_factor_available_providers_email', toggleTwoFactorEmailTokenTtlVisibility );
+      $( document ).on( 'change', 'input[name="admin_site_enhancements[two_factor_authentication]"]', toggleTwoFactorEmailTokenTtlVisibility );
+
       $('input[name="admin_site_enhancements[heartbeat_control_for_admin_pages]"]').click(function() {
          var radioValue = $(this).attr('value');
          if ( radioValue == 'modify' ) {

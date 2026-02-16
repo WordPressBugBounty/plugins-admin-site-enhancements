@@ -1,12 +1,23 @@
 ## Changelog
 
-**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **83 _major_ releases** (e.g. 1.1.0 ) and **185 _minor_ releases** (e.g. 4.9.1), for a **total of 268 releases**.
+**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **84 _major_ releases** (e.g. 1.1.0 ) and **185 _minor_ releases** (e.g. 4.9.1), for a **total of 269 releases**.
 
 Each **_major release_** usually corresponds with the addition of one new module/feature. Each module/feature usually is the equivalent of one (or more) single-purpose plugin. Each **_minor release_** usually contain one or more bugfix or improvements to existing modules/features.
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). Lifetime Deal (LTD) available.
 
-### 8.3.2 (2025.02.09) - ASE Free and Pro
+### 8.4.0 (2026.02.16) - ASE Free and Pro
+
+* **[ADDED in Pro] Security >> Two-Factor Authentication**: Add an extra verification step during login for some or all user roles with grace period settings. Supported methods are authenticator app (TOTP), recovery codes and email. Compatible with the Change Login URL, Limit Login Attempts and CAPTCHA Protection modules. Props to Sebastian, Laurent F., Jonathan, Carlos d.A. Silvan L., Luethi, Ramyt I., Ammar, Marcel S., Drijen S., Stefan B., Timothy L. and Cory V. for prompting this addition.
+
+* **[FIXED in Free and Pro] Disable Components >> Disable Gutenberg**: fixed a PHP fatal error that occurs in a certain scenario. Props to [@d79](https://wordpress.org/support/users/d79/) for [reporting](https://wordpress.org/support/topic/bug-disable-gutenberg-%e2%86%92-fatal-error/) this in detail with the error entry log.
+
+* **[TRANSLATION in Free and Pro]** ASE is now being translated into [38 languages](https://translate.wpase.com/):
+  * **Added new/improved translation** for:
+    * ASE Free: updated Danish, Spanish (Chile), Russian, Portuguese (Brazil), Polish, Persian, German, Dutch (Netherlands), Dutch (Belgium)
+    * ASE Pro: updated Danish, Portuguese (Brazil)
+
+### 8.3.2 (2026.02.09) - ASE Free and Pro
 
 * **[IMPROVED in Free and Pro] Security >> Limit Login Attempts**:
   * ASE Free: when an IP address is locked out because it's exceeded the allowed failed login attempts amount, there will be a "Release Lock" button shown in a new "Actions" column in the "Failed login attempts" list within the Limit Login Attempts module. This will easily remove the IP address from lockout and allow the user on that IP address to attempt another set of login attempts. Props to [Michael K.](https://wordpress.org/support/users/michoscopic/) for [prompting](https://wordpress.org/support/topic/any-way-to-unblock-user-after-limit-login-attempts/) this improvement.
@@ -35,7 +46,7 @@ Each **_major release_** usually corresponds with the addition of one new module
     * ASE Free - Update Ukrainian, Spanish (Spain), Portuguese (Brazil), Polish, Norwegian, French, Dutch, Arabic.
     * ASE Pro - Update Norwegian, Portuguese (Brazil), Polish.
 
-### 8.3.1 (2025.02.02) - ASE Free and Pro
+### 8.3.1 (2026.02.02) - ASE Free and Pro
 
 * **[IMPROVED in Free and Pro] Admin Interface >> Hide Admin Notices**: notice/ad from BdThemes Element Pack Pro plugin is now properly moved to the notices panel. Props to Alexander P. for reporting the issue.
 
@@ -62,7 +73,7 @@ Each **_major release_** usually corresponds with the addition of one new module
     * ASE Free - Updated Spanish (Spain), Portuguese (Brazil), Polish, French, Dutch,.
     * ASE Pro - Updated Polish.
 
-### 8.3.0 (2025.01.26) - ASE Free and Pro
+### 8.3.0 (2026.01.26) - ASE Free and Pro
 
 * **[ADDED in Free and Pro] Content Management >> Media Files Visibility Control**: in ASE Free, this module will limit media library in a way that only administrators can see all media files. Non-administrator users will only see media files they uploaded themselves in the media library and in the modal window to add/insert media. ASE Pro adds an option to specify which non-administrator user roles will be limited to only seeing media files they uploaded themselves. 
 
@@ -90,7 +101,7 @@ Each **_major release_** usually corresponds with the addition of one new module
     * ASE Free - Updated Vietnamese, Russian, Portuguese (Brazil), Polish, Norwegian, Dutch (Belgian), Dutch, Bengali (Bangladesh)
     * ASE Pro - Indonesian, Vietnamese, Polish, Norwegian, Portuguese (Brazil).
 
-### 8.2.3 (2025.01.19) - ASE Free and Pro
+### 8.2.3 (2026.01.19) - ASE Free and Pro
 
 * **[IMPROVED in Free and Pro] Admin Interface >> Admin Menu Organizer**: added an option to make the "Collapse Menu" toggler sticky at the bottom of the admin menu. Props to [@outdoorsdev1](https://wordpress.org/support/users/outdoorsdev1/) for [suggesting this](https://wordpress.org/support/topic/request-make-expand-collapse-menu-item-in-wordpress-admin-navigation-sticky/) and sharing the code snippets this improvement is based upon.
 
@@ -119,7 +130,7 @@ Each **_major release_** usually corresponds with the addition of one new module
     * ASE Free - Updated Portuguese (Brazil), Polish, Persian, Danish.
     * ASE Pro - Updated Portuguese (Brazil).
 
-### 8.2.2 (2025.01.12) - ASE Free and Pro
+### 8.2.2 (2026.01.12) - ASE Free and Pro
 
 * **[IMPROVED in Pro] Utilities >> File Manager**:
   * 'Download' a file previous would open the file URL in a new browser tab for several file types. It will now properly initiate a download.
@@ -144,7 +155,7 @@ Each **_major release_** usually corresponds with the addition of one new module
     * ASE Free - Added Azerbaijani, props to [Saeid BGrn](https://profiles.wordpress.org/saeead/), and Dutch (Belgium), props to [Pieterjan D.](https://profiles.wordpress.org/nekojonez/). Updated Spanish (Spain), Portuguese (Brazil), Polish, Persian, Norwegian, Indonesian, German (Formal), Dutch, Arabic.
     * ASE Pro - Updated Indonesian.
 
-### 8.2.1 (2025.01.06) - ASE Free and Pro
+### 8.2.1 (2026.01.06) - ASE Free and Pro
 
 * **[IMPROVED in Pro] Admin Interface >> Admin Logo**: admin logo is now loaded in a way that prevents layout shift in the admin menu panel.
 
