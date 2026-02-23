@@ -648,6 +648,21 @@ function asenha_admin_scripts(  $hook_suffix  ) {
         $wp_scripts = wp_scripts();
         $wp_scripts->remove( 'wp-tinymce' );
         wp_register_tinymce_scripts( $wp_scripts, true );
+        $admin_page_script_dependencies = array(
+            'asenha-jsticky',
+            'asenha-jbox',
+            'asenha-js-cookie',
+            'asenha-codemirror-htmlmixed-mode',
+            'asenha-codemirror-xml-mode',
+            'asenha-codemirror-javascript-mode',
+            'asenha-codemirror-css-mode',
+            'asenha-codemirror-markdown-mode',
+            'asenha-datatables',
+            'wp-color-picker',
+            'wp-mediaelement',
+            'wp-tinymce-root',
+            'wp-tinymce'
+        );
         // Main style and script for the admin page
         wp_enqueue_style(
             'asenha-admin-page',
@@ -663,21 +678,7 @@ function asenha_admin_scripts(  $hook_suffix  ) {
         wp_enqueue_script(
             'asenha-admin-page',
             ASENHA_URL . 'assets/js/admin-page.js',
-            array(
-                'asenha-jsticky',
-                'asenha-jbox',
-                'asenha-js-cookie',
-                'asenha-codemirror-htmlmixed-mode',
-                'asenha-codemirror-xml-mode',
-                'asenha-codemirror-javascript-mode',
-                'asenha-codemirror-css-mode',
-                'asenha-codemirror-markdown-mode',
-                'asenha-datatables',
-                'wp-color-picker',
-                'wp-mediaelement',
-                'wp-tinymce-root',
-                'wp-tinymce'
-            ),
+            $admin_page_script_dependencies,
             ASENHA_VERSION,
             false
         );
@@ -876,11 +877,6 @@ function asenha_admin_scripts(  $hook_suffix  ) {
     if ( array_key_exists( 'hide_admin_notices', $options ) && $options['hide_admin_notices'] ) {
         $hide_for_nonadmins = ( isset( $options['hide_admin_notices_for_nonadmins'] ) ? $options['hide_admin_notices_for_nonadmins'] : false );
         $minimum_capability = 'manage_options';
-        if ( function_exists( 'bwasenha_fs' ) ) {
-            if ( $hide_for_nonadmins && bwasenha_fs()->can_use_premium_code__premium_only() ) {
-                $minimum_capability = 'read';
-            }
-        }
         if ( current_user_can( $minimum_capability ) ) {
             wp_enqueue_style(
                 'asenha-jbox',
