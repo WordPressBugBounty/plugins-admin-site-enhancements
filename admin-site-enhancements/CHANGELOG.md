@@ -6,6 +6,32 @@ Each **_major release_** usually corresponds with the addition of one new module
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). Lifetime Deal (LTD) available.
 
+### 8.6.0 (2026.03.30) - ASE Free and Pro
+
+* **[ADDED in Pro] Admin Interface >> Admin Bar Custom Elements**: New module to add custom menu and submenu items to the admin bar. Props to Todd, Jake H. and Lee B. for prompting this addition.
+
+* **[SECURITY FIX in Free and Pro] Log In/Out & Register >> Change Login URL**: fix vulnerability that exposes the hidden login URL/form when a certain URL pattern is loaded on the frontend while logged-out. Props to Dan for responsibly disclosing this.
+
+* **[IMPROVED in Free] Security >> Email Address Obfuscator**: The "high-compatibility" mode option is now available in ASE Free as well.
+
+* **[FIXED and IMPROVED in Free and Pro] Admin Interface >> Admin Menu Organizer**: 
+  * [ASE Free and Pro] Remove description text at the top of the Admin Menu Organizer page.
+  * [ASE Pro] Add the ability to always allow eligible users to view and access a menu item even if it's been hidden for all user roles or a particular user role. Props to Gary M., Gergo F.. Lee, SPARKS!, Tim C. and Tyler S. for prompting this imprvement.
+  * [ASE Pro] Fix custom submenu title corruption when a unicode character is present, e.g. Serviço. Props to Jayron C. for reporting the issue in detail.
+  * [ASE Pro] Change "Add Menu" to "Add Menu or Separator" and "Add Separator" to "Add Spacer" for better clarity since the addition of the "Add Menu" feature. Pros to Tanja K. for prompting this improvement.
+
+* **[IMPROVED in Pro] Security >> Two-Factor Authentication (2FA)**: 
+  * add an option to apply different 2FA settings for each user role. This allows you to choose which 2FA methods to activate and the grace period to apply for each role. Props to Justin T. for prompting this improvement.
+  * add an option to enable the email method by default for the selected user role(s). Props to Justin T. for prompting this improvement.
+  
+* **[IMPROVED in Free and Pro] Disable Components >> Disable REST API**: two-factor authentication routes by default are now excluded from being disabled.
+
+* **[Improved in Pro] Utilities >> File Manager**: "Last Modified" column will now properly reflect the timezone set in "Settings >> General".
+ 
+* **[FIXED and IMPROVED in Pro] Content Management >> Custom Content Types >> Custom Field Group**: 
+  * Fixed out-of-memory bug that occurs in a certain scenario when using the `[cf]`  shortcode with a WYSIWYG field in a page builder context. Props to Lynette C. for reporting the issue and facilitating the troubleshooting process.
+  * Added new option for WYSIWYG field to force paragraph output to use double line breaks instead of paragraph tags. This is useful when used in certain page builder context so that styling from the page builder UI applies correctly and not being rendered mute / ineffective by the paragraph tags.
+
 ### 8.5.2 (2026.03.23) - ASE Free and Pro
 
 * **[IMPROVED in Free and Pro] Disable Components >> Disable Comments**: Kadence galleries (kt_gallery) will no longer be shown as an option to disable comments on, as it can prevent adding new images to a gallery. In ASE Pro, when "Disable on all post types" is selected, kt_gallery will automatically be excluded from processing to prevent the issue. Props to [@totallyminimad](https://wordpress.org/support/users/totallyminimad/) for [reporting the issue](https://wordpress.org/support/topic/possible-conflict-with-new-gallery-image-insert-in-block-editor/) in detail.

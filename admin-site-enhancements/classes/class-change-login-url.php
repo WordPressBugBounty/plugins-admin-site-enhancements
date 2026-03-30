@@ -269,6 +269,16 @@ class Change_Login_URL {
                 exit;
             } elseif ( false !== strpos( $url_input, 'wp-admin/admin-post.php' ) ) {
                 // Do nothing. i.e. do not redirect to /not_found/
+            } elseif ( is_string( $request_query = wp_parse_url( $url_input, PHP_URL_QUERY ) ) && '' !== $request_query ) {
+                $request_path = wp_parse_url( $url_input, PHP_URL_PATH );
+                if ( is_string( $request_path ) && '' !== $request_path ) {
+                    $path_segments = array_values( array_filter( explode( '/', trim( $request_path, '/' ) ) ) );
+                    $last_segment = ( !empty( $path_segments ) ? end( $path_segments ) : '' );
+                    if ( 'wp-admin' === $last_segment || 'admin' === $last_segment ) {
+                        wp_safe_redirect( home_url( $redirect_slug . '/' ), 302 );
+                        exit;
+                    }
+                }
             } elseif ( isset( $url_input_parts[1] ) && in_array( $url_input_parts[1], array(
                 'admin',
                 'wp-admin',

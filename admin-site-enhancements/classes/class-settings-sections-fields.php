@@ -2687,6 +2687,23 @@ class Settings_Sections_Fields {
                 'class'             => 'asenha-description security ' . $field_slug,
             )
         );
+        $field_id = 'obfuscate_email_address_builder_safe_mode';
+        $field_slug = 'obfuscate-email-address-builder-safe-mode';
+        $obfuscate_email_builder_safe_row_class = 'asenha-checkbox asenha-hide-th asenha-th-border-top security ' . $field_slug;
+        add_settings_field(
+            $field_id,
+            '',
+            [$render_field, 'render_checkbox_plain'],
+            ASENHA_SLUG,
+            'main-section',
+            array(
+                'option_name' => ASENHA_SLUG_U,
+                'field_id'    => $field_id,
+                'field_name'  => ASENHA_SLUG_U . '[' . $field_id . ']',
+                'field_label' => __( 'Use high-compatibility mode to fix rendering issues.', 'admin-site-enhancements' ),
+                'class'       => $obfuscate_email_builder_safe_row_class,
+            )
+        );
         // Disable XML-RPC
         $field_id = 'disable_xmlrpc';
         $field_slug = 'disable-xmlrpc';

@@ -959,8 +959,81 @@ function asenha_admin_scripts(  $hook_suffix  ) {
         );
         $amo_page_vars = array(
             'saveMenuNonce' => wp_create_nonce( 'save-menu-nonce' ),
+            'strings'       => array(
+                'saveChangesError' => __( 'Unable to save changes. Please reload the page and try again.', 'admin-site-enhancements' ),
+            ),
         );
         wp_localize_script( 'asenha-custom-admin-menu', 'amoPageVars', $amo_page_vars );
+    }
+    // Admin Interface >> Admin Bar Custom Elements (Pro)
+    if ( $current_screen && 'settings_page_asenha-admin-bar' === $current_screen->base ) {
+        wp_deregister_script( 'jquery-ui-core' );
+        wp_register_script(
+            'jquery-ui-core',
+            get_site_url() . '/wp-includes/js/jquery/ui/core.min.js',
+            array('jquery'),
+            ASENHA_VERSION,
+            false
+        );
+        wp_enqueue_script( 'jquery-ui-core' );
+        if ( version_compare( $wp_version, '5.6.0', '>=' ) ) {
+            wp_deregister_script( 'jquery-ui-mouse' );
+            wp_register_script(
+                'jquery-ui-mouse',
+                get_site_url() . '/wp-includes/js/jquery/ui/mouse.min.js',
+                array('jquery-ui-core'),
+                ASENHA_VERSION,
+                false
+            );
+            wp_enqueue_script( 'jquery-ui-mouse' );
+        } else {
+            wp_deregister_script( 'jquery-ui-widget' );
+            wp_register_script(
+                'jquery-ui-widget',
+                get_site_url() . '/wp-includes/js/jquery/ui/widget.min.js',
+                array('jquery'),
+                ASENHA_VERSION,
+                false
+            );
+            wp_enqueue_script( 'jquery-ui-widget' );
+            wp_deregister_script( 'jquery-ui-mouse' );
+            wp_register_script(
+                'jquery-ui-mouse',
+                get_site_url() . '/wp-includes/js/jquery/ui/mouse.min.js',
+                array('jquery-ui-core', 'jquery-ui-widget'),
+                ASENHA_VERSION,
+                false
+            );
+            wp_enqueue_script( 'jquery-ui-mouse' );
+        }
+        wp_deregister_script( 'jquery-ui-sortable' );
+        wp_register_script(
+            'jquery-ui-sortable',
+            get_site_url() . '/wp-includes/js/jquery/ui/sortable.min.js',
+            array('jquery-ui-mouse'),
+            ASENHA_VERSION,
+            false
+        );
+        wp_enqueue_script( 'jquery-ui-sortable' );
+        wp_enqueue_style(
+            'asenha-admin-menu-organizer',
+            ASENHA_URL . 'assets/css/admin-menu-organizer.css',
+            array(),
+            ASENHA_VERSION
+        );
+        wp_enqueue_style(
+            'asenha-admin-bar-custom-elements',
+            ASENHA_URL . 'assets/premium/css/admin-bar-custom-elements.css',
+            array('asenha-admin-menu-organizer'),
+            ASENHA_VERSION
+        );
+        wp_enqueue_script(
+            'asenha-admin-bar-custom-elements',
+            ASENHA_URL . 'assets/premium/js/admin-bar-custom-elements.js',
+            array('jquery-ui-sortable'),
+            ASENHA_VERSION,
+            false
+        );
     }
     // Utilities >> Email Delivery Log
     if ( 'tools_page_email-delivery-log' == $hook_suffix ) {
