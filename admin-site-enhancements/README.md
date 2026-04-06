@@ -5,7 +5,7 @@ Donate link: https://bowo.io/asenha-sp-rdm
 Tags: enhancements, tweaks, optimizations, tools  
 Requires at least: 4.6  
 Tested up to: 6.9.4  
-Stable tag: 8.6.0  
+Stable tag: 8.6.1  
 Requires PHP: 5.6  
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -59,7 +59,7 @@ _"ASE is an amazing plugin! **Time and money saver**. Thank you!"_ ~[Iulian Baci
 * **Media Replacement**. Easily replace any type of media file with a new one while ensuring no existing links will break. [ASE Pro](https://www.wpase.com/rdme-to-web) allows replacing media from the grid view of media library as well.
 * **SVG Upload**. Allow some or all user roles to upload SVG files, which will then be sanitized to keep things secure.
 * **AVIF Upload**. Enable uploading AVIF files in the Media Library.
-* **[[ASE Pro](https://www.wpase.com/rdme-to-web)] Public Preview for Drafts**. Enable public preview for draft posts from some or all public post types.
+* **[[ASE Pro](https://www.wpase.com/rdme-to-web)] Public Preview for Drafts**. Enable public preview for draft and scheduled posts from some or all public post types.
 * **External Permalinks**. Enable pages, posts and/or custom post types to have permalinks that point to external URLs. [ASE Pro](https://www.wpase.com/rdme-to-web) adds an option to enable only on / except on certain post types, or on all post types.
 * **Open All External Links in New Tab**. Force all links to external sites to open in new browser tab via target="\_blank" attribute.
 * **Allow Custom Navigation Menu Items to Open in New Tab**. Allow custom navigation menu items to have links that open in new browser tab via target="\_blank" attribute.
@@ -203,42 +203,36 @@ ASE does not officially support multisite. Please use at your own risk. That sai
 
 ## Changelog
 
-**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **85 _major_ releases** (e.g. 1.1.0 ) and **189 _minor_ releases** (e.g. 4.9.1), for a **total of 274 releases**.
+**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **85 _major_ releases** (e.g. 1.1.0 ) and **190 _minor_ releases** (e.g. 4.9.1), for a **total of 275 releases**.
 
 Each **_major release_** usually corresponds with the addition of one new module/feature. Each module/feature usually is the equivalent of one (or more) single-purpose plugin. Each **_minor release_** usually contain one or more bugfix or improvements to existing modules/features.
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). Lifetime Deal (LTD) available.
 
-### 8.6.0 (2026.03.30) - ASE Free and Pro
+### 8.6.1 (2026.04.06) - ASE Free and Pro
 
-* **[ADDED in Pro] Admin Interface >> Admin Bar Custom Elements**: New module to add custom menu and submenu items to the admin bar. Props to Todd, Jake H. and Lee B. for prompting this addition.
+* **[IMPROVED in Free and Pro] Log In/Out | Register >> Change Login URL**: update module description to clarify compatibility with 2FA plugin / module.
 
-* **[SECURITY FIX in Free and Pro] Log In/Out & Register >> Change Login URL**: fix vulnerability that exposes the hidden login URL/form when a certain URL pattern is loaded on the frontend while logged-out. Props to Dan for responsibly disclosing this.
+* **[FIXED in Free and Pro] Utilities >> Email Delivery**: fixed PHP Deprecation issue in PHP 8.4.
 
-* **[IMPROVED in Free] Security >> Email Address Obfuscator**: The "high-compatibility" mode option is now available in ASE Free as well.
-
-* **[FIXED and IMPROVED in Free and Pro] Admin Interface >> Admin Menu Organizer**: 
-  * [ASE Free and Pro] Remove description text at the top of the Admin Menu Organizer page.
-  * [ASE Pro] Add the ability to always allow eligible users to view and access a menu item even if it's been hidden for all user roles or a particular user role. Props to Gary M., Gergo F.. Lee, SPARKS!, Tim C. and Tyler S. for prompting this imprvement.
-  * [ASE Pro] Fix custom submenu title corruption when a unicode character is present, e.g. Serviço. Props to Jayron C. for reporting the issue in detail.
-  * [ASE Pro] Change "Add Menu" to "Add Menu or Separator" and "Add Separator" to "Add Spacer" for better clarity since the addition of the "Add Menu" feature. Pros to Tanja K. for prompting this improvement.
-
-* **[IMPROVED in Pro] Security >> Two-Factor Authentication (2FA)**: 
-  * add an option to apply different 2FA settings for each user role. This allows you to choose which 2FA methods to activate and the grace period to apply for each role. Props to Justin T. for prompting this improvement.
-  * add an option to enable the email method by default for the selected user role(s). Props to Justin T. for prompting this improvement.
+* **[IMPROVED in Pro] Admin Interface >> Admin Bar Custom Elements**:
+  - It's now possible to drag a parent element between the left and right side.
+  - It's now possible to drag a child element from one parent element to another parent element. The "Parent" field has also been removed in favor of this drag and drop approach.
+  - Add an option to set which user roles an element should be shown for. A child element can inherit the parent element settings or has its own settings.
+  - The read-only "ID" field is now hidden so the "Options" panel is cleaner and simpler.
   
-* **[IMPROVED in Free and Pro] Disable Components >> Disable REST API**: two-factor authentication routes by default are now excluded from being disabled.
+* **[IMPROVED in Pro] Custom Code >> Code Snippets Manager**: Improved handling of errors triggered by PHP snippets. Added a mechanism to prevent misattribution. Add a dedicated Error Log page (and submenu item) to display errors without clearly identifiable source snippets, which should help diagnose which PHP snippet an error originates from without mistakenly attributing it to a potentially wrong snippet. This also imroves the reliability of safe mode being auto-enabled on fatal errors. Props to David K. for prompting this improvement.
 
-* **[Improved in Pro] Utilities >> File Manager**: "Last Modified" column will now properly reflect the timezone set in "Settings >> General".
- 
-* **[FIXED and IMPROVED in Pro] Content Management >> Custom Content Types >> Custom Field Group**: 
-  * Fixed out-of-memory bug that occurs in a certain scenario when using the `[cf]`  shortcode with a WYSIWYG field in a page builder context. Props to Lynette C. for reporting the issue and facilitating the troubleshooting process.
-  * Added new option for WYSIWYG field to force paragraph output to use double line breaks instead of paragraph tags. This is useful when used in certain page builder context so that styling from the page builder UI applies correctly and not being rendered mute / ineffective by the paragraph tags.
+* **[IMPROVED in Pro] Content Management >> Public Preview for Drafts** add an option to also allow public preview for scheduled posts. Props to B. Adams for prompting this improvement.
+
+* **[IMPROVED in Pro] Content Management >> Custom Content Types >> Custom Field Group**: add a new 'notify' parameter for frontend submission form's shortcode `[post_cf_form]` which can contain comma-separated email addresses and/or usernames. Once a submission has been made email notification containing form submission data will be sent to those email addresses and/or user emails. Props to Henry R. for prompting this improvement.
+
+* **[FIXED in Pro] Content Management >> Media Categories**: fix heading misalignment / cut-off on screen <= 1300px. Props to Henry R. for reporting the issue.
 
 * **[TRANSLATION in Free and Pro]** ASE is now being translated into [38 languages](https://translate.wpase.com/):
   * **Added new/improved translation** for:
-    * ASE Free: Updated Portuguese (Brazil), Polish, Norwegian, Dutch, Chinese (Taiwan)
-    * ASE Pro: Updated Spanish (Spain).
+    * ASE Free: Update Portuguese (Brazil), Polish, Norwegian, Hungarian, Dutch.
+    * ASE Pro: Update Czech, Hungarian, Portuguese (Brazil), Polish
   * **More strings have been internationalized**. @Translators, please visit the respective project pages for the Free and Pro versions to translate the new strings, if you havent' done so already.
   * **Interested to help translate or improve the translation?** Please go to [https://translate.wpase.com](https://translate.wpase.com) for more info.
   * **[Chinese (China)](https://translate.wordpress.org/locale/zh-cn/default/wp-plugins/admin-site-enhancements/)**: ASE Free and Pro (completed). Props to [@bricksvip](https://profiles.wordpress.org/bricksvip/) et al. Current status: [12 strings untranslated](https://translate.wordpress.org/projects/wp-plugins/admin-site-enhancements/stable/zh-cn/default/?filters%5Bstatus%5D=untranslated).

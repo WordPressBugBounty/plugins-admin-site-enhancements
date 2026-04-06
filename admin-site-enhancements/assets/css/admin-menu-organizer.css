@@ -142,7 +142,8 @@ li[id^="separator"] .menu-item-title {
     color: #999;
 }
 
-.sortable-placeholder {
+/* Scoped to AMO root list so other screens (e.g. ABCE) can style .sortable-placeholder independently. */
+#custom-admin-menu .sortable-placeholder {
     width: 600px !important;
     max-width: 600px !important;
     height: 46px;

@@ -1341,6 +1341,7 @@ class Settings_Sections_Fields {
         );
         $field_id = 'change_login_url_description';
         $field_slug = 'change-login-url-description';
+        $field_description = '<div class="asenha-warning">' . __( '"New login URL" only works for/with the default WordPress login page.', 'admin-site-enhancements' ) . ' ' . __( 'Please use something other than \'login\' for the custom login slug.', 'admin-site-enhancements' ) . '<br /><br />' . __( 'If you have a login page you manually created with a page builder or with another plugin, please add them to the "Allow login from" section.', 'admin-site-enhancements' ) . '<br /><br />' . __( 'If you need 2FA, the <a href="https://wordpress.org/plugins/two-factor/">Two Factor plugin</a> has been confirmed to be compatible.', 'admin-site-enhancements' ) . '</div>';
         add_settings_field(
             $field_id,
             '',
@@ -1349,7 +1350,7 @@ class Settings_Sections_Fields {
             'main-section',
             array(
                 'option_name'       => ASENHA_SLUG_U,
-                'field_description' => __( '<div class="asenha-warning">"New login URL" <strong>only works for/with the default WordPress login page</strong>. If you have a login page you manually created with a page builder or with another plugin, please add them to the "Allow login from" section.<br /><br />This module is <strong>not yet compatible with two-factor authentication (2FA) methods</strong>. If you use a 2FA plugin, please use the change login URL feature bundled in that plugin, or use another plugin that is compatible with it.<br /><br />And obviously, to improve security, please <strong>use something other than \'login\'</strong> for the custom login slug.</div>', 'admin-site-enhancements' ),
+                'field_description' => $field_description,
                 'class'             => 'asenha-description login-logout ' . $field_slug,
             )
         );

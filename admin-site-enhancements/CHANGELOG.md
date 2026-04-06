@@ -1,10 +1,35 @@
 ## Changelog
 
-**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **85 _major_ releases** (e.g. 1.1.0 ) and **189 _minor_ releases** (e.g. 4.9.1), for a **total of 274 releases**.
+**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **85 _major_ releases** (e.g. 1.1.0 ) and **190 _minor_ releases** (e.g. 4.9.1), for a **total of 275 releases**.
 
 Each **_major release_** usually corresponds with the addition of one new module/feature. Each module/feature usually is the equivalent of one (or more) single-purpose plugin. Each **_minor release_** usually contain one or more bugfix or improvements to existing modules/features.
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). Lifetime Deal (LTD) available.
+
+### 8.6.1 (2026.04.06) - ASE Free and Pro
+
+* **[IMPROVED in Free and Pro] Log In/Out | Register >> Change Login URL**: update module description to clarify compatibility with 2FA plugin / module.
+
+* **[FIXED in Free and Pro] Utilities >> Email Delivery**: fixed PHP Deprecation issue in PHP 8.4.
+
+* **[IMPROVED in Pro] Admin Interface >> Admin Bar Custom Elements**:
+  - It's now possible to drag a parent element between the left and right side.
+  - It's now possible to drag a child element from one parent element to another parent element. The "Parent" field has also been removed in favor of this drag and drop approach.
+  - Add an option to set which user roles an element should be shown for. A child element can inherit the parent element settings or has its own settings.
+  - The read-only "ID" field is now hidden so the "Options" panel is cleaner and simpler.
+  
+* **[IMPROVED in Pro] Custom Code >> Code Snippets Manager**: Improved handling of errors triggered by PHP snippets. Added a mechanism to prevent misattribution. Add a dedicated Error Log page (and submenu item) to display errors without clearly identifiable source snippets, which should help diagnose which PHP snippet an error originates from without mistakenly attributing it to a potentially wrong snippet. This also imroves the reliability of safe mode being auto-enabled on fatal errors. Props to David K. for prompting this improvement.
+
+* **[IMPROVED in Pro] Content Management >> Public Preview for Drafts** add an option to also allow public preview for scheduled posts. Props to B. Adams for prompting this improvement.
+
+* **[IMPROVED in Pro] Content Management >> Custom Content Types >> Custom Field Group**: add a new 'notify' parameter for frontend submission form's shortcode `[post_cf_form]` which can contain comma-separated email addresses and/or usernames. Once a submission has been made email notification containing form submission data will be sent to those email addresses and/or user emails. Props to Henry R. for prompting this improvement.
+
+* **[FIXED in Pro] Content Management >> Media Categories**: fix heading misalignment / cut-off on screen <= 1300px. Props to Henry R. for reporting the issue.
+
+* **[TRANSLATION in Free and Pro]** ASE is now being translated into [38 languages](https://translate.wpase.com/):
+  * **Added new/improved translation** for:
+    * ASE Free: Update Portuguese (Brazil), Polish, Norwegian, Hungarian, Dutch.
+    * ASE Pro: Update Czech, Hungarian, Portuguese (Brazil), Polish
 
 ### 8.6.0 (2026.03.30) - ASE Free and Pro
 
@@ -16,6 +41,7 @@ Each **_major release_** usually corresponds with the addition of one new module
 
 * **[FIXED and IMPROVED in Free and Pro] Admin Interface >> Admin Menu Organizer**: 
   * [ASE Free and Pro] Remove description text at the top of the Admin Menu Organizer page.
+  * [ASE Free] Fixed missing green checkmark icon after clicking "Save Changes"
   * [ASE Pro] Add the ability to always allow eligible users to view and access a menu item even if it's been hidden for all user roles or a particular user role. Props to Gary M., Gergo F.. Lee, SPARKS!, Tim C. and Tyler S. for prompting this imprvement.
   * [ASE Pro] Fix custom submenu title corruption when a unicode character is present, e.g. Serviço. Props to Jayron C. for reporting the issue in detail.
   * [ASE Pro] Change "Add Menu" to "Add Menu or Separator" and "Add Separator" to "Add Spacer" for better clarity since the addition of the "Add Menu" feature. Pros to Tanja K. for prompting this improvement.

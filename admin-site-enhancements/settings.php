@@ -1016,15 +1016,9 @@ function asenha_admin_scripts(  $hook_suffix  ) {
         );
         wp_enqueue_script( 'jquery-ui-sortable' );
         wp_enqueue_style(
-            'asenha-admin-menu-organizer',
-            ASENHA_URL . 'assets/css/admin-menu-organizer.css',
-            array(),
-            ASENHA_VERSION
-        );
-        wp_enqueue_style(
             'asenha-admin-bar-custom-elements',
             ASENHA_URL . 'assets/premium/css/admin-bar-custom-elements.css',
-            array('asenha-admin-menu-organizer'),
+            array(),
             ASENHA_VERSION
         );
         wp_enqueue_script(
