@@ -1,10 +1,27 @@
 ## Changelog
 
-**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **85 _major_ releases** (e.g. 1.1.0 ) and **190 _minor_ releases** (e.g. 4.9.1), for a **total of 275 releases**.
+**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **85 _major_ releases** (e.g. 1.1.0 ) and **191 _minor_ releases** (e.g. 4.9.1), for a **total of 276 releases**.
 
 Each **_major release_** usually corresponds with the addition of one new module/feature. Each module/feature usually is the equivalent of one (or more) single-purpose plugin. Each **_minor release_** usually contain one or more bugfix or improvements to existing modules/features.
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). Lifetime Deal (LTD) available.
+
+### 8.6.2 (2026.04.13) - ASE Free and Pro
+
+* **[FIXED in Free and Pro] Admin Interface >> Hide Admin Notices**: fixed notices not being hidden in Admin Columns plugin's admin pages. Props to John D. for reporting the issue.
+
+* **[IMPROVED in Free and Pro] Utilities >> Password Protection**: cron requests now bypasses password protection.
+
+* **[IMPROVED in Pro] Content Management >> Custom Content Types >> Custom Field Group**: Added the ability to expose / update custom field values in / via WP REST API ([docs >>](https://www.wpase.com/documentation/custom-field-types/#rest-api)). Props to Gabriel, Tadeas, Ale M., Richard W., Riza M.A., Rahul S., Matt E., Jesús, Liza C. and Matteo C. for prompting this improvement.
+
+* **[FIXED and IMPROVED in Pro] Custom Code >> Code Snippets Manager**: 
+  * fixed a bug with the "Disable the Code Snippets Editor role" is checked that, in a certain scenario, causes administrator users to not see the "Code Snippets" menu and can not access snippets list, add and edit screens.
+  * added a new settings (checkbox) to migrate the snippets storage folder to /wp-content/ root. Props to Rajan D. for prompting this improvement.
+
+* **[TRANSLATION in Free and Pro]** ASE is now being translated into [38 languages](https://translate.wpase.com/):
+  * **Added new/improved translation** for:
+    * ASE Free: Updated Spanish (Spain), Spanish (Chile), Portuguese (Brazil), Polish, Norwegian, Dutch, Arabic
+    * ASE Pro: Updated Norwegian, Portuguese (Brazil), Polish
 
 ### 8.6.1 (2026.04.06) - ASE Free and Pro
 
@@ -18,7 +35,7 @@ Each **_major release_** usually corresponds with the addition of one new module
   - Add an option to set which user roles an element should be shown for. A child element can inherit the parent element settings or has its own settings.
   - The read-only "ID" field is now hidden so the "Options" panel is cleaner and simpler.
   
-* **[IMPROVED in Pro] Custom Code >> Code Snippets Manager**: Improved handling of errors triggered by PHP snippets. Added a mechanism to prevent misattribution. Add a dedicated Error Log page (and submenu item) to display errors without clearly identifiable source snippets, which should help diagnose which PHP snippet an error originates from without mistakenly attributing it to a potentially wrong snippet. This also imroves the reliability of safe mode being auto-enabled on fatal errors. Props to David K. for prompting this improvement.
+* **[IMPROVED in Pro] Custom Code >> Code Snippets Manager**: Improved handling of errors triggered by PHP snippets. Added a mechanism to prevent misattribution. Add a dedicated Error Log page (and submenu item) to display errors without clearly identifiable source snippets, which should help diagnose which PHP snippet an error originates from without mistakenly attributing it to a potentially wrong snippet. This also improves the reliability of safe mode being auto-enabled on fatal errors. Props to David K. for prompting this improvement.
 
 * **[IMPROVED in Pro] Content Management >> Public Preview for Drafts** add an option to also allow public preview for scheduled posts. Props to B. Adams for prompting this improvement.
 

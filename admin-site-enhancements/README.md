@@ -5,7 +5,7 @@ Donate link: https://bowo.io/asenha-sp-rdm
 Tags: enhancements, tweaks, optimizations, tools  
 Requires at least: 4.6  
 Tested up to: 6.9.4  
-Stable tag: 8.6.1  
+Stable tag: 8.6.2  
 Requires PHP: 5.6  
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -203,36 +203,28 @@ ASE does not officially support multisite. Please use at your own risk. That sai
 
 ## Changelog
 
-**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **85 _major_ releases** (e.g. 1.1.0 ) and **190 _minor_ releases** (e.g. 4.9.1), for a **total of 275 releases**.
+**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **85 _major_ releases** (e.g. 1.1.0 ) and **191 _minor_ releases** (e.g. 4.9.1), for a **total of 276 releases**.
 
 Each **_major release_** usually corresponds with the addition of one new module/feature. Each module/feature usually is the equivalent of one (or more) single-purpose plugin. Each **_minor release_** usually contain one or more bugfix or improvements to existing modules/features.
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). Lifetime Deal (LTD) available.
 
-### 8.6.1 (2026.04.06) - ASE Free and Pro
+### 8.6.2 (2026.04.13) - ASE Free and Pro
 
-* **[IMPROVED in Free and Pro] Log In/Out | Register >> Change Login URL**: update module description to clarify compatibility with 2FA plugin / module.
+* **[FIXED in Free and Pro] Admin Interface >> Hide Admin Notices**: fixed notices not being hidden in Admin Columns plugin's admin pages. Props to John D. for reporting the issue.
 
-* **[FIXED in Free and Pro] Utilities >> Email Delivery**: fixed PHP Deprecation issue in PHP 8.4.
+* **[IMPROVED in Free and Pro] Utilities >> Password Protection**: cron requests now bypasses password protection.
 
-* **[IMPROVED in Pro] Admin Interface >> Admin Bar Custom Elements**:
-  - It's now possible to drag a parent element between the left and right side.
-  - It's now possible to drag a child element from one parent element to another parent element. The "Parent" field has also been removed in favor of this drag and drop approach.
-  - Add an option to set which user roles an element should be shown for. A child element can inherit the parent element settings or has its own settings.
-  - The read-only "ID" field is now hidden so the "Options" panel is cleaner and simpler.
-  
-* **[IMPROVED in Pro] Custom Code >> Code Snippets Manager**: Improved handling of errors triggered by PHP snippets. Added a mechanism to prevent misattribution. Add a dedicated Error Log page (and submenu item) to display errors without clearly identifiable source snippets, which should help diagnose which PHP snippet an error originates from without mistakenly attributing it to a potentially wrong snippet. This also imroves the reliability of safe mode being auto-enabled on fatal errors. Props to David K. for prompting this improvement.
+* **[IMPROVED in Pro] Content Management >> Custom Content Types >> Custom Field Group**: Added the ability to expose / update custom field values in / via WP REST API ([docs >>](https://www.wpase.com/documentation/custom-field-types/#rest-api)). Props to Gabriel, Tadeas, Ale M., Richard W., Riza M.A., Rahul S., Matt E., Jesús, Liza C. and Matteo C. for prompting this improvement.
 
-* **[IMPROVED in Pro] Content Management >> Public Preview for Drafts** add an option to also allow public preview for scheduled posts. Props to B. Adams for prompting this improvement.
-
-* **[IMPROVED in Pro] Content Management >> Custom Content Types >> Custom Field Group**: add a new 'notify' parameter for frontend submission form's shortcode `[post_cf_form]` which can contain comma-separated email addresses and/or usernames. Once a submission has been made email notification containing form submission data will be sent to those email addresses and/or user emails. Props to Henry R. for prompting this improvement.
-
-* **[FIXED in Pro] Content Management >> Media Categories**: fix heading misalignment / cut-off on screen <= 1300px. Props to Henry R. for reporting the issue.
+* **[FIXED and IMPROVED in Pro] Custom Code >> Code Snippets Manager**: 
+  * fixed a bug with the "Disable the Code Snippets Editor role" is checked that, in a certain scenario, causes administrator users to not see the "Code Snippets" menu and can not access snippets list, add and edit screens.
+  * added a new settings (checkbox) to migrate the snippets storage folder to /wp-content/ root. Props to Rajan D. for prompting this improvement.
 
 * **[TRANSLATION in Free and Pro]** ASE is now being translated into [38 languages](https://translate.wpase.com/):
   * **Added new/improved translation** for:
-    * ASE Free: Update Portuguese (Brazil), Polish, Norwegian, Hungarian, Dutch.
-    * ASE Pro: Update Czech, Hungarian, Portuguese (Brazil), Polish
+    * ASE Free: Updated Spanish (Spain), Spanish (Chile), Portuguese (Brazil), Polish, Norwegian, Dutch, Arabic
+    * ASE Pro: Updated Norwegian, Portuguese (Brazil), Polish
   * **More strings have been internationalized**. @Translators, please visit the respective project pages for the Free and Pro versions to translate the new strings, if you havent' done so already.
   * **Interested to help translate or improve the translation?** Please go to [https://translate.wpase.com](https://translate.wpase.com) for more info.
   * **[Chinese (China)](https://translate.wordpress.org/locale/zh-cn/default/wp-plugins/admin-site-enhancements/)**: ASE Free and Pro (completed). Props to [@bricksvip](https://profiles.wordpress.org/bricksvip/) et al. Current status: [12 strings untranslated](https://translate.wordpress.org/projects/wp-plugins/admin-site-enhancements/stable/zh-cn/default/?filters%5Bstatus%5D=untranslated).
