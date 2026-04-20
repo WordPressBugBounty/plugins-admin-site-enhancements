@@ -498,6 +498,7 @@
       $('.heartbeat-interval-for-frontend').appendTo('.fields-optimizations .enable-heartbeat-control .asenha-subfields');
 
       // Place fields into "Utilities" tab
+      
       $('.smtp-email-delivery').appendTo('.fields-utilities > table > tbody');
       $('.smtp-default-from-description').appendTo('.fields-utilities .smtp-email-delivery .asenha-subfields');
       $('.smtp-default-from-name').appendTo('.fields-utilities .smtp-email-delivery .asenha-subfields');
@@ -959,6 +960,8 @@
             $('.heartbeat-interval-for-frontend .asenha-subfield-select-inner').hide();            
          }
       });
+
+      
 
       subfieldsToggler( 'smtp_email_delivery', 'smtp-email-delivery' );
 

@@ -5,7 +5,7 @@ Donate link: https://bowo.io/asenha-sp-rdm
 Tags: enhancements, tweaks, optimizations, tools  
 Requires at least: 4.6  
 Tested up to: 6.9.4  
-Stable tag: 8.6.2  
+Stable tag: 8.7.0  
 Requires PHP: 5.6  
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -43,7 +43,7 @@ _"ASE is an amazing plugin! **Time and money saver**. Thank you!"_ ~[Iulian Baci
 ### FEATURES & MODULES
 
 **74 modules** in total:  
-**57 free modules** (31 has Pro features) | **17 Pro modules**
+**57 free modules** (31 has Pro features) | **18 Pro modules**
 
 [**See all features >>**](https://www.wpase.com/features/)
 
@@ -136,6 +136,7 @@ _"ASE is an amazing plugin! **Time and money saver**. Thank you!"_ ~[Iulian Baci
 
 ### Utilities
 
+* **[[ASE Pro](https://www.wpase.com/rdme-to-web)] Site Backup and Migration**. Backup files and database, restore from backups, and migrate or sync to another server.
 * **Email Delivery**. Set custom sender name and email. Optionally use external SMTP service to ensure notification and transactional emails from your site are being delivered to inboxes. [ASE Pro](https://www.wpase.com/rdme-to-web) adds the option to specify a custom reply-to name and email, Bcc address(es), disable authentication and the option to log email delivery.
 * **[[ASE Pro](https://www.wpase.com/rdme-to-web)] Form Builder**. Enable the drag-and-drop creation of various types of forms (contact, feedback, booking, application, proposal, admission, support, survey, etc.) on the frontend to collect information from site visitors or users or members. 33 field types are available, including Net Promoter Score (NPS), Likert, Matrix of Uniform and Variable Dropdowns and CAPTCHA fields. Support custom form styles, multi-columns layout, email notification, auto responder, entries management and webhooks for sending submission data to Zapier, n8n, etc.
 * **[[ASE Pro](https://www.wpase.com/rdme-to-web)] File Manager**. A comprehensive file manager for WordPress with folder tree navigation, file and folder operations, and code editing capabilities.
@@ -203,28 +204,35 @@ ASE does not officially support multisite. Please use at your own risk. That sai
 
 ## Changelog
 
-**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **85 _major_ releases** (e.g. 1.1.0 ) and **191 _minor_ releases** (e.g. 4.9.1), for a **total of 276 releases**.
+**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **86 _major_ releases** (e.g. 1.1.0 ) and **191 _minor_ releases** (e.g. 4.9.1), for a **total of 277 releases**.
 
 Each **_major release_** usually corresponds with the addition of one new module/feature. Each module/feature usually is the equivalent of one (or more) single-purpose plugin. Each **_minor release_** usually contain one or more bugfix or improvements to existing modules/features.
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). Lifetime Deal (LTD) available.
 
-### 8.6.2 (2026.04.13) - ASE Free and Pro
+### 8.7.0 (2026.04.20) - ASE Free and Pro
 
-* **[FIXED in Free and Pro] Admin Interface >> Hide Admin Notices**: fixed notices not being hidden in Admin Columns plugin's admin pages. Props to John D. for reporting the issue.
+* **[ADDED in Pro] Utilities >> Site Backup and Migration**: Backup site files and database, restore from backups, and migrate or sync to another server. [Find out more >>](https://www.wpase.com/features/site-backup-migration/).
 
-* **[IMPROVED in Free and Pro] Utilities >> Password Protection**: cron requests now bypasses password protection.
+* **[FIXED in Free and Pro] Log In/Out | Register >> Change Login URL**: fixed a regression that exposes the custom login URL when a certain URL pattern is loaded by a public visitor. Props to @dariobros for reporting the issue.
 
-* **[IMPROVED in Pro] Content Management >> Custom Content Types >> Custom Field Group**: Added the ability to expose / update custom field values in / via WP REST API ([docs >>](https://www.wpase.com/documentation/custom-field-types/#rest-api)). Props to Gabriel, Tadeas, Ale M., Richard W., Riza M.A., Rahul S., Matt E., Jesús, Liza C. and Matteo C. for prompting this improvement.
+* **[IMPROVED in Pro] Utilities >> File Manager**: add option to put the folder tree on the left side, and another option to add the File Manager as a top-level menu item instead of submenu under Tools. Props to Christian S. for prompting these improvements.
 
 * **[FIXED and IMPROVED in Pro] Custom Code >> Code Snippets Manager**: 
-  * fixed a bug with the "Disable the Code Snippets Editor role" is checked that, in a certain scenario, causes administrator users to not see the "Code Snippets" menu and can not access snippets list, add and edit screens.
-  * added a new settings (checkbox) to migrate the snippets storage folder to /wp-content/ root. Props to Rajan D. for prompting this improvement.
+  * default snippets storage folder to the /wp-content/ root for when there are no snippets created yet.
+  * prevent stripping valid backslashes on saving a snippet and restoring from revision. Props to Martin S. for reporting the issue in detail.
+  
+* **[IMPROVED in Pro] Utilities >> Form Builder**:
+  * Enable "Tags" for email notification's "From Name" field, which can be useful if you want to use the "Name" field in a form as the "From Name" of the email notification. Props to Duncan H. for prompting this improvement.
+  * Field labels in "Tags" selector in email notification and auto-responder settings pages now are properly stripped from raw HTML tags.
+  * Hidden fields are no longer included in auto-responder emails.
+  * Add option to customize placeholder for dropdowns in matrix fields (the default is "Choose one"). Props to Uli L. for prompting this improvement.
+  
+* **[FIXED in Pro] Admin Interface >> Admin Menu Organizer**: fixed an issue where the "Options" toggle is not working for submenu items when the site language is set to 简体中文 (zh_CN) or 繁體中文 (zh_TW). Props to John Y. for reporting this and for facilitating the troubleshooting process.
 
 * **[TRANSLATION in Free and Pro]** ASE is now being translated into [38 languages](https://translate.wpase.com/):
   * **Added new/improved translation** for:
-    * ASE Free: Updated Spanish (Spain), Spanish (Chile), Portuguese (Brazil), Polish, Norwegian, Dutch, Arabic
-    * ASE Pro: Updated Norwegian, Portuguese (Brazil), Polish
+    * ASE Free: Updated Portuguese (Brazil), Polish, Norwegian.
   * **More strings have been internationalized**. @Translators, please visit the respective project pages for the Free and Pro versions to translate the new strings, if you havent' done so already.
   * **Interested to help translate or improve the translation?** Please go to [https://translate.wpase.com](https://translate.wpase.com) for more info.
   * **[Chinese (China)](https://translate.wordpress.org/locale/zh-cn/default/wp-plugins/admin-site-enhancements/)**: ASE Free and Pro (completed). Props to [@bricksvip](https://profiles.wordpress.org/bricksvip/) et al. Current status: [12 strings untranslated](https://translate.wordpress.org/projects/wp-plugins/admin-site-enhancements/stable/zh-cn/default/?filters%5Bstatus%5D=untranslated).

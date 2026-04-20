@@ -3059,9 +3059,6 @@ class Settings_Sections_Fields {
                 'display_none_on_load' => true,
             )
         );
-        // =================================================================
-        // UTILITIES
-        // =================================================================
         // SMTP Email Delivery
         $field_id = 'smtp_email_delivery';
         $field_slug = 'smtp-email-delivery';

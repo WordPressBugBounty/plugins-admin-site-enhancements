@@ -735,9 +735,6 @@ class Settings_Sanitization {
             $options['heartbeat_interval_for_frontend'] = 60;
         }
         $options['heartbeat_interval_for_frontend'] = ( !empty( $options['heartbeat_interval_for_frontend'] ) ? sanitize_text_field( $options['heartbeat_interval_for_frontend'] ) : 60 );
-        // =================================================================
-        // UTILITIES
-        // =================================================================
         // SMTP Email Delivery
         if ( !isset( $options['smtp_email_delivery'] ) ) {
             $options['smtp_email_delivery'] = false;

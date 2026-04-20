@@ -47,28 +47,95 @@ function asenha_get_option_array(  $option_name, $autoload = null  ) {
 }
 
 if ( false === get_option( ASENHA_SLUG_U ) ) {
-    add_option(
-        ASENHA_SLUG_U,
-        array(),
-        '',
-        true
-    );
+    global $wpdb;
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+    $asenha_exists_in_db = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->options} WHERE option_name = %s", ASENHA_SLUG_U ) );
+    if ( !$asenha_exists_in_db ) {
+        add_option(
+            ASENHA_SLUG_U,
+            array(),
+            '',
+            true
+        );
+    } else {
+        // Option exists in DB but cache returned false (stale persistent cache).
+        // Aggressively invalidate all cache layers including local in-process caches
+        // that some Redis/Memcached backends maintain separately from the external store.
+        wp_cache_delete( 'alloptions', 'options' );
+        wp_cache_delete( 'notoptions', 'options' );
+        if ( function_exists( 'wp_cache_flush' ) ) {
+            wp_cache_flush();
+        }
+        global $wp_object_cache;
+        if ( is_object( $wp_object_cache ) ) {
+            if ( property_exists( $wp_object_cache, 'local_cache' ) && is_array( $wp_object_cache->local_cache ) ) {
+                unset($wp_object_cache->local_cache['options']);
+            }
+            if ( property_exists( $wp_object_cache, 'cache' ) && is_array( $wp_object_cache->cache ) ) {
+                unset($wp_object_cache->cache['options']);
+            }
+        }
+    }
 }
 if ( false === get_option( ASENHA_SLUG_U . '_stats' ) ) {
-    add_option(
-        ASENHA_SLUG_U . '_stats',
-        array(),
-        '',
-        false
-    );
+    global $wpdb;
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+    $asenha_stats_exists_in_db = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->options} WHERE option_name = %s", ASENHA_SLUG_U . '_stats' ) );
+    if ( !$asenha_stats_exists_in_db ) {
+        add_option(
+            ASENHA_SLUG_U . '_stats',
+            array(),
+            '',
+            false
+        );
+    } else {
+        // Option exists in DB but cache returned false (stale persistent cache).
+        // Aggressively invalidate all cache layers including local in-process caches.
+        wp_cache_delete( 'alloptions', 'options' );
+        wp_cache_delete( 'notoptions', 'options' );
+        if ( function_exists( 'wp_cache_flush' ) ) {
+            wp_cache_flush();
+        }
+        global $wp_object_cache;
+        if ( is_object( $wp_object_cache ) ) {
+            if ( property_exists( $wp_object_cache, 'local_cache' ) && is_array( $wp_object_cache->local_cache ) ) {
+                unset($wp_object_cache->local_cache['options']);
+            }
+            if ( property_exists( $wp_object_cache, 'cache' ) && is_array( $wp_object_cache->cache ) ) {
+                unset($wp_object_cache->cache['options']);
+            }
+        }
+    }
 }
 if ( false === get_option( ASENHA_SLUG_U . '_extra' ) ) {
-    add_option(
-        ASENHA_SLUG_U . '_extra',
-        array(),
-        '',
-        true
-    );
+    global $wpdb;
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+    $asenha_extra_exists_in_db = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->options} WHERE option_name = %s", ASENHA_SLUG_U . '_extra' ) );
+    if ( !$asenha_extra_exists_in_db ) {
+        add_option(
+            ASENHA_SLUG_U . '_extra',
+            array(),
+            '',
+            true
+        );
+    } else {
+        // Option exists in DB but cache returned false (stale persistent cache).
+        // Aggressively invalidate all cache layers including local in-process caches.
+        wp_cache_delete( 'alloptions', 'options' );
+        wp_cache_delete( 'notoptions', 'options' );
+        if ( function_exists( 'wp_cache_flush' ) ) {
+            wp_cache_flush();
+        }
+        global $wp_object_cache;
+        if ( is_object( $wp_object_cache ) ) {
+            if ( property_exists( $wp_object_cache, 'local_cache' ) && is_array( $wp_object_cache->local_cache ) ) {
+                unset($wp_object_cache->local_cache['options']);
+            }
+            if ( property_exists( $wp_object_cache, 'cache' ) && is_array( $wp_object_cache->cache ) ) {
+                unset($wp_object_cache->cache['options']);
+            }
+        }
+    }
 }
 // Bugfix in v7.1.2 for Custom Content Type module
 $options_extra = asenha_get_option_array( ASENHA_SLUG_U . '_extra', true );
