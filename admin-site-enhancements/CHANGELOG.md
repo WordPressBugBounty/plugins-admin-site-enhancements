@@ -1,14 +1,37 @@
 ## Changelog
 
-**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **87 _major_ releases** (e.g. 1.1.0 ) and **198 _minor_ releases** (e.g. 4.9.1), for a **total of 285 releases**.
+**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **87 _major_ releases** (e.g. 1.1.0 ) and **199 _minor_ releases** (e.g. 4.9.1), for a **total of 286 releases**.
 
 Each **_major release_** usually corresponds with the addition of one new module/feature. Each module/feature usually is the equivalent of one (or more) single-purpose plugin. Each **_minor release_** usually contain one or more bugfix or improvements to existing modules/features.
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). Lifetime Deal (LTD) available.
 
-### 8.8.4 (2026.06.15) - ASE Free and Pro
+### 8.8.5 (2026.06.22) - ASE Free and Pro
 
-* **[SECURITY FIX in Free and Pro] View Admin as Role**: fixed "Unauthenticated Administrator-Role Restoration" vulnerability responsibly disclosed by Revanth Hari Narayana Matte via WPScan Security.
+* **[IMPROVED/FIXED in Free and Pro] Admin Interface >> Wider Admin Menu**: fixed an issue where the wider admin menu is overlapping Fluent Support admin pages. Props to [Diiamo](https://wordpress.org/support/users/luislu/) for [reporting](https://wordpress.org/support/topic/wider-admin-menu-issue/) this with a screenshot.
+
+* **[IMPROVED/FIXED in Free and Pro] Utilities >> Email Delivery**: improved mechanism for encrypting SMTP password to no longer rely on WP salts, which can change in certain scenarios, causing silent email delivery failure. Props to someone from @rocket.ch for reporting the issue.
+
+* **[FIXED in Free and Pro] Admin Interface >> Admin Menu Organizer**: fixed several PHP warnings in PHP 8.4.
+
+* **[IMPROVED and FIXED in Pro] Utilities >> Site Backup and Migration**:
+  * Improved the reliability of database export during backups. Props to Uli L. for prompting this improvement.
+  * Improved the reliability of how the "Download" button works for local and remote backup archives. Props to Dominik K. for reporting a related issue that prompted this improvement.
+  * Storage folder (from the 'Storage' tab/feature) by default is no longer included when creating a backup archive. Props to Fellipe R.d.V. for prompting this change.
+  * Added a new option in the module settings to include the storage folder in backup, restore and migration operations. May be useful if you want to have extra redundancy for the WP site you are using as a storage location for backing up your other WP sites. For example, in that storage WP site's backup policy, you can opt to send a backup to Amazon S3, Dropbox, etc., thus creating redundancies for the backup archives of your other WP sites in one go.
+  * Added backup archive note viewer inside the emergency restore script.
+  * Fixed JS error related to the archive note when initiating manual backup.
+  
+* **[FIXED in Pro] Content Management >> Custom Content Types**: fixed PHP warning in PHP 8.4 related to the new WPML integration. Props to Niels S. for reporting the issue in detail.
+
+* **[FIXED in Pro] Log In/Out & Register >> Redirect After Login**: fixed a bug where 2FA is being bypassed when this module is enabled. Props to Danny V. for reporting the issue in detail, with screenshots and a screen recording.
+
+* **[TRANSLATION in Free and Pro]** ASE is now being translated into [38 languages](https://translate.wpase.com/):
+  * **Added new/improved translation** for:
+    * ASE Free: Updated Slovak, Portuguese (Brazil), Polish, Norwegian, Dutch (Netherlands), Dutch (Belgium).
+    * ASE Pro: Updated Greek, Polish, Slovak.
+
+### 8.8.4 (2026.06.15) - ASE Free and Pro
 
 * **[FIXED in Free and Pro] ASE Settings page:** Fixed visual regression for buttons and toggles (enabled / on) on ASE settings page being invisible when on WordPress less than 7.0. Props to Kim T.R. for reporting the issue.
 

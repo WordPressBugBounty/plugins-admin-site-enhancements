@@ -3301,10 +3301,27 @@ class Settings_Sections_Fields {
         $field_id = 'smtp_password';
         $field_slug = 'smtp-password';
         $smtp_authentication_enabled = !isset( $options['smtp_authentication'] ) || 'enable' === $options['smtp_authentication'];
-        $smtp_password_status = \asenha_get_smtp_password_status_compat( ( isset( $options['smtp_password'] ) ? $options['smtp_password'] : '' ) );
+        $email_delivery_for_status = new Email_Delivery();
+        $stored_smtp_password = ( isset( $options['smtp_password'] ) ? $options['smtp_password'] : '' );
+        $smtp_password_status = \asenha_get_smtp_password_status_compat( $stored_smtp_password );
+        $smtp_password_status_label = ( method_exists( $email_delivery_for_status, 'get_smtp_password_status_label' ) ? $email_delivery_for_status->get_smtp_password_status_label( $stored_smtp_password ) : '' );
         $smtp_password_description = __( 'Leave blank to keep the current password.', 'admin-site-enhancements' );
+        if ( $smtp_authentication_enabled && '' !== $smtp_password_status_label ) {
+            $smtp_password_description .= ' ' . sprintf( 
+                /* translators: %s: password storage status label */
+                __( 'Status: %s.', 'admin-site-enhancements' ),
+                $smtp_password_status_label
+             );
+        }
         if ( $smtp_authentication_enabled && 'encrypted_invalid' === $smtp_password_status ) {
             $smtp_password_description = __( 'Enter and save a new password to restore SMTP authentication.', 'admin-site-enhancements' );
+            if ( '' !== $smtp_password_status_label ) {
+                $smtp_password_description .= ' ' . sprintf( 
+                    /* translators: %s: password storage status label */
+                    __( 'Status: %s.', 'admin-site-enhancements' ),
+                    $smtp_password_status_label
+                 );
+            }
         }
         add_settings_field(
             $field_id,

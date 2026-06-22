@@ -179,8 +179,11 @@ function asenha_get_smtp_password_status_compat(  $stored_password = null  ) {
     if ( empty( $stored_password ) ) {
         return 'empty';
     }
-    if ( is_string( $stored_password ) && 0 === strpos( $stored_password, 'asenha_encrypted::smtp_password::v1::' ) ) {
-        return 'encrypted_valid';
+    if ( is_string( $stored_password ) && (0 === strpos( $stored_password, 'asenha_encrypted::smtp_password::v1::' ) || 0 === strpos( $stored_password, 'asenha_encrypted::smtp_password::v2::' )) ) {
+        return 'encrypted_invalid';
+    }
+    if ( is_string( $stored_password ) && 0 === strpos( $stored_password, 'asenha_encrypted::smtp_password::' ) ) {
+        return 'encrypted_invalid';
     }
     return 'legacy_plaintext';
 }
@@ -202,30 +205,89 @@ function asenha_encrypt_smtp_password_compat(  $email_delivery, $password  ) {
 }
 
 /**
- * Encrypt legacy SMTP password storage after pluggable functions are available.
+ * Migrate SMTP password storage to the current encrypted format.
+ *
+ * Upgrades legacy plaintext and decryptable v1 ciphertext to v2 automatically.
  *
  * @since 8.5.1
  */
-function asenha_migrate_legacy_smtp_password_storage() {
+function asenha_migrate_smtp_password_storage() {
     $options = asenha_get_option_array( ASENHA_SLUG_U, true );
     if ( empty( $options['smtp_password'] ) ) {
         return;
     }
     $email_delivery = new \ASENHA\Classes\Email_Delivery();
-    if ( 'legacy_plaintext' !== asenha_get_smtp_password_status_compat( $options['smtp_password'] ) ) {
+    $stored_password = $options['smtp_password'];
+    if ( method_exists( $email_delivery, 'is_smtp_password_storage_version_v2' ) && $email_delivery->is_smtp_password_storage_version_v2() && method_exists( $email_delivery, 'is_smtp_password_v2_encrypted' ) && $email_delivery->is_smtp_password_v2_encrypted( $stored_password ) ) {
         return;
     }
-    $encrypted_smtp_password = asenha_encrypt_smtp_password_compat( $email_delivery, $options['smtp_password'] );
-    if ( !empty( $encrypted_smtp_password ) ) {
-        $options['smtp_password'] = $encrypted_smtp_password;
+    $updated = false;
+    if ( method_exists( $email_delivery, 'is_smtp_password_v2_encrypted' ) && $email_delivery->is_smtp_password_v2_encrypted( $stored_password ) ) {
+        $plaintext_password = ( method_exists( $email_delivery, 'unwrap_smtp_password_to_plaintext' ) ? $email_delivery->unwrap_smtp_password_to_plaintext( $stored_password ) : false );
+        if ( false !== $plaintext_password && method_exists( $email_delivery, 'is_probable_smtp_ciphertext' ) && !$email_delivery->is_probable_smtp_ciphertext( $plaintext_password ) ) {
+            $email_delivery->mark_smtp_password_storage_version_v2();
+            return;
+        }
+        if ( false === $plaintext_password || method_exists( $email_delivery, 'is_probable_smtp_ciphertext' ) && $email_delivery->is_probable_smtp_ciphertext( $plaintext_password ) ) {
+            $email_delivery->set_smtp_password_unavailable_flag();
+            return;
+        }
+    } elseif ( method_exists( $email_delivery, 'is_smtp_password_v1_encrypted' ) && $email_delivery->is_smtp_password_v1_encrypted( $stored_password ) ) {
+        $plaintext_password = $email_delivery->decrypt_smtp_password( $stored_password );
+        if ( false !== $plaintext_password && method_exists( $email_delivery, 'is_probable_smtp_ciphertext' ) && !$email_delivery->is_probable_smtp_ciphertext( $plaintext_password ) ) {
+            $encrypted_smtp_password = asenha_encrypt_smtp_password_compat( $email_delivery, $plaintext_password );
+            if ( !empty( $encrypted_smtp_password ) ) {
+                $options['smtp_password'] = $encrypted_smtp_password;
+                $updated = true;
+            }
+        } elseif ( false !== $plaintext_password && method_exists( $email_delivery, 'is_probable_smtp_ciphertext' ) && $email_delivery->is_probable_smtp_ciphertext( $plaintext_password ) ) {
+            $email_delivery->set_smtp_password_unavailable_flag();
+            return;
+        }
+    } elseif ( method_exists( $email_delivery, 'is_probable_smtp_ciphertext' ) && $email_delivery->is_probable_smtp_ciphertext( $stored_password ) ) {
+        $email_delivery->set_smtp_password_unavailable_flag();
+        return;
+    } else {
+        $encrypted_smtp_password = asenha_encrypt_smtp_password_compat( $email_delivery, $stored_password );
+        if ( !empty( $encrypted_smtp_password ) ) {
+            $options['smtp_password'] = $encrypted_smtp_password;
+            $updated = true;
+        }
+    }
+    if ( $updated ) {
         update_option( ASENHA_SLUG_U, $options, true );
+        if ( method_exists( $email_delivery, 'mark_smtp_password_storage_version_v2' ) ) {
+            $email_delivery->mark_smtp_password_storage_version_v2();
+        }
     }
 }
 
+/**
+ * Repair nested SMTP password storage after migration.
+ *
+ * @since 8.8.6
+ */
+function asenha_repair_nested_smtp_password_storage() {
+    $email_delivery = new \ASENHA\Classes\Email_Delivery();
+    if ( method_exists( $email_delivery, 'repair_nested_smtp_password_storage' ) ) {
+        $email_delivery->repair_nested_smtp_password_storage();
+    }
+}
+
+/**
+ * Run SMTP password storage migration and nested repair.
+ *
+ * @since 8.8.6
+ */
+function asenha_run_smtp_password_storage_upgrades() {
+    asenha_migrate_smtp_password_storage();
+    asenha_repair_nested_smtp_password_storage();
+}
+
 if ( did_action( 'plugins_loaded' ) ) {
-    asenha_migrate_legacy_smtp_password_storage();
+    asenha_run_smtp_password_storage_upgrades();
 } else {
-    add_action( 'plugins_loaded', 'asenha_migrate_legacy_smtp_password_storage' );
+    add_action( 'plugins_loaded', 'asenha_run_smtp_password_storage_upgrades' );
 }
 /**
  * Register admin menu

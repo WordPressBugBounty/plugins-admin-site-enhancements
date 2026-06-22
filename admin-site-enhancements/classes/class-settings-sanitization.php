@@ -771,17 +771,28 @@ class Settings_Sanitization {
         $options['smtp_username'] = ( !empty( $options['smtp_username'] ) ? sanitize_text_field( $options['smtp_username'] ) : '' );
         $existing_smtp_password = ( isset( $existing_options['smtp_password'] ) ? $existing_options['smtp_password'] : '' );
         $submitted_smtp_password = ( isset( $options['smtp_password'] ) ? (string) $options['smtp_password'] : '' );
-        if ( !empty( $submitted_smtp_password ) ) {
+        $reject_submitted_ciphertext = !empty( $submitted_smtp_password ) && method_exists( $email_delivery, 'is_probable_smtp_ciphertext' ) && $email_delivery->is_probable_smtp_ciphertext( $submitted_smtp_password );
+        if ( !empty( $submitted_smtp_password ) && !$reject_submitted_ciphertext ) {
             $encrypted_smtp_password = \asenha_encrypt_smtp_password_compat( $email_delivery, $submitted_smtp_password );
             $options['smtp_password'] = ( !empty( $encrypted_smtp_password ) ? $encrypted_smtp_password : $existing_smtp_password );
+        } elseif ( $reject_submitted_ciphertext ) {
+            $options['smtp_password'] = $existing_smtp_password;
         } else {
             $existing_smtp_password_status = \asenha_get_smtp_password_status_compat( $existing_smtp_password );
-            if ( 'legacy_plaintext' === $existing_smtp_password_status ) {
+            $existing_is_probable_ciphertext = method_exists( $email_delivery, 'is_probable_smtp_ciphertext' ) && $email_delivery->is_probable_smtp_ciphertext( $existing_smtp_password );
+            if ( 'legacy_plaintext' === $existing_smtp_password_status && !$existing_is_probable_ciphertext ) {
                 $encrypted_smtp_password = \asenha_encrypt_smtp_password_compat( $email_delivery, $existing_smtp_password );
                 $options['smtp_password'] = ( !empty( $encrypted_smtp_password ) ? $encrypted_smtp_password : $existing_smtp_password );
             } else {
                 $options['smtp_password'] = $existing_smtp_password;
             }
+        }
+        $saved_smtp_password_status = \asenha_get_smtp_password_status_compat( $options['smtp_password'] );
+        if ( 'encrypted_valid' === $saved_smtp_password_status ) {
+            $email_delivery->clear_smtp_password_unavailable_flag();
+        }
+        if ( empty( $options['smtp_email_delivery'] ) || isset( $options['smtp_authentication'] ) && 'enable' !== $options['smtp_authentication'] ) {
+            $email_delivery->clear_smtp_password_unavailable_flag();
         }
         if ( !isset( $options['smtp_default_from_name'] ) ) {
             $options['smtp_default_from_name'] = '';

@@ -587,6 +587,12 @@ class Admin_Site_Enhancements {
                     5,
                     2
                 );
+                add_filter(
+                    'login_redirect',
+                    [$redirect_after_login, 'filter_login_redirect'],
+                    10,
+                    3
+                );
             }
         }
         // Redirect After Logout
@@ -1049,8 +1055,11 @@ class Admin_Site_Enhancements {
             add_action( 'wp_enqueue_scripts', [$heartbeat_control, 'maybe_disable_heartbeat'], 99 );
         }
         // SMTP Email Delivery
+        $email_delivery = new ASENHA\Classes\Email_Delivery();
+        add_action( 'admin_notices', [$email_delivery, 'maybe_show_smtp_password_admin_notice'] );
+        add_action( 'admin_enqueue_scripts', [$email_delivery, 'enqueue_smtp_password_notice_script'] );
+        add_action( 'wp_ajax_asenha_dismiss_smtp_password_notice', [$email_delivery, 'dismiss_smtp_password_admin_notice'] );
         if ( array_key_exists( 'smtp_email_delivery', $options ) && $options['smtp_email_delivery'] ) {
-            $email_delivery = new ASENHA\Classes\Email_Delivery();
             add_action( 'phpmailer_init', [$email_delivery, 'deliver_email_via_smtp'], 99999 );
             add_action( 'wp_ajax_send_test_email', [$email_delivery, 'send_test_email'] );
         }

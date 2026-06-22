@@ -209,7 +209,7 @@
 			+ '#wpbody-content > .bwfan_header > .notice-updated,'
 			+ '#wpbody-content > .bwfan_header > .updated:not(.inline),'
 			+ '#wpbody-content > .bwfan_header > .update-nag,'
-			+ '#wpbody-content > .notice:not(.otgs-notice,.wcml-notice),' // LearnDash, WPML WooCommerce Multilingual
+			+ '#wpbody-content > .notice:not(.otgs-notice,.wcml-notice,#asenha-smtp-password-notice),' // LearnDash, WPML WooCommerce Multilingual
 			+ '#wpbody-content > .update-nag,' // LearnDash
 			+ '#wpbody-content > .jp-connection-banner,' // Jetpack
 			+ '#wpbody-content > .jitm-banner,' // Jetpack
@@ -265,6 +265,9 @@
 			+ '#wpbody-content > .wrap .ac-admin-page .updated:not(.inline),'
 			+ '#wpbody-content > .wrap .ac-admin-page .update-nag'
 			);
+
+			// Keep the SMTP password notice visible in place.
+			noticesToMove = noticesToMove.not('.asenha-smtp-password-notice,#asenha-smtp-password-notice');
 
 			// Keep the View Admin as Role recovery URL notice visible in place.
 			noticesToMove = noticesToMove.not('.asenha-view-admin-as-role-recovery-notice,#asenha-view-admin-as-role-recovery-notice');
