@@ -1056,6 +1056,7 @@ class Admin_Site_Enhancements {
         }
         // SMTP Email Delivery
         $email_delivery = new ASENHA\Classes\Email_Delivery();
+        ASENHA\Classes\Email_Delivery::set_runtime_instance( $email_delivery );
         add_action( 'admin_notices', [$email_delivery, 'maybe_show_smtp_password_admin_notice'] );
         add_action( 'admin_enqueue_scripts', [$email_delivery, 'enqueue_smtp_password_notice_script'] );
         add_action( 'wp_ajax_asenha_dismiss_smtp_password_notice', [$email_delivery, 'dismiss_smtp_password_admin_notice'] );

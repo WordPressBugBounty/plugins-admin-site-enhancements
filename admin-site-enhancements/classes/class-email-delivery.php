@@ -29,6 +29,68 @@ class Email_Delivery {
     private $log_entry_id;
 
     /**
+     * Runtime Email_Delivery instance registered from bootstrap.php.
+     *
+     * @since 8.8.5
+     *
+     * @var Email_Delivery|null
+     */
+    private static $runtime_instance = null;
+
+    /**
+     * Pending fallback log error when wp_mail_failed fires before a log row exists.
+     *
+     * @since 8.8.5
+     *
+     * @var string
+     */
+    private $pending_fallback_log_error = '';
+
+    /**
+     * Max length for subject column in asenha_email_delivery.
+     *
+     * @since 8.8.5
+     */
+    private const LOG_SUBJECT_MAX_LENGTH = 250;
+
+    /**
+     * Max length for send_to column in asenha_email_delivery.
+     *
+     * @since 8.8.5
+     */
+    private const LOG_SEND_TO_MAX_LENGTH = 256;
+
+    /**
+     * Max length for error column in asenha_email_delivery.
+     *
+     * @since 8.8.5
+     */
+    private const LOG_ERROR_MAX_LENGTH = 250;
+
+    /**
+     * Register the runtime Email_Delivery instance used by hooked callbacks.
+     *
+     * @since 8.8.5
+     *
+     * @param Email_Delivery $instance Email Delivery instance.
+     * @return void
+     */
+    public static function set_runtime_instance( Email_Delivery $instance ) {
+        self::$runtime_instance = $instance;
+    }
+
+    /**
+     * Get the runtime Email_Delivery instance registered from bootstrap.php.
+     *
+     * @since 8.8.5
+     *
+     * @return Email_Delivery|null
+     */
+    public static function get_runtime_instance() {
+        return self::$runtime_instance;
+    }
+
+    /**
      * Pending email-log error when SMTP auth cannot use the stored password.
      *
      * @since 8.8.5

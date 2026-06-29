@@ -1440,16 +1440,16 @@ function asenha_public_scripts(  $hook_suffix  ) {
     // External Permalinks
     $enable_external_permalinks = ( array_key_exists( 'enable_external_permalinks', $options ) ? $options['enable_external_permalinks'] : false );
     if ( $enable_external_permalinks ) {
-        wp_enqueue_script(
-            'asenha-public',
-            ASENHA_URL . 'assets/js/external-permalinks.js',
+        $external_permalinks = new ASENHA\Classes\External_Permalinks();
+        wp_register_script(
+            'asenha-external-permalinks',
+            false,
             array(),
             ASENHA_VERSION,
             false
         );
-        wp_localize_script( 'asenha-public', 'phpVars', array(
-            'externalPermalinksEnabled' => $enable_external_permalinks,
-        ) );
+        wp_enqueue_script( 'asenha-external-permalinks' );
+        wp_add_inline_script( 'asenha-external-permalinks', $external_permalinks->get_frontend_inline_script_for_options( $options ) );
     }
     // Media Categories
     $enable_media_categories = ( array_key_exists( 'enable_media_categories', $options ) ? $options['enable_media_categories'] : false );

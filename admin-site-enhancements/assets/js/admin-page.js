@@ -328,6 +328,7 @@
       $('.enable-external-permalinks').appendTo('.fields-content-management > table > tbody');
       
       $('.enable-external-permalinks-for').appendTo('.fields-content-management .enable-external-permalinks .asenha-subfields');
+      
       $('.external-links-new-tab').appendTo('.fields-content-management > table > tbody');
       
       $('.custom-nav-menu-items-new-tab').appendTo('.fields-content-management > table > tbody');
