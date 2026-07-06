@@ -53,6 +53,11 @@ class Admin_Site_Enhancements {
         add_action( 'admin_print_footer_scripts', 'asenha_dequeue_scritps', PHP_INT_MAX );
         add_action( 'admin_enqueue_scripts-tools_page_admin-site-enhancements', 'asenha_dequeue_scritps', PHP_INT_MAX );
         add_action( 'admin_print_scripts-tools_page_admin-site-enhancements', 'asenha_dequeue_scritps', PHP_INT_MAX );
+        add_action( 'admin_enqueue_scripts-settings_page_admin-menu-organizer', 'asenha_dequeue_gravity_forms_assets_on_custom_admin_pages', PHP_INT_MAX );
+        add_action( 'admin_enqueue_scripts-settings_page_asenha-admin-bar', 'asenha_dequeue_gravity_forms_assets_on_custom_admin_pages', PHP_INT_MAX );
+        add_action( 'admin_print_scripts-settings_page_admin-menu-organizer', 'asenha_dequeue_gravity_forms_assets_on_custom_admin_pages', PHP_INT_MAX );
+        add_action( 'admin_print_scripts-settings_page_asenha-admin-bar', 'asenha_dequeue_gravity_forms_assets_on_custom_admin_pages', PHP_INT_MAX );
+        add_action( 'admin_print_footer_scripts', 'asenha_dequeue_gravity_forms_assets_on_custom_admin_pages', PHP_INT_MAX );
         // Add admin bar inline styles
         add_action( 'admin_head', 'asenha_admin_bar_item_js_css' );
         add_action( 'wp_head', 'asenha_admin_bar_item_js_css' );

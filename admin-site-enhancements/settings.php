@@ -284,11 +284,73 @@ function asenha_run_smtp_password_storage_upgrades() {
     asenha_repair_nested_smtp_password_storage();
 }
 
+/**
+ * Check whether an upgrader-reported plugin basename belongs to ASE.
+ *
+ * Supports free, pro, and local development folder names while still requiring
+ * the canonical ASE main plugin file.
+ *
+ * @since 8.8.6
+ *
+ * @param string $plugin_basename Plugin basename from upgrader hook data.
+ * @return bool
+ */
+function asenha_is_ase_plugin_update(  $plugin_basename  ) {
+    if ( !is_string( $plugin_basename ) || '' === $plugin_basename ) {
+        return false;
+    }
+    if ( 'admin-site-enhancements.php' !== wp_basename( $plugin_basename ) ) {
+        return false;
+    }
+    $plugin_dirname = dirname( $plugin_basename );
+    if ( '.' === $plugin_dirname || '' === $plugin_dirname ) {
+        return false;
+    }
+    return false !== strpos( $plugin_dirname, 'admin-site-enhancements' );
+}
+
+/**
+ * Run SMTP password storage upgrades when ASE is updated via WordPress upgrader.
+ *
+ * @since 8.8.6
+ *
+ * @param \WP_Upgrader $upgrader   WordPress upgrader instance.
+ * @param array        $hook_extra Upgrader hook context.
+ * @return void
+ */
+function asenha_maybe_run_smtp_password_storage_upgrades_on_update(  $upgrader, $hook_extra  ) {
+    if ( !is_array( $hook_extra ) || empty( $hook_extra['action'] ) || 'update' !== $hook_extra['action'] || empty( $hook_extra['type'] ) || 'plugin' !== $hook_extra['type'] ) {
+        return;
+    }
+    $updated_plugins = array();
+    if ( !empty( $hook_extra['plugin'] ) && is_string( $hook_extra['plugin'] ) ) {
+        $updated_plugins[] = $hook_extra['plugin'];
+    }
+    if ( !empty( $hook_extra['plugins'] ) && is_array( $hook_extra['plugins'] ) ) {
+        $updated_plugins = array_merge( $updated_plugins, $hook_extra['plugins'] );
+    }
+    if ( empty( $updated_plugins ) ) {
+        return;
+    }
+    foreach ( array_unique( $updated_plugins ) as $updated_plugin ) {
+        if ( asenha_is_ase_plugin_update( $updated_plugin ) ) {
+            asenha_run_smtp_password_storage_upgrades();
+            return;
+        }
+    }
+}
+
 if ( did_action( 'plugins_loaded' ) ) {
     asenha_run_smtp_password_storage_upgrades();
 } else {
     add_action( 'plugins_loaded', 'asenha_run_smtp_password_storage_upgrades' );
 }
+add_action(
+    'upgrader_process_complete',
+    'asenha_maybe_run_smtp_password_storage_upgrades_on_update',
+    10,
+    2
+);
 /**
  * Register admin menu
  *
@@ -1430,6 +1492,53 @@ function asenha_dequeue_scritps() {
 }
 
 /**
+ * Check whether a script or style handle belongs to Gravity Forms.
+ *
+ * @since 8.8.7
+ *
+ * @param string          $handle    Script or style handle.
+ * @param WP_Scripts|WP_Styles $wp_assets WordPress scripts or styles registry.
+ * @return bool
+ */
+function asenha_is_gravity_forms_asset_handle(  $handle, $wp_assets  ) {
+    if ( 0 === strpos( $handle, 'gform_' ) ) {
+        return true;
+    }
+    if ( isset( $wp_assets->registered[$handle] ) ) {
+        $src = $wp_assets->registered[$handle]->src;
+        if ( is_string( $src ) && false !== strpos( $src, 'gravityforms' ) ) {
+            return true;
+        }
+    }
+    return false;
+}
+
+/**
+ * Dequeue Gravity Forms scripts and styles on ASE custom admin interface pages.
+ *
+ * Prevents jQuery UI conflicts on Admin Menu Organizer and Admin Bar Custom Elements
+ * when Gravity Forms loads its global admin script bundle.
+ *
+ * @since 8.8.7
+ */
+function asenha_dequeue_gravity_forms_assets_on_custom_admin_pages() {
+    if ( !is_asenha_custom_admin_interface_page() ) {
+        return;
+    }
+    global $wp_scripts, $wp_styles;
+    foreach ( array($wp_scripts, $wp_styles) as $wp_assets ) {
+        if ( !is_object( $wp_assets ) || !isset( $wp_assets->queue ) ) {
+            continue;
+        }
+        foreach ( (array) $wp_assets->queue as $handle ) {
+            if ( asenha_is_gravity_forms_asset_handle( $handle, $wp_assets ) ) {
+                $wp_assets->dequeue( $handle );
+            }
+        }
+    }
+}
+
+/**
  * Enqueue public scripts
  *
  * @since 3.9.0
@@ -1531,6 +1640,21 @@ function is_asenha() {
         return false;
         // Nope, this is NOT the plugin's page
     }
+}
+
+/**
+ * Check if current screen is an ASE custom admin interface page.
+ *
+ * @since 8.8.7
+ *
+ * @return bool
+ */
+function is_asenha_custom_admin_interface_page() {
+    $screen = get_current_screen();
+    if ( !$screen ) {
+        return false;
+    }
+    return in_array( $screen->base, array('settings_page_admin-menu-organizer', 'settings_page_asenha-admin-bar'), true );
 }
 
 /**

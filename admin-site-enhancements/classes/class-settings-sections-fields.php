@@ -3300,63 +3300,20 @@ class Settings_Sections_Fields {
         );
         $field_id = 'smtp_password';
         $field_slug = 'smtp-password';
-        $smtp_authentication_enabled = !isset( $options['smtp_authentication'] ) || 'enable' === $options['smtp_authentication'];
-        $email_delivery_for_status = new Email_Delivery();
-        $stored_smtp_password = ( isset( $options['smtp_password'] ) ? $options['smtp_password'] : '' );
-        $smtp_password_status = \asenha_get_smtp_password_status_compat( $stored_smtp_password );
-        $smtp_password_status_label = ( method_exists( $email_delivery_for_status, 'get_smtp_password_status_label' ) ? $email_delivery_for_status->get_smtp_password_status_label( $stored_smtp_password ) : '' );
-        $smtp_password_description = __( 'Leave blank to keep the current password.', 'admin-site-enhancements' );
-        if ( $smtp_authentication_enabled && '' !== $smtp_password_status_label ) {
-            $smtp_password_description .= ' ' . sprintf( 
-                /* translators: %s: password storage status label */
-                __( 'Status: %s.', 'admin-site-enhancements' ),
-                $smtp_password_status_label
-             );
-        }
-        if ( $smtp_authentication_enabled && 'encrypted_invalid' === $smtp_password_status ) {
-            $smtp_password_description = __( 'Enter and save a new password to restore SMTP authentication.', 'admin-site-enhancements' );
-            if ( '' !== $smtp_password_status_label ) {
-                $smtp_password_description .= ' ' . sprintf( 
-                    /* translators: %s: password storage status label */
-                    __( 'Status: %s.', 'admin-site-enhancements' ),
-                    $smtp_password_status_label
-                 );
-            }
-        }
         add_settings_field(
             $field_id,
             __( '<span class="field-sublabel sublabel-wide">Password</span>', 'admin-site-enhancements' ),
-            [$render_field, 'render_password_subfield'],
+            [$render_field, 'render_smtp_password_subfield'],
             ASENHA_SLUG,
             'main-section',
             array(
                 'option_name'       => ASENHA_SLUG_U,
                 'field_id'          => $field_id,
                 'field_name'        => ASENHA_SLUG_U . '[' . $field_id . ']',
-                'field_type'        => '',
-                'field_prefix'      => '',
-                'field_suffix'      => '',
                 'field_placeholder' => '',
-                'field_description' => $smtp_password_description,
-                'hide_stored_value' => true,
-                'class'             => 'asenha-text with-prefix-suffix with-description wide utilities ' . $field_slug,
+                'class'             => 'asenha-text with-prefix-suffix wide utilities ' . $field_slug,
             )
         );
-        if ( $smtp_authentication_enabled && 'encrypted_invalid' === $smtp_password_status ) {
-            $field_id = 'smtp_password_notice';
-            $field_slug = 'smtp-password-notice';
-            add_settings_field(
-                $field_id,
-                '',
-                [$render_field, 'render_custom_html'],
-                ASENHA_SLUG,
-                'main-section',
-                array(
-                    'html'  => '<div class="notice notice-warning inline"><p>' . esc_html( __( 'The stored SMTP password can no longer be decrypted. Please enter it again above and save changes.', 'admin-site-enhancements' ) ) . '</p></div>',
-                    'class' => 'asenha-html wide utilities ' . $field_slug,
-                )
-            );
-        }
         $field_id = 'smtp_bypass_ssl_verification';
         $field_slug = 'smtp-bypass-ssl-verification';
         add_settings_field(

@@ -501,6 +501,88 @@ class Email_Delivery {
     }
 
     /**
+     * Get SMTP password UI state for the settings screen and AJAX responses.
+     *
+     * Side-effect free: does not set transients or modify stored credentials.
+     *
+     * @since 8.8.7
+     *
+     * @param array|null $options ASE options array.
+     * @return array {
+     *     @type string $status                 Storage status constant value.
+     *     @type string $label                  Human-readable status label.
+     *     @type string $description            Full field description for the password row.
+     *     @type bool   $show_warning           Whether to show the inline re-entry warning.
+     *     @type string $warning_message        Warning notice text.
+     *     @type bool   $authentication_enabled Whether SMTP auth is enabled.
+     * }
+     */
+    public function get_smtp_password_ui_state( $options = null ) {
+        if ( null === $options ) {
+            if ( function_exists( '\\asenha_get_option_array' ) ) {
+                $options = \asenha_get_option_array( ASENHA_SLUG_U, true );
+            } else {
+                $options = get_option( ASENHA_SLUG_U, array() );
+            }
+        }
+        if ( !is_array( $options ) ) {
+            $options = array();
+        }
+        $authentication_enabled = !isset( $options['smtp_authentication'] ) || 'enable' === $options['smtp_authentication'];
+        $stored_password = ( isset( $options['smtp_password'] ) ? $options['smtp_password'] : '' );
+        $status = $this->get_smtp_password_status( $stored_password );
+        $label = ( $authentication_enabled ? $this->get_smtp_password_status_label( $stored_password ) : '' );
+        $description = __( 'Leave blank to keep the current password.', 'admin-site-enhancements' );
+        if ( $authentication_enabled && '' !== $label ) {
+            $description .= ' ' . sprintf( 
+                /* translators: %s: password storage status label */
+                __( 'Status: %s.', 'admin-site-enhancements' ),
+                $label
+             );
+        }
+        $show_warning = false;
+        $warning_message = '';
+        if ( $authentication_enabled && self::SMTP_PASSWORD_STATUS_ENCRYPTED_INVALID === $status ) {
+            $description = __( 'Enter and save a new password to restore SMTP authentication.', 'admin-site-enhancements' );
+            if ( '' !== $label ) {
+                $description .= ' ' . sprintf( 
+                    /* translators: %s: password storage status label */
+                    __( 'Status: %s.', 'admin-site-enhancements' ),
+                    $label
+                 );
+            }
+            $show_warning = true;
+            $warning_message = __( 'The stored SMTP password can no longer be decrypted. Please enter it again above and save changes.', 'admin-site-enhancements' );
+        }
+        return array(
+            'status'                 => $status,
+            'label'                  => $label,
+            'description'            => $description,
+            'show_warning'           => $show_warning,
+            'warning_message'        => $warning_message,
+            'authentication_enabled' => $authentication_enabled,
+        );
+    }
+
+    /**
+     * Map SMTP password UI state to AJAX response fields.
+     *
+     * @since 8.8.7
+     *
+     * @param array|null $options ASE options array.
+     * @return array
+     */
+    public function get_smtp_password_ajax_ui_fields( $options = null ) {
+        $ui_state = $this->get_smtp_password_ui_state( $options );
+        return array(
+            'smtp_password_status'       => $ui_state['status'],
+            'smtp_password_status_label' => $ui_state['label'],
+            'smtp_password_description'  => $ui_state['description'],
+            'smtp_password_warning'      => ( $ui_state['show_warning'] ? $ui_state['warning_message'] : '' ),
+        );
+    }
+
+    /**
      * Whether SMTP authentication is required but no usable password is available.
      *
      * @since 8.8.5
@@ -893,10 +975,10 @@ class Email_Delivery {
                 $smtp_is_configured = !empty( $smtp_host ) && !empty( $smtp_port ) && !empty( $smtp_security );
                 $runtime_smtp_password = $this->get_smtp_password_for_runtime( $smtp_password );
                 if ( $smtp_is_configured && 'enable' === $smtp_authentication && (self::SMTP_PASSWORD_STATUS_ENCRYPTED_INVALID === $smtp_password_status || '' === $runtime_smtp_password || $this->is_probable_smtp_ciphertext( $runtime_smtp_password )) ) {
-                    wp_send_json( array(
+                    wp_send_json( array_merge( array(
                         'status'  => 'failed',
                         'message' => $this->get_smtp_password_reentry_message(),
-                    ) );
+                    ), $this->get_smtp_password_ajax_ui_fields( $options ) ) );
                 }
                 $content = array(
                     array(
@@ -951,14 +1033,15 @@ class Email_Delivery {
                     $body,
                     $headers
                 );
+                $ui_fields = $this->get_smtp_password_ajax_ui_fields( $options );
                 if ( $success ) {
-                    $response = array(
+                    $response = array_merge( array(
                         'status' => 'success',
-                    );
+                    ), $ui_fields );
                 } else {
-                    $response = array(
+                    $response = array_merge( array(
                         'status' => 'failed',
-                    );
+                    ), $ui_fields );
                 }
                 wp_send_json( $response );
             }

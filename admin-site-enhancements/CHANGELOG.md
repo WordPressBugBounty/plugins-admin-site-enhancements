@@ -1,10 +1,31 @@
 ## Changelog
 
-**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **87 _major_ releases** (e.g. 1.1.0 ) and **200 _minor_ releases** (e.g. 4.9.1), for a **total of 287 releases**.
+**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **87 _major_ releases** (e.g. 1.1.0 ) and **201 _minor_ releases** (e.g. 4.9.1), for a **total of 288 releases**.
 
 Each **_major release_** usually corresponds with the addition of one new module/feature. Each module/feature usually is the equivalent of one (or more) single-purpose plugin. Each **_minor release_** usually contain one or more bugfix or improvements to existing modules/features.
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). Lifetime Deal (LTD) available.
+
+### 8.8.7 (2026.07.06) - ASE Free and Pro
+
+* **[FIXED and IMPROVED in Free and Pro] Utilities >> Email Delivery**: 
+  * Improved mechanism to (also) trigger the update of encryption version/method of SMTP password during ASE (plugin) update. This should help resolve an issure reported by Bas B. and @VisedFAQ. Please double check the Email Delivery module in your sites and try sending a test email. If test fails, re-enter and re-save the password to ensure proper encryption and delivery.
+  * Fixed a bug where password status under the password field is showing incorrect status. Props to [@VisedFAQ](https://wordpress.org/support/users/visedfaq/) for [reporting](https://wordpress.org/support/topic/smtp-module-bugs/) this.
+
+* **[IMPROVED in Pro] Admin Interface >> Admin Menu Organizer**: added mechanism to speed up the saving process of admin menu changes, which should help with timeout issues on sites where admin-ajax.php response is very slow, e.g. low-resource, shared hosting. Props to @SPARKS! W.T. for reporting the issue.
+
+* **[IMPROVED in Pro] Utilities >> Site Backup and Migration**: 
+  * In the "Backup" tab, the total storage will now be updated immediately after creating a new backup or deleting an existing one. Props to Stijn V. for prompting this improvement.
+  * When performing a restore from an encrypted backup archive, entering the wrong password now will re-open the restore popover with instructions to enter the correct password and allows to retry the restore operation without the need to reload the page. Props to Massimo V. for prompting this improvement.
+
+* **[FIXED in Pro] Admin Interface >> Admin Bar Custom Elements (ABCE) & Admin Menu Organizer (AMO):** fixed a conflict with Gravity Forms that causes a javascript error on the ABCE & AMO admin pages.
+
+* **[FIXED in Pro] Content Management >> Media Categories**: fixed a conflict on Download Monitor's add/edit download screen that prevents successful upload of files. Props to Jeroen Z. for reporting the issue in detail.
+
+* **[TRANSLATION in Free and Pro]** ASE is now being translated into [38 languages](https://translate.wpase.com/):
+  * **Added new/improved translation** for:
+    * ASE Free: Updated Portuguese (Brazil), Polish, Persian, Dutch (Netherlands), Dutch (Belgium).
+    * ASE Pro: Updated Portuguese (Brazil).
 
 ### 8.8.6 (2026.06.29) - ASE Free and Pro
 
