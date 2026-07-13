@@ -46,6 +46,128 @@ function asenha_get_option_array(  $option_name, $autoload = null  ) {
     return $normalized_value;
 }
 
+/**
+ * Whether an object-cache property can be read without triggering a visibility fatal.
+ *
+ * @since 8.4.3
+ *
+ * @param object $object   Object cache instance.
+ * @param string $property Property name.
+ * @return bool
+ */
+function asenha_object_cache_property_is_readable(  $object, $property  ) {
+    if ( !is_object( $object ) || !is_string( $property ) || '' === $property ) {
+        return false;
+    }
+    if ( !property_exists( $object, $property ) ) {
+        return false;
+    }
+    if ( method_exists( $object, '__get' ) ) {
+        return true;
+    }
+    try {
+        $ref = new ReflectionProperty($object, $property);
+        return $ref->isPublic();
+    } catch ( ReflectionException $e ) {
+        return false;
+    }
+}
+
+/**
+ * Whether an object-cache property can be written without triggering a visibility fatal.
+ *
+ * @since 8.4.3
+ *
+ * @param object $object   Object cache instance.
+ * @param string $property Property name.
+ * @return bool
+ */
+function asenha_object_cache_property_is_writable(  $object, $property  ) {
+    if ( !is_object( $object ) || !is_string( $property ) || '' === $property ) {
+        return false;
+    }
+    if ( !property_exists( $object, $property ) ) {
+        return false;
+    }
+    if ( method_exists( $object, '__set' ) ) {
+        return true;
+    }
+    try {
+        $ref = new ReflectionProperty($object, $property);
+        return $ref->isPublic();
+    } catch ( ReflectionException $e ) {
+        return false;
+    }
+}
+
+/**
+ * Best-effort clear of cache groups from in-process object-cache arrays.
+ *
+ * Only touches cache internals when they are safely accessible. Private
+ * properties without magic accessors are skipped to avoid fatals.
+ *
+ * @since 8.4.3
+ *
+ * @param array $groups Cache group names to clear.
+ */
+function asenha_clear_accessible_object_cache_groups(  array $groups  ) {
+    global $wp_object_cache;
+    if ( !is_object( $wp_object_cache ) || empty( $groups ) ) {
+        return;
+    }
+    foreach ( array('local_cache', 'cache') as $property ) {
+        try {
+            if ( !asenha_object_cache_property_is_readable( $wp_object_cache, $property ) ) {
+                continue;
+            }
+            $value = $wp_object_cache->{$property};
+            if ( !is_array( $value ) ) {
+                continue;
+            }
+            foreach ( $groups as $group ) {
+                if ( !is_string( $group ) || '' === $group ) {
+                    continue;
+                }
+                if ( isset( $value[$group] ) ) {
+                    unset($value[$group]);
+                }
+            }
+            if ( !asenha_object_cache_property_is_writable( $wp_object_cache, $property ) ) {
+                continue;
+            }
+            $wp_object_cache->{$property} = $value;
+        } catch ( Throwable $e ) {
+            // Best-effort only; wp_cache_flush() already ran.
+        }
+    }
+}
+
+/**
+ * Best-effort clear of the options group from in-process object-cache arrays.
+ *
+ * @since 8.4.3
+ */
+function asenha_clear_accessible_object_cache_options_group() {
+    asenha_clear_accessible_object_cache_groups( array('options') );
+}
+
+/**
+ * Aggressively invalidate WordPress options object-cache layers.
+ *
+ * @since 8.4.3
+ */
+function asenha_invalidate_options_object_cache_layers() {
+    wp_cache_delete( 'alloptions', 'options' );
+    wp_cache_delete( 'notoptions', 'options' );
+    if ( function_exists( 'wp_cache_flush' ) ) {
+        wp_cache_flush();
+    }
+    if ( function_exists( 'wp_cache_flush_group' ) ) {
+        wp_cache_flush_group( 'options' );
+    }
+    asenha_clear_accessible_object_cache_groups( array('options') );
+}
+
 if ( false === get_option( ASENHA_SLUG_U ) ) {
     global $wpdb;
     // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -59,22 +181,7 @@ if ( false === get_option( ASENHA_SLUG_U ) ) {
         );
     } else {
         // Option exists in DB but cache returned false (stale persistent cache).
-        // Aggressively invalidate all cache layers including local in-process caches
-        // that some Redis/Memcached backends maintain separately from the external store.
-        wp_cache_delete( 'alloptions', 'options' );
-        wp_cache_delete( 'notoptions', 'options' );
-        if ( function_exists( 'wp_cache_flush' ) ) {
-            wp_cache_flush();
-        }
-        global $wp_object_cache;
-        if ( is_object( $wp_object_cache ) ) {
-            if ( property_exists( $wp_object_cache, 'local_cache' ) && is_array( $wp_object_cache->local_cache ) ) {
-                unset($wp_object_cache->local_cache['options']);
-            }
-            if ( property_exists( $wp_object_cache, 'cache' ) && is_array( $wp_object_cache->cache ) ) {
-                unset($wp_object_cache->cache['options']);
-            }
-        }
+        asenha_invalidate_options_object_cache_layers();
     }
 }
 if ( false === get_option( ASENHA_SLUG_U . '_stats' ) ) {
@@ -90,21 +197,7 @@ if ( false === get_option( ASENHA_SLUG_U . '_stats' ) ) {
         );
     } else {
         // Option exists in DB but cache returned false (stale persistent cache).
-        // Aggressively invalidate all cache layers including local in-process caches.
-        wp_cache_delete( 'alloptions', 'options' );
-        wp_cache_delete( 'notoptions', 'options' );
-        if ( function_exists( 'wp_cache_flush' ) ) {
-            wp_cache_flush();
-        }
-        global $wp_object_cache;
-        if ( is_object( $wp_object_cache ) ) {
-            if ( property_exists( $wp_object_cache, 'local_cache' ) && is_array( $wp_object_cache->local_cache ) ) {
-                unset($wp_object_cache->local_cache['options']);
-            }
-            if ( property_exists( $wp_object_cache, 'cache' ) && is_array( $wp_object_cache->cache ) ) {
-                unset($wp_object_cache->cache['options']);
-            }
-        }
+        asenha_invalidate_options_object_cache_layers();
     }
 }
 if ( false === get_option( ASENHA_SLUG_U . '_extra' ) ) {
@@ -120,21 +213,7 @@ if ( false === get_option( ASENHA_SLUG_U . '_extra' ) ) {
         );
     } else {
         // Option exists in DB but cache returned false (stale persistent cache).
-        // Aggressively invalidate all cache layers including local in-process caches.
-        wp_cache_delete( 'alloptions', 'options' );
-        wp_cache_delete( 'notoptions', 'options' );
-        if ( function_exists( 'wp_cache_flush' ) ) {
-            wp_cache_flush();
-        }
-        global $wp_object_cache;
-        if ( is_object( $wp_object_cache ) ) {
-            if ( property_exists( $wp_object_cache, 'local_cache' ) && is_array( $wp_object_cache->local_cache ) ) {
-                unset($wp_object_cache->local_cache['options']);
-            }
-            if ( property_exists( $wp_object_cache, 'cache' ) && is_array( $wp_object_cache->cache ) ) {
-                unset($wp_object_cache->cache['options']);
-            }
-        }
+        asenha_invalidate_options_object_cache_layers();
     }
 }
 // Bugfix in v7.1.2 for Custom Content Type module
@@ -1293,7 +1372,7 @@ function asenha_admin_scripts(  $hook_suffix  ) {
     }
     // Utilities >> Multiple User Roles
     if ( array_key_exists( 'multiple_user_roles', $options ) && $options['multiple_user_roles'] ) {
-        if ( 'user-edit.php' == $hook_suffix || 'user-new.php' == $hook_suffix ) {
+        if ( 'user-edit.php' == $hook_suffix || 'user-new.php' == $hook_suffix || 'profile.php' == $hook_suffix ) {
             // Only replace roles dropdown with checkboxes for users that can assign roles to other users, e.g. administrators
             if ( current_user_can( 'promote_users', get_current_user_id() ) ) {
                 wp_enqueue_script(
@@ -1451,12 +1530,14 @@ function asenha_admin_menu_organizer_css() {
 }
 
 /**
- * Dequeue scripts that prevents ASE settings page from working properly. Usually from plugins.
+ * Dequeue scripts and styles that prevents ASE settings page from working properly. Usually from plugins and themes.
  * 
  * @since 6.3.3
  */
 function asenha_dequeue_scritps() {
     if ( is_asenha() ) {
+        // Voxel theme — backend.css overrides ASE .form-table module title styling
+        wp_dequeue_style( 'vx:backend.css' );
         // https://wordpress.org/plugins/user-activity-log/
         wp_dequeue_script( 'chats-js' );
         wp_dequeue_script( 'custom_wp_admin_js' );
@@ -1514,14 +1595,36 @@ function asenha_is_gravity_forms_asset_handle(  $handle, $wp_assets  ) {
 }
 
 /**
- * Dequeue Gravity Forms scripts and styles on ASE custom admin interface pages.
+ * Check whether a script handle belongs to Glossary by Codeat admin.js.
  *
- * Prevents jQuery UI conflicts on Admin Menu Organizer and Admin Bar Custom Elements
- * when Gravity Forms loads its global admin script bundle.
+ * @since 8.8.8
+ *
+ * @param string     $handle     Script handle.
+ * @param WP_Scripts $wp_scripts WordPress scripts registry.
+ * @return bool
+ */
+function asenha_is_glossary_admin_asset_handle(  $handle, $wp_scripts  ) {
+    if ( 'glossary-admin-script' === $handle ) {
+        return true;
+    }
+    if ( isset( $wp_scripts->registered[$handle] ) ) {
+        $src = $wp_scripts->registered[$handle]->src;
+        if ( is_string( $src ) && false !== strpos( $src, 'glossary-by-codeat' ) && false !== strpos( $src, '/assets/js/admin.js' ) ) {
+            return true;
+        }
+    }
+    return false;
+}
+
+/**
+ * Dequeue conflicting scripts and styles on ASE custom admin interface pages.
+ *
+ * Prevents jQuery UI conflicts from Gravity Forms, and JS errors from plugins
+ * that enqueue global admin scripts on Admin Menu Organizer and Admin Bar Custom Elements.
  *
  * @since 8.8.7
  */
-function asenha_dequeue_gravity_forms_assets_on_custom_admin_pages() {
+function asenha_dequeue_conflicting_assets_on_custom_admin_pages() {
     if ( !is_asenha_custom_admin_interface_page() ) {
         return;
     }
@@ -1536,6 +1639,47 @@ function asenha_dequeue_gravity_forms_assets_on_custom_admin_pages() {
             }
         }
     }
+    // Voxeler Messages — admin script expects DOM nodes absent on AMO/ABCE
+    wp_dequeue_script( 'voxeler-messages-admin-scripts' );
+    $screen = get_current_screen();
+    if ( $screen && 'settings_page_admin-menu-organizer' === $screen->base ) {
+        foreach ( (array) $wp_scripts->queue as $handle ) {
+            if ( asenha_is_glossary_admin_asset_handle( $handle, $wp_scripts ) ) {
+                $wp_scripts->dequeue( $handle );
+            }
+        }
+        wp_deregister_script( 'glossary-admin-script' );
+    }
+}
+
+/**
+ * Block Glossary admin.js script tag output on Admin Menu Organizer.
+ *
+ * Last-resort gate when dequeue hooks run before a late plugin re-enqueue.
+ *
+ * @since 8.8.8
+ *
+ * @param string $tag    Script tag HTML.
+ * @param string $handle Script handle.
+ * @param string $src    Script source URL.
+ * @return string
+ */
+function asenha_block_glossary_admin_script_on_amo(  $tag, $handle, $src  ) {
+    if ( !is_asenha_custom_admin_interface_page() ) {
+        return $tag;
+    }
+    $screen = get_current_screen();
+    if ( !$screen || 'settings_page_admin-menu-organizer' !== $screen->base ) {
+        return $tag;
+    }
+    global $wp_scripts;
+    if ( asenha_is_glossary_admin_asset_handle( $handle, $wp_scripts ) ) {
+        return '';
+    }
+    if ( is_string( $src ) && false !== strpos( $src, 'glossary-by-codeat' ) && false !== strpos( $src, '/assets/js/admin.js' ) ) {
+        return '';
+    }
+    return $tag;
 }
 
 /**
@@ -1650,6 +1794,9 @@ function is_asenha() {
  * @return bool
  */
 function is_asenha_custom_admin_interface_page() {
+    if ( !is_admin() || !function_exists( 'get_current_screen' ) ) {
+        return false;
+    }
     $screen = get_current_screen();
     if ( !$screen ) {
         return false;

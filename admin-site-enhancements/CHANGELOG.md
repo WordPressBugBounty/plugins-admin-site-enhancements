@@ -1,15 +1,48 @@
 ## Changelog
 
-**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **87 _major_ releases** (e.g. 1.1.0 ) and **201 _minor_ releases** (e.g. 4.9.1), for a **total of 288 releases**.
+**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **87 _major_ releases** (e.g. 1.1.0 ) and **202 _minor_ releases** (e.g. 4.9.1), for a **total of 289 releases**.
 
 Each **_major release_** usually corresponds with the addition of one new module/feature. Each module/feature usually is the equivalent of one (or more) single-purpose plugin. Each **_minor release_** usually contain one or more bugfix or improvements to existing modules/features.
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). Lifetime Deal (LTD) available.
 
+### 8.8.8 (2026.07.13) - ASE Free and Pro
+
+* **[FIXED in Free and Pro] Utilities >> Multiple User Roles**: Fixed an issue of unable to remove an extra role from an administrator's own profile edit screen. Props to Igor E. for reporting the issue in detail, with a screen recording.
+
+* **[FIXED in Free and Pro] ASE Settings**: Fixed a CSS issue affecting module title styling when the Voxel theme is active.
+
+* **[IMPROVED in Pro] Utilities >> Form Builder**: Implemented conditional logic to show / hide fields based on the value of other fields. Props to Cadence, Leon S., José Antonio C.S., Chee S.C. and Roland T. for prompting this improvement.
+
+* **[IMPROVED in Pro] Content Management >> Content Order**: Improved robustness of drag and drop within and between parent posts when ordering hierarchical posts. Props to Janette C. for reporting the issue with a screencast and facilitating the troubleshooting process.
+
+* **[FIXED and IMPROVED in Pro] Utilities >> Site Backup and Migration**:
+  * Fixed fatal error related to object cache flushing that occurs after completion of restore operation. Props to Benjamin N. for reporting the issue in detail, complete with the error stack trace.
+  * Improved error message and logging when connecting to a WP Site backup location. Props to Benjamin N. for prompting this improvement.
+
+* **[IMPROVED in Pro] Disable Components >> Disable REST API**: REST API endpoint in use for connecting to a remote WP Site location in the Site Backup and Migration module is automatically whitelisted. This ensures connecting to the remote WP Site location will not be blocked. Props to Benjamin N. for prompting this improvement.
+
+* **[FIXED and IMPROVED in Pro] Content Management >> Custom Content Types >> Custom Field Groups**: 
+  * Fixed an issue where conditional logic is not properly showing/hiding repeater sub-fields. Props to Stijn V. for reporting the issue.
+  * Fixed WYSIWYG field layout issue when adding a new repeater row with a WYSIWYG field. Props to Stijn V. for reporting the issue.
+  * Fixed vertical misalignment issue with conditional logic controls and fields. Props to Stijn V. for reporting the issue.
+  * Added numeral fraction to column widths, e.g. "Quarter" becomes "Quarter (1/4)", to improve accessibility for users with dyslexia. Props to Stijn V. for prompting this improvement.
+  * Added option to specify allowed file extensions for file field, which will also pre-filter the media library frame to the allowed file extensions. Props to Stijn V. for prompting this improvement.
+  * Add support for custom date time format for date time field in Bricks builder. e.g. {ase__movie_premiere_datetime:F j, Y - g:i a} to set a custom date time format. Props to David W. for prompting this improvement.
+
+* **[FIXED in Pro] Custom Code >> Code Snippets Manager**: Fixed a fatal error that occurs in a certain scenario when loading the snippets listing page. Props to John R. for reporting the issue complete with the error stack trace and facilitating the troubleshooting process.
+
+* **[FIXED in Pro] Admin Interface >> Admin Bar Custom Elements & Admin Menu Organizer**: Fixed a javascript error caused by conflict with Voxeler Messages plugin. 
+
+* **[TRANSLATION in Free and Pro]** ASE is now being translated into [38 languages](https://translate.wpase.com/):
+  * **Added new/improved translation** for:
+    * ASE Free: Updated Indonesian, Spanish (Chile), Slovak, Russian, Portuguese (Brazil), Polish, Norwegian.
+    * ASE Pro: Updated Slovak, Indonesian.
+
 ### 8.8.7 (2026.07.06) - ASE Free and Pro
 
 * **[FIXED and IMPROVED in Free and Pro] Utilities >> Email Delivery**: 
-  * Improved mechanism to (also) trigger the update of encryption version/method of SMTP password during ASE (plugin) update. This should help resolve an issure reported by Bas B. and @VisedFAQ. Please double check the Email Delivery module in your sites and try sending a test email. If test fails, re-enter and re-save the password to ensure proper encryption and delivery.
+  * Improved mechanism to (also) trigger the update of encryption version/method of SMTP password during ASE (plugin) update. This should help resolve an issue reported by Bas B. and @VisedFAQ. Please double check the Email Delivery module in your sites and try sending a test email. If test fails, re-enter and re-save the password to ensure proper encryption and delivery.
   * Fixed a bug where password status under the password field is showing incorrect status. Props to [@VisedFAQ](https://wordpress.org/support/users/visedfaq/) for [reporting](https://wordpress.org/support/topic/smtp-module-bugs/) this.
 
 * **[IMPROVED in Pro] Admin Interface >> Admin Menu Organizer**: added mechanism to speed up the saving process of admin menu changes, which should help with timeout issues on sites where admin-ajax.php response is very slow, e.g. low-resource, shared hosting. Props to @SPARKS! W.T. for reporting the issue.
@@ -771,6 +804,8 @@ Each **_major release_** usually corresponds with the addition of one new module
     * ASE Pro: Updated Portuguese (Brazil), Norwegian, Danish.
 
 ### 8.0.5 (2025.11.03) - ASE Free and Pro
+
+* **[SECURITY FIX] Utilities >> View Admin as Role**: fixed "Unauthenticated Administrator-Role Restoration" vulnerability responsibly disclosed by Revanth Hari Narayana Matte via WPScan.
 
 * **[FIXED in Free and Pro] Content Management >> Media Replacement**: fixed a fatal error that occurs in a certain scenario. Props to [@zadine](https://wordpress.org/support/users/zadine/) for [reporting the issue](https://wordpress.org/support/topic/fatal-error-4934/) complete with the debug.log entry details, including the stack trace.
 

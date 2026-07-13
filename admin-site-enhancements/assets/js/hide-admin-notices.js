@@ -272,6 +272,9 @@
 			// Keep the View Admin as Role recovery URL notice visible in place.
 			noticesToMove = noticesToMove.not('.asenha-view-admin-as-role-recovery-notice,#asenha-view-admin-as-role-recovery-notice');
 
+			// Keep Freemius clone/migration safe mode notices visible in place.
+			noticesToMove = noticesToMove.not('[data-id="clone_resolution_options_notice"], [data-id="temporary_duplicate_notice"]');
+
 			
 
 			noticesToMove.not(':hidden').detach()
