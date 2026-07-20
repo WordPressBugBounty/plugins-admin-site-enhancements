@@ -5,7 +5,7 @@ Donate link: https://bowo.io/asenha-sp-rdm
 Tags: enhancements, tweaks, optimizations, tools  
 Requires at least: 4.6  
 Tested up to: 7.0  
-Stable tag: 8.8.8  
+Stable tag: 8.9.0  
 Requires PHP: 5.6  
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -75,6 +75,7 @@ _"ASE is an amazing plugin! **Time and money saver**. Thank you!"_ ~[Iulian Baci
 * **[[ASE Pro](https://www.wpase.com/rdme-to-web)] Admin Logo**. Show custom logo in the admin bar or the (top of) admin menu.
 * **Wider Admin Menu**. Up to 300px wide.
 * **Admin Menu Editor / Organizer**. Customize order for the admin menu. Change menu item title or hide some items. [ASE Pro](https://www.wpase.com/rdme-to-web) allows always hiding menu items for some or all user roles, adding custom menu and submenu items, reordering submenu items and always allowing eligible users to view and access a menu item.
+* **Navigation Menu Duplicator**. Duplicate a navigation menu with one click from Appearance → Menus.
 * **[[ASE Pro](https://www.wpase.com/rdme-to-web)] Admin Columns Manager**. Organize columns in the admin list tables. Supports columns for ASE, ACF and Meta Box custom fields.
 * **Show Custom Taxonomy Filters**. Show additional filter(s) on list tables for hierarchical, custom taxonomies. [ASE Pro](https://www.wpase.com/rdme-to-web) allows showing additional filter(s) for non-hierarchical taxonomies.
 * **Enhance List Tables**. Improve the usefulness of listing pages of various post types by adding / removing columns and elements, e.g. featured image, excerpt, last modified, ID, media file size columns.
@@ -139,7 +140,7 @@ _"ASE is an amazing plugin! **Time and money saver**. Thank you!"_ ~[Iulian Baci
 
 * **[[ASE Pro](https://www.wpase.com/rdme-to-web)] Site Backup and Migration**. Backup files and database, restore from backups, and migrate or sync to another server.
 * **Email Delivery**. Set custom sender name and email. Optionally use external SMTP service to ensure notification and transactional emails from your site are being delivered to inboxes. [ASE Pro](https://www.wpase.com/rdme-to-web) adds the option to specify a custom reply-to name and email, Bcc address(es), disable authentication and the option to log email delivery.
-* **[[ASE Pro](https://www.wpase.com/rdme-to-web)] Form Builder**. Enable the drag-and-drop creation of various types of forms (contact, feedback, booking, application, proposal, admission, support, survey, etc.) on the frontend to collect information from site visitors or users or members. 33 field types are available, including Net Promoter Score (NPS), Likert, Matrix of Uniform and Variable Dropdowns and CAPTCHA fields. Support custom form styles, multi-columns layout, conditional logic, email notification, auto responder, entries management and webhooks for sending submission data to Zapier, n8n, etc.
+* **[[ASE Pro](https://www.wpase.com/rdme-to-web)] Form Builder**. Enable the drag-and-drop creation of various types of forms (contact, feedback, booking, application, proposal, admission, support, survey, etc.) on the frontend to collect information from site visitors or users or members. 33 field types are available, including Net Promoter Score (NPS), Likert, Matrix of Uniform and Variable Dropdowns and CAPTCHA fields. Support custom form styles, multi-columns layout, conditional logic, multi-step with saving progress, email notification, auto responder, entries management and webhooks for sending submission data to Zapier, n8n, etc.
 * **[[ASE Pro](https://www.wpase.com/rdme-to-web)] File Manager**. A comprehensive file manager with folder tree navigation, file and folder operations, and code editing capabilities.
 * **[[ASE Pro](https://www.wpase.com/rdme-to-web)] Local User Avatar**. Enable usage of any image from the media library as user avatars.
 * **Multiple User Roles**. Assign multiple roles during user account creation and editing.
@@ -205,44 +206,31 @@ ASE does not officially support multisite. Please use at your own risk. That sai
 
 ## Changelog
 
-**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **87 _major_ releases** (e.g. 1.1.0 ) and **202 _minor_ releases** (e.g. 4.9.1), for a **total of 289 releases**.
+**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **89 _major_ releases** (e.g. 1.1.0 ) and **202 _minor_ releases** (e.g. 4.9.1), for a **total of 291 releases**.
 
 Each **_major release_** usually corresponds with the addition of one new module/feature. Each module/feature usually is the equivalent of one (or more) single-purpose plugin. Each **_minor release_** usually contain one or more bugfix or improvements to existing modules/features.
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). Lifetime Deal (LTD) available.
 
-### 8.8.8 (2026.07.13) - ASE Free and Pro
+### 8.9.0 (2026.07.20) - ASE Free and Pro
 
-* **[FIXED in Free and Pro] Utilities >> Multiple User Roles**: Fixed an issue of unable to remove an extra role from an administrator's own profile edit screen. Props to Igor E. for reporting the issue in detail, with a screen recording.
+* **[ADDED in Free and Pro] Admin Interface >> Navigation Menu Duplicator**. Added a new module to duplicate a navigation menu with one click from Appearance → Menus.
 
-* **[FIXED in Free and Pro] ASE Settings**: Fixed a CSS issue affecting module title styling when the Voxel theme is active.
+* **[IMPROVED in Free and Pro] Log In/Out & Register >> Change Login URL**: Improved handling of a URL pattern that may reveal the custom login URL when ASE is installed on WordPress site hosted with NGINX that implements a certain pattern of NGINX URL mapping. Props to Bram for reporting the issue in great detail.
 
-* **[IMPROVED in Pro] Utilities >> Form Builder**: Implemented conditional logic to show / hide fields based on the value of other fields. Props to Cadence, Leon S., José Antonio C.S., Chee S.C. and Roland T. for prompting this improvement.
+* **[IMPROVED in Pro] Content Management >> Content Order**: Added compatibility with WPML plugin so that reordering results in sequential menu_order of posts in the primary language while respecting WPML's post order syncing. Also added a new (checkbox) option to allow independent reordering of posts in each language, which will suppress WPML's post order syncing. Props to Stijn V. for prompting this improvement.
 
-* **[IMPROVED in Pro] Content Management >> Content Order**: Improved robustness of drag and drop within and between parent posts when ordering hierarchical posts. Props to Janette C. for reporting the issue with a screencast and facilitating the troubleshooting process.
+* **[IMPROVED in Pro] Content Management >> Terms Order**: add an 'Order' button on taxonomy terms listing page, linking to the custom terms ordering page for that taxonomy. Props to Stijn V. for prompting this improvement.
 
-* **[FIXED and IMPROVED in Pro] Utilities >> Site Backup and Migration**:
-  * Fixed fatal error related to object cache flushing that occurs after completion of restore operation. Props to Benjamin N. for reporting the issue in detail, complete with the error stack trace.
-  * Improved error message and logging when connecting to a WP Site backup location. Props to Benjamin N. for prompting this improvement.
+* **[IMPROVED in Pro] Utilities >> Form Builder**: 
+  * Added two new "Layout" fields: Section Start and Section End, to group together multiple fields. Conditional logic can then be applied to the Section Start field to show / hide the grouped fields at once. Nesting sections is also supported. Props to Roland T. for prompting this improvement.
+  * Added **multi-step form** feature via a new "Layout" field called Page Break. In the "Form" tab, there's also a dedicated section to configure the multi-step behaviour, including step titles, progress indicator type (progress bar or clickable steps), steps styles (pills, circles, squares, tabs, chevrons), and whether to enable saving progress and emailing a URL to resume form-filling. Props to Fabio R. for prompting this improvement.
 
-* **[IMPROVED in Pro] Disable Components >> Disable REST API**: REST API endpoint in use for connecting to a remote WP Site location in the Site Backup and Migration module is automatically whitelisted. This ensures connecting to the remote WP Site location will not be blocked. Props to Benjamin N. for prompting this improvement.
-
-* **[FIXED and IMPROVED in Pro] Content Management >> Custom Content Types >> Custom Field Groups**: 
-  * Fixed an issue where conditional logic is not properly showing/hiding repeater sub-fields. Props to Stijn V. for reporting the issue.
-  * Fixed WYSIWYG field layout issue when adding a new repeater row with a WYSIWYG field. Props to Stijn V. for reporting the issue.
-  * Fixed vertical misalignment issue with conditional logic controls and fields. Props to Stijn V. for reporting the issue.
-  * Added numeral fraction to column widths, e.g. "Quarter" becomes "Quarter (1/4)", to improve accessibility for users with dyslexia. Props to Stijn V. for prompting this improvement.
-  * Added option to specify allowed file extensions for file field, which will also pre-filter the media library frame to the allowed file extensions. Props to Stijn V. for prompting this improvement.
-  * Add support for custom date time format for date time field in Bricks builder. e.g. {ase__movie_premiere_datetime:F j, Y - g:i a} to set a custom date time format. Props to David W. for prompting this improvement.
-
-* **[FIXED in Pro] Custom Code >> Code Snippets Manager**: Fixed a fatal error that occurs in a certain scenario when loading the snippets listing page. Props to John R. for reporting the issue complete with the error stack trace and facilitating the troubleshooting process.
-
-* **[FIXED in Pro] Admin Interface >> Admin Bar Custom Elements & Admin Menu Organizer**: Fixed a javascript error caused by conflict with Voxeler Messages plugin. 
+* **[FIXED in Pro] Admin Interface >> Admin Columns Manager**: Fixed PHP warnings on posts listing page that occurs when a stale/deleted/non-existent taxonomy has a lingering admin column on the listing page. Props to Ignazio D.M. for reporting the issue in detail with a screen recording.
 
 * **[TRANSLATION in Free and Pro]** ASE is now being translated into [38 languages](https://translate.wpase.com/):
   * **Added new/improved translation** for:
-    * ASE Free: Updated Indonesian, Spanish (Chile), Slovak, Russian, Portuguese (Brazil), Polish, Norwegian.
-    * ASE Pro: Updated Slovak, Indonesian.
+    * ASE Free: Updated Spanish (Spain), Portuguese (Brazil), Polish, Dutch (Netherlands).
   * **More strings have been internationalized**. @Translators, please visit the respective project pages for the Free and Pro versions to translate the new strings, if you havent' done so already.
   * **Interested to help translate or improve the translation?** Please go to [https://translate.wpase.com](https://translate.wpase.com) for more info.
   * **[Chinese (China)](https://translate.wordpress.org/locale/zh-cn/default/wp-plugins/admin-site-enhancements/)**: ASE Free and Pro (completed). Props to [@bricksvip](https://profiles.wordpress.org/bricksvip/) et al. Current status: [39 strings untranslated](https://translate.wordpress.org/projects/wp-plugins/admin-site-enhancements/stable/zh-cn/default/?filters%5Bstatus%5D=untranslated).

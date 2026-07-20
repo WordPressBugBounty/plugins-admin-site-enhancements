@@ -391,6 +391,7 @@
       $('.admin-menu-width').appendTo('.fields-admin-interface .wider-admin-menu .asenha-subfields');
       $('.customize-admin-menu').appendTo('.fields-admin-interface > table > tbody');
       $('.admin-menu-organizer-sticky-collapse-menu').appendTo('.fields-admin-interface .customize-admin-menu .asenha-subfields');
+      $('.navigation-menu-duplicator').appendTo('.fields-admin-interface > table > tbody');
       
       $('.show-custom-taxonomy-filters').appendTo('.fields-admin-interface > table > tbody');
       

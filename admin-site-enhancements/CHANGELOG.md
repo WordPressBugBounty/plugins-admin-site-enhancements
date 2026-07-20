@@ -1,10 +1,30 @@
 ## Changelog
 
-**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **87 _major_ releases** (e.g. 1.1.0 ) and **202 _minor_ releases** (e.g. 4.9.1), for a **total of 289 releases**.
+**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **89 _major_ releases** (e.g. 1.1.0 ) and **202 _minor_ releases** (e.g. 4.9.1), for a **total of 291 releases**.
 
 Each **_major release_** usually corresponds with the addition of one new module/feature. Each module/feature usually is the equivalent of one (or more) single-purpose plugin. Each **_minor release_** usually contain one or more bugfix or improvements to existing modules/features.
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). Lifetime Deal (LTD) available.
+
+### 8.9.0 (2026.07.20) - ASE Free and Pro
+
+* **[ADDED in Free and Pro] Admin Interface >> Navigation Menu Duplicator**. Added a new module to duplicate a navigation menu with one click from Appearance → Menus.
+
+* **[IMPROVED in Free and Pro] Log In/Out & Register >> Change Login URL**: Improved handling of a URL pattern that may reveal the custom login URL when ASE is installed on WordPress site hosted with NGINX that implements a certain pattern of NGINX URL mapping. Props to Bram for reporting the issue in great detail.
+
+* **[IMPROVED in Pro] Content Management >> Content Order**: Added compatibility with WPML plugin so that reordering results in sequential menu_order of posts in the primary language while respecting WPML's post order syncing. Also added a new (checkbox) option to allow independent reordering of posts in each language, which will suppress WPML's post order syncing. Props to Stijn V. for prompting this improvement.
+
+* **[IMPROVED in Pro] Content Management >> Terms Order**: add an 'Order' button on taxonomy terms listing page, linking to the custom terms ordering page for that taxonomy. Props to Stijn V. for prompting this improvement.
+
+* **[IMPROVED in Pro] Utilities >> Form Builder**: 
+  * Added two new "Layout" fields: Section Start and Section End, to group together multiple fields. Conditional logic can then be applied to the Section Start field to show / hide the grouped fields at once. Nesting sections is also supported. Props to Roland T. for prompting this improvement.
+  * Added **multi-step form** feature via a new "Layout" field called Page Break. In the "Form" tab, there's also a dedicated section to configure the multi-step behaviour, including step titles, progress indicator type (progress bar or clickable steps), steps styles (pills, circles, squares, tabs, chevrons), and whether to enable saving progress and emailing a URL to resume form-filling. Props to Fabio R. for prompting this improvement.
+
+* **[FIXED in Pro] Admin Interface >> Admin Columns Manager**: Fixed PHP warnings on posts listing page that occurs when a stale/deleted/non-existent taxonomy has a lingering admin column on the listing page. Props to Ignazio D.M. for reporting the issue in detail with a screen recording.
+
+* **[TRANSLATION in Free and Pro]** ASE is now being translated into [38 languages](https://translate.wpase.com/):
+  * **Added new/improved translation** for:
+    * ASE Free: Updated Spanish (Spain), Portuguese (Brazil), Polish, Dutch (Netherlands).
 
 ### 8.8.8 (2026.07.13) - ASE Free and Pro
 

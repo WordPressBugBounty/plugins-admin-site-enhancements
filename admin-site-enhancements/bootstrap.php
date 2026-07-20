@@ -401,6 +401,12 @@ class Admin_Site_Enhancements {
             }
             add_action( 'wp_ajax_save_admin_menu', [$admin_menu_organizer, 'save_admin_menu'] );
         }
+        // Navigation Menu Duplicator
+        if ( array_key_exists( 'enable_navigation_menu_duplicator', $options ) && $options['enable_navigation_menu_duplicator'] ) {
+            $navigation_menu_duplicator = new ASENHA\Classes\Navigation_Menu_Duplicator();
+            add_action( 'admin_enqueue_scripts', [$navigation_menu_duplicator, 'enqueue_scripts'] );
+            add_action( 'admin_init', [$navigation_menu_duplicator, 'maybe_handle_duplicate_request'] );
+        }
         // Show Custom Taxonomy Filters
         if ( array_key_exists( 'show_custom_taxonomy_filters', $options ) && $options['show_custom_taxonomy_filters'] ) {
             $show_custom_taxonomy_filters = new ASENHA\Classes\Show_Custom_Taxonomy_Filters();

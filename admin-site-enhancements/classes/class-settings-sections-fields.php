@@ -16,6 +16,11 @@ class Settings_Sections_Fields {
      * @since 1.0.0
      */
     function register_sections_fields() {
+        // Skip on admin-ajax: this registers every ASE settings field and is only needed on
+        // the Enhancements screen / options.php saves — not on third-party AJAX (e.g. Amelia).
+        if ( wp_doing_ajax() ) {
+            return;
+        }
         add_settings_section(
             'main-section',
             '',
@@ -910,6 +915,28 @@ class Settings_Sections_Fields {
                 'field_name'  => ASENHA_SLUG_U . '[' . $field_id . ']',
                 'field_label' => __( 'Make "Collapse Menu" sticky at the bottom of the admin menu', 'admin-site-enhancements' ),
                 'class'       => 'asenha-checkbox asenha-hide-th admin-interface ' . $field_slug,
+            )
+        );
+        // Navigation Menu Duplicator
+        $field_id = 'enable_navigation_menu_duplicator';
+        $field_slug = 'navigation-menu-duplicator';
+        $field_title = __( 'Navigation Menu Duplicator', 'admin-site-enhancements' );
+        add_settings_field(
+            $field_id,
+            $field_title,
+            [$render_field, 'render_checkbox_toggle'],
+            ASENHA_SLUG,
+            'main-section',
+            array(
+                'option_name'            => ASENHA_SLUG_U,
+                'field_id'               => $field_id,
+                'field_slug'             => $field_slug,
+                'field_title'            => $field_title,
+                'field_name'             => ASENHA_SLUG_U . '[' . $field_id . ']',
+                'field_description'      => __( 'Duplicate a navigation menu with one click from Appearance → Menus. Duplicated menus remain on the site even if this module is later disabled.', 'admin-site-enhancements' ),
+                'field_options_wrapper'  => false,
+                'field_options_moreless' => false,
+                'class'                  => 'asenha-toggle admin-interface ' . $field_slug,
             )
         );
         // Show Custom Taxonomy Filters

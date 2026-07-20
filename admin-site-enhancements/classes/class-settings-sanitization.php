@@ -218,6 +218,11 @@ class Settings_Sanitization {
             $options['admin_menu_organizer_sticky_collapse_menu'] = false;
         }
         $options['admin_menu_organizer_sticky_collapse_menu'] = ( 'on' == $options['admin_menu_organizer_sticky_collapse_menu'] ? true : false );
+        // Navigation Menu Duplicator
+        if ( !isset( $options['enable_navigation_menu_duplicator'] ) ) {
+            $options['enable_navigation_menu_duplicator'] = false;
+        }
+        $options['enable_navigation_menu_duplicator'] = ( 'on' == $options['enable_navigation_menu_duplicator'] ? true : false );
         // Enhance List Tables
         if ( !isset( $options['enhance_list_tables'] ) ) {
             $options['enhance_list_tables'] = false;
