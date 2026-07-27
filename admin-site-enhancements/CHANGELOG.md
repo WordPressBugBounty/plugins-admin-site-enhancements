@@ -1,10 +1,46 @@
 ## Changelog
 
-**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **89 _major_ releases** (e.g. 1.1.0 ) and **202 _minor_ releases** (e.g. 4.9.1), for a **total of 291 releases**.
+**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **89 _major_ releases** (e.g. 1.1.0 ) and **203 _minor_ releases** (e.g. 4.9.1), for a **total of 292 releases**.
 
 Each **_major release_** usually corresponds with the addition of one new module/feature. Each module/feature usually is the equivalent of one (or more) single-purpose plugin. Each **_minor release_** usually contain one or more bugfix or improvements to existing modules/features.
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). Lifetime Deal (LTD) available.
+
+### 8.9.1 (2026.07.27) - ASE Free and Pro
+
+* **[IMPROVED in Free and Pro] Admin Interface >> Admin Menu Organizer**:
+  * ASE Free: Properly hide "Yoast SEO" menu item until toggled for non-administrator roles. Props to Stijn V. for prompting this improvement.
+  * ASE Pro: Properly, always hide "Yoast SEO" menu item for the selected/excluded non-administrator roles. Props to Stijn V. for prompting this improvement.
+  
+* **[IMPROVED in Free and Pro] Log In/Out & Register >> Change Login URL**: Improve compatibility with login processes done via AJAX, e.g. StoreEngine login page. Props to Kuku C. for prompting this improvement.
+
+* **[IMPROVED in Free and Pro] Utilities >> Multiple User Roles**: added mechanism to prevent non-administrator users whose been granted `promote_users` (WP core) capability (for whatever reason) from promoting themselves to be an administrator. Props to Artus KG for reporting the issue.
+
+* **[IMPROVED in Pro] Utilities >> Email Delivery**: added handling for multiple addresses in "Reply-to email" for correct processing and fatal error prevention. Props to Brandon P. for reporting the issue in detail and proposing the code fix.
+
+* **[IMPROVED and FIXED in Pro] Content Management >> Custom Content Types**: 
+  * Custom Post Types and Custom Taxonomies: Slash (/) is now allowed for use in custom rewrite slugs for custom post types and custom taxonomies, so you can get something like https://www.example.com/music/genre/pop for the 'Pop' term archive when you use 'music/genre' as the custom rewrite slug. Props to Stijn V. for prompting this improvement.
+  * Custom Field Groups: fixed unauthenticated RCE that can occur in a scenario where a frontend post creation form contains a repeater field.
+  * Custom Field Groups: make the editor buttons that appears in the TinyMCE editor uniform across post, term and CFG screens.
+  * Custom Field Groups: full-screen button in TinyMCE editor in the CFG edit screen, and in WYSIWYG field now will properly expand the editor without it being partially hidden under the admin bar and admin menu.
+  * Custom Field Groups: added new options for WYSIWYG field to (i) optionally hide the media button ("Add Media" button), (ii) choose to show visual and code tabs, or just one of them, (iii) customize which toolbar buttons to show in the editor. Props to Stijn V. for prompting this improvement.
+  * Custom Field Groups: fixed an issue where 3-levels nested repeaters don't properly output the 3rd level repeater sub-fields in Bricks nested query loops. Props to Stijn V. for reporting the issue in detail and facilitating the troubleshooting process.
+  * Custom Field Groups: fixed an issue where select field's output format is not being honored in Bricks builder. Props to Stijn V. for reporting the issue in detail.
+
+* **[IMPROVED and FIXED in Pro] Admin Interface >> Admin Columns Manager**:
+  * ASE date time field can now have custom formatting and be used for the default sort.
+  * Fix an issue where date time field value in ASE, ACF and Meta Box is being converted with the WordPress timezone, instead of being treated as already in the WordPress timezone. Props to Gergo F. for reporting the issue in great detail and facilitating the troubleshooting process.
+
+* **[IMPROVED in Pro] Content Management >> Terms Order**: added WPML compatibility to sync term order between languages each time a term is reordered in any language. Props to Claudio P. for prompting this improvement.
+
+* **[IMPROVED in Pro] Disable Components >> Disable Gutenberg**: added an option to always disable Gutenberg on certain posts and another option to always enable Gutenberg on certain posts. Props to Martin Ž. for prompting this improvement.
+
+* **[FIXED in Pro] Optimizations >> Image Upload Control**: fixed fatal error when PHP is not compiled with the GD library and only the Imagick library is present. Props to Vikram S. for reporting the issue in detail.
+
+* **[TRANSLATION in Free and Pro]** ASE is now being translated into [38 languages](https://translate.wpase.com/):
+  * **Added new/improved translation** for:
+    * ASE Free: Added Hebrew. Updated Portuguese (Brazil), French, Polish, Dutch (Netherlands).
+    * ASE Pro: Polish, Portuguese (Brazil), Indonesian
 
 ### 8.9.0 (2026.07.20) - ASE Free and Pro
 

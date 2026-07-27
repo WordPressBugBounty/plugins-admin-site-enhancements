@@ -469,6 +469,7 @@
       
       $('.disable-gutenberg-for').appendTo('.fields-disable-components .disable-gutenberg .asenha-subfields');
       $('.disable-gutenberg-frontend-styles').appendTo('.fields-disable-components .disable-gutenberg .asenha-subfields');
+      
       $('.disable-comments').appendTo('.fields-disable-components > table > tbody');
       
       $('.disable-comments-for').appendTo('.fields-disable-components .disable-comments .asenha-subfields');
@@ -1045,6 +1046,8 @@
             $('.disable-gutenberg-type').addClass('asenha-th-border-bottom');
          }
       });
+
+      
 
       // Disable Comments
       if ( $('input[name="admin_site_enhancements[disable_comments_type]"]:checked').val() == 'all-post-types' ) {

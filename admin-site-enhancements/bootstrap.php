@@ -700,14 +700,23 @@ class Admin_Site_Enhancements {
         // =================================================================
         // Disable Gutenberg
         if ( array_key_exists( 'disable_gutenberg', $options ) && $options['disable_gutenberg'] ) {
+            $load_disable_gutenberg = false;
             if ( array_key_exists( 'disable_gutenberg_for', $options ) && !empty( $options['disable_gutenberg_for'] ) ) {
+                $load_disable_gutenberg = true;
+            }
+            $disable_gutenberg = null;
+            if ( $load_disable_gutenberg ) {
                 $disable_gutenberg = new ASENHA\Classes\Disable_Gutenberg();
                 if ( !class_exists( 'Classic_Editor' ) ) {
                     require_once ASENHA_PATH . 'includes/empty-class-classic-editor.php';
                 }
                 add_action( 'admin_init', [$disable_gutenberg, 'disable_gutenberg_for_post_types_admin'] );
                 add_action( 'admin_print_styles', [$disable_gutenberg, 'safari_18_fix'] );
+                $load_disable_gutenberg_frontend_styles = false;
                 if ( array_key_exists( 'disable_gutenberg_frontend_styles', $options ) && $options['disable_gutenberg_frontend_styles'] ) {
+                    $load_disable_gutenberg_frontend_styles = true;
+                }
+                if ( $load_disable_gutenberg_frontend_styles ) {
                     add_action( 'wp_enqueue_scripts', [$disable_gutenberg, 'disable_gutenberg_for_post_types_frontend'], 999999 );
                     add_action( 'wp_footer', [$disable_gutenberg, 'disable_gutenberg_for_post_types_frontend'] );
                 }
