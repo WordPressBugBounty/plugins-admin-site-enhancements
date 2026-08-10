@@ -1,0 +1,129 @@
+.asenha-contact-form {
+	display: block;
+	width: 100%;
+}
+
+.asenha-contact-form .asenha-cf-field {
+	display: block;
+	margin-bottom: 1em;
+}
+
+.asenha-contact-form .asenha-cf-field label {
+	display: block;
+	text-align: left;
+	margin-bottom: 0.35em;
+}
+
+.asenha-contact-form .asenha-cf-field input,
+.asenha-contact-form .asenha-cf-field textarea {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.asenha-contact-form .asenha-cf-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1em;
+}
+
+.asenha-contact-form .asenha-cf-field--full {
+	width: 100%;
+}
+
+.asenha-contact-form .asenha-cf-field--half {
+	flex: 1 1 calc(50% - 0.5em);
+	min-width: 12rem;
+}
+
+.asenha-contact-form .asenha-cf-honeypot {
+	position: absolute;
+	left: -9999px;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+}
+
+.asenha-contact-form .asenha-cf-messages {
+	scroll-margin-top: 1rem;
+}
+
+.asenha-contact-form .asenha-cf-success-msg {
+	display: flex;
+	align-items: center;
+	gap: 0.5em;
+	margin: 0 0 1em;
+	padding: 0.75em 1em;
+	background: #edfaef;
+	border: 1px solid #00a32a;
+	border-radius: 3px;
+	color: #1e1e1e;
+}
+
+.asenha-contact-form .asenha-cf-success-icon {
+	display: inline-flex;
+	flex-shrink: 0;
+	color: #008a20;
+	line-height: 0;
+}
+
+.asenha-contact-form .asenha-cf-success-icon svg {
+	width: 1.25em;
+	height: 1.25em;
+}
+
+.asenha-contact-form .asenha-cf-success-text {
+	flex: 1 1 auto;
+}
+
+.asenha-contact-form .asenha-cf-error-msg {
+	margin: 0 0 1em;
+}
+
+.asenha-contact-form .asenha-cf-field-error input,
+.asenha-contact-form .asenha-cf-field-error textarea {
+	outline: 1px solid #b32d2e;
+}
+
+.asenha-contact-form .asenha-cf-field-error-message {
+	color: #b32d2e;
+	font-size: 0.9em;
+	margin-top: 0.35em;
+}
+
+.asenha-contact-form .asenha-cf-submit-wrap {
+	display: flex;
+	align-items: center;
+	gap: 0.5em;
+}
+
+.asenha-contact-form .asenha-cf-submit-spinner {
+	display: none;
+	width: 16px;
+	height: 16px;
+	border: 2px solid rgba(0, 0, 0, 0.15);
+	border-top-color: currentColor;
+	border-radius: 50%;
+	animation: asenha-cf-spin 0.8s linear infinite;
+	flex-shrink: 0;
+}
+
+.asenha-contact-form .asenha-cf-submit-button.is-loading + .asenha-cf-submit-spinner {
+	display: inline-block;
+}
+
+.asenha-contact-form .asenha-cf-submit-button.is-loading {
+	opacity: 0.7;
+	pointer-events: none;
+}
+
+@keyframes asenha-cf-spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+@media (max-width: 600px) {
+	.asenha-contact-form .asenha-cf-field--half {
+		flex-basis: 100%;
+	}
+}

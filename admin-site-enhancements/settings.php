@@ -1077,6 +1077,7 @@ function asenha_admin_scripts(  $hook_suffix  ) {
             'formBuilderSendTestEmailNonce' => wp_create_nonce( 'formbuilder_ajax' ),
             'expandText'                    => __( 'Expand', 'admin-site-enhancements' ),
             'collapseText'                  => __( 'Collapse', 'admin-site-enhancements' ),
+            'contactFormShortcodeCopied'    => __( 'Shortcode copied!', 'admin-site-enhancements' ),
             'dataTable'                     => array(
                 'emptyTable'   => __( 'No data available in table', 'admin-site-enhancements' ),
                 'info'         => __( 'Showing _START_ to _END_ of _TOTAL_ entries', 'admin-site-enhancements' ),

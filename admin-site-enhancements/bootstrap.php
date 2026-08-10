@@ -1093,6 +1093,10 @@ class Admin_Site_Enhancements {
             add_action( 'phpmailer_init', [$email_delivery, 'deliver_email_via_smtp'], 99999 );
             add_action( 'wp_ajax_send_test_email', [$email_delivery, 'send_test_email'] );
         }
+        // Contact Form
+        if ( array_key_exists( 'contact_form', $options ) && $options['contact_form'] ) {
+            require_once ASENHA_PATH . 'includes/contact-form/contact-form.php';
+        }
         // Multiple User Roles
         if ( array_key_exists( 'multiple_user_roles', $options ) && $options['multiple_user_roles'] ) {
             $multiple_user_roles = new ASENHA\Classes\Multiple_User_Roles();

@@ -1,10 +1,37 @@
 ## Changelog
 
-**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **89 _major_ releases** (e.g. 1.1.0 ) and **204 _minor_ releases** (e.g. 4.9.1), for a **total of 293 releases**.
+**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **90 _major_ releases** (e.g. 1.1.0 ) and **204 _minor_ releases** (e.g. 4.9.1), for a **total of 294 releases**.
 
 Each **_major release_** usually corresponds with the addition of one new module/feature. Each module/feature usually is the equivalent of one (or more) single-purpose plugin. Each **_minor release_** usually contain one or more bugfix or improvements to existing modules/features.
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). Lifetime Deal (LTD) available.
+
+### 9.0.0 (2026.08.10) - ASE Free and Pro
+
+* **[ADDED in Free and Pro] Utilities >> Contact Form**: added a simple contact form (shortcode and block) with AJAX submission, built-in spam protection layers, submission entries management and new submission notification email.
+
+* **[IMPROVED and FIXED in Pro] Content Management >> Custom Content Types**:
+  * Added export / import for custom post types, custom taxonomies, custom field groups and options pages definitions. This is accessible via a new "Export / Import" button on the list pages of the custom post types, etc., which links to the "Export | Import" section in ASE settings page. Props to Diego I., Sarah A., Alauddin A. and Paul R. for prompting this improvement.
+  * Custom Field Group: fixed OpenStreetMap preview layout issue inside Oxygen builder.
+  * Custom Field Group: when custom field group is attached to WooCommerce product, duplicating the product now correctly duplicate the custom field values. Props to Philippe G. for reporting the issue in great detail.
+  * Custom Field Group: if there are post meta with meta keys that are the same as ASE custom fields, upon saving/updating the post, those non-ASE, duplicate post meta will now be automatically deleted. This deletion of duplicate post meta is also triggered when an ASE custom field is updated via quick edit, bulk edit and REST API. Props to Eduard for reporting the issue in detail.
+  * Custom Field Group: fixed WPML integration issue that causes repeater and nested repeater field sub-fields values not being shown in the translated post. Also added admin notice for when new repeater sub-field values are added and the translation job needs to be updated with the new values. Props to Stijn V. for reporting the issue in detail and facilitating the troubleshooting process.
+  * Custom Field group: fixed conditional logic not working when the CFG is placed on taxonomy terms. Props to Paul R. for reporting the issue in detail and facilitating the troubleshooting process.
+  
+* **[IMPROVED in Pro] Utilities >> Site Backup and Migration:
+  * In the emergency restore script, once the restore process is initiated, the page will now auto scroll down to reveal the restore progress section.
+  * Failure when deleting remote backup archives now reconcile the local archive index, i.e. removes the stale entry in the backup archives list. This covers cases where remote backup location no longer exists or connectable, or the remote backup archive was deleted manually at the remote location. 
+  
+* **[IMPROVED in Pro] Utilities >> Form Builder**: when there are unsaved changes, trying to switch tabs between "Builder", "Settings" and "Style" will now raise a warning dialog to prevent losing those changes. Props to Steve H. for prompting this improvement.
+
+* **[IMPROVED in Pro] Content Management >> Media Categories**: added WPML compatibility so that translated terms will be used and show up in frontend queries of translated pages. Props to Stijn V. for prompting this improvement.
+  
+* **[FIXED in Pro] Admin Interface >> Hide Admin Bar**: fixed auto-hide on the frontend not working in sites using the Bricks builder. Props to Kenneth S. for reporting the issue with a screencast and facilitating the troubleshooting process.
+
+* **[TRANSLATION in Free and Pro]** ASE is now being translated into [38 languages](https://translate.wpase.com/):
+  * **Added new/improved translation** for:
+    * ASE Free: updated Spanish (Spain), Portuguese (Brazil), Polish, Norwegian.
+    * ASE Pro: updated Czech and Norwegian.
 
 ### 8.9.2 (2026.08.03) - ASE Free and Pro
 

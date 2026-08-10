@@ -554,6 +554,23 @@
       $('.smtp-send-test-email-description').appendTo('.fields-utilities .smtp-email-delivery .asenha-subfields');
       $('.smtp-send-test-email-to').appendTo('.fields-utilities .smtp-email-delivery .asenha-subfields');
       $('.smtp-send-test-email-result').appendTo('.fields-utilities .smtp-email-delivery .asenha-subfields');
+      $('.contact-form').appendTo('.fields-utilities > table > tbody');
+      $('.contact-form-use-theme-styles').appendTo('.fields-utilities .contact-form .asenha-subfields');
+      $('.contact-form-shortcode').appendTo('.fields-utilities .contact-form .asenha-subfields');
+      $('.contact-form-notification-email').appendTo('.fields-utilities .contact-form .asenha-subfields');
+      $('.contact-form-advanced-wrapper').appendTo('.fields-utilities .contact-form .asenha-subfields');
+      $('.contact-form-advanced-toggler').appendTo('.fields-utilities .contact-form .asenha-subfields');
+      $('.heading-for-contact-form-form-labels').appendTo('.contact-form-advanced-wrapper');
+      $('.contact-form-label-subject').appendTo('.contact-form-advanced-wrapper');
+      $('.contact-form-label-message').appendTo('.contact-form-advanced-wrapper');
+      $('.contact-form-label-name').appendTo('.contact-form-advanced-wrapper');
+      $('.contact-form-label-email').appendTo('.contact-form-advanced-wrapper');
+      $('.contact-form-submit-button-label').appendTo('.contact-form-advanced-wrapper');
+      $('.contact-form-success-message').appendTo('.contact-form-advanced-wrapper');
+      $('.contact-form-error-message').appendTo('.contact-form-advanced-wrapper');
+      $('.heading-for-contact-form-test-mode').appendTo('.contact-form-advanced-wrapper');
+      $('.contact-form-disable-antispam').appendTo('.contact-form-advanced-wrapper');
+      $('.contact-form-test-mode-description').appendTo('.contact-form-advanced-wrapper');
       
       $('.multiple-user-roles').appendTo('.fields-utilities > table > tbody');
       $('.image-sizes-panel').appendTo('.fields-utilities > table > tbody');
@@ -1006,6 +1023,59 @@
       
 
       subfieldsToggler( 'smtp_email_delivery', 'smtp-email-delivery' );
+      subfieldsToggler( 'contact_form', 'contact-form' );
+
+      function copyContactFormShortcode(text) {
+         if (navigator.clipboard && navigator.clipboard.writeText) {
+            return navigator.clipboard.writeText(text);
+         }
+
+         return new Promise(function(resolve, reject) {
+            var textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.setAttribute('readonly', '');
+            textarea.style.position = 'absolute';
+            textarea.style.left = '-9999px';
+            document.body.appendChild(textarea);
+            textarea.select();
+
+            try {
+               var copied = document.execCommand('copy');
+               document.body.removeChild(textarea);
+               if (copied) {
+                  resolve();
+               } else {
+                  reject();
+               }
+            } catch (error) {
+               document.body.removeChild(textarea);
+               reject(error);
+            }
+         });
+      }
+
+      $(document).on('click', '.asenha-contact-form-copy-shortcode', function() {
+         var $button = $(this);
+         var text = $button.attr('data-clipboard-text') || '';
+         var $wrapper = $button.closest('.asenha-contact-form-shortcode-wrapper');
+         var $copied = $wrapper.find('.asenha-contact-form-shortcode-copied');
+
+         if (!text) {
+            return;
+         }
+
+         copyContactFormShortcode(text).then(function() {
+            if (typeof adminPageVars !== 'undefined' && adminPageVars.contactFormShortcodeCopied) {
+               $copied.text(adminPageVars.contactFormShortcodeCopied);
+            }
+
+            $copied.removeAttr('hidden');
+
+            window.setTimeout(function() {
+               $copied.attr('hidden', 'hidden');
+            }, 1500);
+         });
+      });
 
       
       
