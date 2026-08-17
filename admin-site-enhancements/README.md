@@ -4,8 +4,8 @@ Contributors: qriouslad
 Donate link: https://bowo.io/asenha-sp-rdm  
 Tags: enhancements, tweaks, optimizations, tools  
 Requires at least: 4.6  
-Tested up to: 7.0.3  
-Stable tag: 9.0.0  
+Tested up to: 7.0.4  
+Stable tag: 9.0.1  
 Requires PHP: 5.6  
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -140,7 +140,7 @@ _"ASE is an amazing plugin! **Time and money saver**. Thank you!"_ ~[Iulian Baci
 
 * **[[ASE Pro](https://www.wpase.com/rdme-to-web)] Site Backup and Migration**. Backup files and database, restore from backups, and migrate or sync to another server.
 * **Email Delivery**. Set custom sender name and email. Optionally use external SMTP service to ensure notification and transactional emails from your site are being delivered to inboxes. [ASE Pro](https://www.wpase.com/rdme-to-web) adds the option to specify a custom reply-to name and email, Bcc address(es), disable authentication and the option to log email delivery.
-* **Contact Form**. A simple contact form (shortcode and block) with AJAX submission, built-in spam protection layers, submission entries management and notification email.
+* **Contact Form**. A simple, customizable contact form (shortcode and block) with AJAX submission, built-in spam protection layers, submission entries management and notification email.
 * **[[ASE Pro](https://www.wpase.com/rdme-to-web)] Form Builder**. Enable the drag-and-drop creation of various types of forms (contact, feedback, booking, application, proposal, admission, support, survey, etc.) on the frontend to collect information from site visitors or users or members. 33 field types are available, including Net Promoter Score (NPS), Likert, Matrix of Uniform and Variable Dropdowns and CAPTCHA fields. Support custom form styles, multi-columns layout, conditional logic, multi-step with saving progress, email notification, auto responder, entries management and webhooks for sending submission data to Zapier, n8n, etc.
 * **[[ASE Pro](https://www.wpase.com/rdme-to-web)] File Manager**. A comprehensive file manager with folder tree navigation, file and folder operations, and code editing capabilities.
 * **[[ASE Pro](https://www.wpase.com/rdme-to-web)] Local User Avatar**. Enable usage of any image from the media library as user avatars.
@@ -207,38 +207,38 @@ ASE does not officially support multisite. Please use at your own risk. That sai
 
 ## Changelog
 
-**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **90 _major_ releases** (e.g. 1.1.0 ) and **204 _minor_ releases** (e.g. 4.9.1), for a **total of 294 releases**.
+**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **90 _major_ releases** (e.g. 1.1.0 ) and **205 _minor_ releases** (e.g. 4.9.1), for a **total of 295 releases**.
 
 Each **_major release_** usually corresponds with the addition of one new module/feature. Each module/feature usually is the equivalent of one (or more) single-purpose plugin. Each **_minor release_** usually contain one or more bugfix or improvements to existing modules/features.
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). Lifetime Deal (LTD) available.
 
-### 9.0.0 (2026.08.10) - ASE Free and Pro
+### 9.0.1 (2026.08.17) - ASE Free and Pro
 
-* **[ADDED in Free and Pro] Utilities >> Contact Form**: added a simple contact form (shortcode and block) with AJAX submission, built-in spam protection layers, submission entries management and new submission notification email.
+* **[SECURITY FIX in Free and Pro] Content Management >> SVG Upload**: 
+  * Fixed a bypass of the CVE-2025-9487 Stored XSS fix in v7.9.8, where a user with SVG upload privilege could store an unsanitised SVG via XML-RPC by supplying a `post_id` they cannot edit. The request still returns 401, but the file is sanitized before that capability check. Props to Mohammed Abd Alrahman for responsibly disclosing the vulnerability via WPScan Security.
+  * SVG sanitizer exceptions are now caught and failed destination files, which may be script-bearing and served as image/svg+xml, are deleted instead of remaining on disk. Props WPScan Security for the responsible disclosure.
 
-* **[IMPROVED and FIXED in Pro] Content Management >> Custom Content Types**:
-  * Added export / import for custom post types, custom taxonomies, custom field groups and options pages definitions. This is accessible via a new "Export / Import" button on the list pages of the custom post types, etc., which links to the "Export | Import" section in ASE settings page. Props to Diego I., Sarah A., Alauddin A. and Paul R. for prompting this improvement.
-  * Custom Field Group: fixed OpenStreetMap preview layout issue inside Oxygen builder.
-  * Custom Field Group: when custom field group is attached to WooCommerce product, duplicating the product now correctly duplicate the custom field values. Props to Philippe G. for reporting the issue in great detail.
-  * Custom Field Group: if there are post meta with meta keys that are the same as ASE custom fields, upon saving/updating the post, those non-ASE, duplicate post meta will now be automatically deleted. This deletion of duplicate post meta is also triggered when an ASE custom field is updated via quick edit, bulk edit and REST API. Props to Eduard for reporting the issue in detail.
-  * Custom Field Group: fixed WPML integration issue that causes repeater and nested repeater field sub-fields values not being shown in the translated post. Also added admin notice for when new repeater sub-field values are added and the translation job needs to be updated with the new values. Props to Stijn V. for reporting the issue in detail and facilitating the troubleshooting process.
-  * Custom Field group: fixed conditional logic not working when the CFG is placed on taxonomy terms. Props to Paul R. for reporting the issue in detail and facilitating the troubleshooting process.
-  
-* **[IMPROVED in Pro] Utilities >> Site Backup and Migration:
-  * In the emergency restore script, once the restore process is initiated, the page will now auto scroll down to reveal the restore progress section.
-  * Failure when deleting remote backup archives now reconcile the local archive index, i.e. removes the stale entry in the backup archives list. This covers cases where remote backup location no longer exists or connectable, or the remote backup archive was deleted manually at the remote location. 
-  
-* **[IMPROVED in Pro] Utilities >> Form Builder**: when there are unsaved changes, trying to switch tabs between "Builder", "Settings" and "Style" will now raise a warning dialog to prevent losing those changes. Props to Steve H. for prompting this improvement.
+* **[IMPROVED in Free] Admin Interface >> Admin Menu Organizer**: added a "Reset Menu" link/feature that let's you start fresh.
 
-* **[IMPROVED in Pro] Content Management >> Media Categories**: added WPML compatibility so that translated terms will be used and show up in frontend queries of translated pages. Props to Stijn V. for prompting this improvement.
-  
-* **[FIXED in Pro] Admin Interface >> Hide Admin Bar**: fixed auto-hide on the frontend not working in sites using the Bricks builder. Props to Kenneth S. for reporting the issue with a screencast and facilitating the troubleshooting process.
+* **[IMPROVED in Free and Pro] Utilities >> Contact Form**: added form styling customization options which includes layout (default vs stacked), label position (left vs right), field style (box vs underline), color scheme (dark vs light), button position (left vs right) and button color.
+
+* **[FIXED in Free and Pro] Log In/Out | Register >> Login ID Type**: fixed a conflict with Wordfence 9.0.0 new passkey authentication when Login ID Type is set to "Email address only", which caused passkey authentication error, i.e. failed login. Props to Maan D. for reporting the issue and proposing the code fix that this fix is based on.
+
+* **[IMPROVED in Pro] Utilities >> Site Backup and Migration**: allow custom start date selection when backup policy uses "Once every 2 weeks", "Once every week" or "Once every 3 days" frequencies. Props to Benjamin N. for prompting this improvement.
+
+* **[IMPROVED in Pro] Utilities >> File Manager**: when compressing a single folder or a single file, the folder/file name will now be used for the resulting archive/zip file.
+
+* **[IMPROVED in Pro] Security >> Two-Factor Authentication (2FA)**: when using `two_factor_token_email_message` filter hook, you can now use HTML and it will be rendered as such, not as raw HTML. The outgoing email now is sent with the 'Content-Type: text/html; charset=UTF-8' header by default. Props to Jayron C. for prompting this improvement.
+
+* **[FIXED and IMPROVED in Pro] Security >> CAPTCHA Protection**: 
+  * Fixed a conflict with plugins that combines javascript files, e.g. SiteGround Speed Optimizer, when ALTCHA is enabled. This, for example, caused the ALTCHA widget to not render and function properly on the login screen/form at wp-login.php, and ended up blocking first-round login attempts. Props to Jenny L. for reporting the isssue and facilitating the troubleshooting process.
+  * Turnstile, reCAPTCHA and ALTCHA widgets now only verifies ASE’s own WordPress login, password-reset, and registration forms, so third-party forms that reuse the same CAPTCHA fields are no longer double-verified or blocked. Props to Tony B. for reporting the issue in detail along with proposing spot-on solutions.
 
 * **[TRANSLATION in Free and Pro]** ASE is now being translated into [38 languages](https://translate.wpase.com/):
   * **Added new/improved translation** for:
-    * ASE Free: updated Spanish (Spain), Portuguese (Brazil), Polish, Norwegian.
-    * ASE Pro: updated Czech and Norwegian.
+    * ASE Free: Updated Swedish, Spanish (Spain), Spanish (Chile), Portuguese (Brazil), Polish, Norwegian, German (Formal), Dutch, Chinese (Taiwan).
+    * ASE Pro: Updated Polish.
   * **More strings have been internationalized**. @Translators, please visit the respective project pages for the Free and Pro versions to translate the new strings, if you havent' done so already.
   * **Interested to help translate or improve the translation?** Please go to [https://translate.wpase.com](https://translate.wpase.com) for more info.
   * **[Chinese (China)](https://translate.wordpress.org/locale/zh-cn/default/wp-plugins/admin-site-enhancements/)**: ASE Free and Pro (completed). Props to [@bricksvip](https://profiles.wordpress.org/bricksvip/) et al. Current status: [39 strings untranslated](https://translate.wordpress.org/projects/wp-plugins/admin-site-enhancements/stable/zh-cn/default/?filters%5Bstatus%5D=untranslated).

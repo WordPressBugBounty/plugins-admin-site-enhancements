@@ -24,6 +24,7 @@
 	display: flex;
 	flex-wrap: wrap;
 	gap: 1em;
+	margin-bottom: 0.75em;
 }
 
 .asenha-contact-form .asenha-cf-field--full {
@@ -94,6 +95,11 @@
 	display: flex;
 	align-items: center;
 	gap: 0.5em;
+	justify-content: flex-start;
+}
+
+.asenha-contact-form.asenha-cf-button-pos--right .asenha-cf-submit-wrap {
+	justify-content: flex-end;
 }
 
 .asenha-contact-form .asenha-cf-submit-spinner {
@@ -119,6 +125,70 @@
 @keyframes asenha-cf-spin {
 	to {
 		transform: rotate(360deg);
+	}
+}
+
+/* Layout: Stacked — Name and Email each occupy full width */
+.asenha-contact-form.asenha-cf-layout--stacked .asenha-cf-row {
+	flex-direction: column;
+	gap: 0;
+}
+
+.asenha-contact-form.asenha-cf-layout--stacked .asenha-cf-field--half {
+	flex: 1 1 100%;
+	min-width: 0;
+}
+
+/* Label position (applies only when stacked) — keeps inputs aligned */
+.asenha-contact-form.asenha-cf-layout--stacked.asenha-cf-label-pos--left .asenha-cf-field:not(.asenha-cf-submit-wrap) {
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
+	gap: 0.75rem;
+}
+
+.asenha-contact-form.asenha-cf-layout--stacked.asenha-cf-label-pos--right .asenha-cf-field:not(.asenha-cf-submit-wrap) {
+	display: flex;
+	flex-direction: row-reverse;
+	align-items: center;
+	gap: 0.75rem;
+}
+
+.asenha-contact-form.asenha-cf-layout--stacked .asenha-cf-field:not(.asenha-cf-submit-wrap) label {
+	flex: 0 0 8rem;
+	margin-bottom: 0;
+	word-break: break-word;
+}
+
+.asenha-contact-form.asenha-cf-layout--stacked.asenha-cf-label-pos--left .asenha-cf-field:not(.asenha-cf-submit-wrap) label {
+	text-align: left;
+	line-height: 44px;
+}
+
+.asenha-contact-form.asenha-cf-layout--stacked.asenha-cf-label-pos--right .asenha-cf-field:not(.asenha-cf-submit-wrap) label {
+	text-align: right;
+}
+
+.asenha-contact-form.asenha-cf-layout--stacked .asenha-cf-field:not(.asenha-cf-submit-wrap) input,
+.asenha-contact-form.asenha-cf-layout--stacked .asenha-cf-field:not(.asenha-cf-submit-wrap) textarea {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+@media (max-width: 782px) {
+	.asenha-contact-form.asenha-cf-layout--stacked.asenha-cf-label-pos--left .asenha-cf-field:not(.asenha-cf-submit-wrap),
+	.asenha-contact-form.asenha-cf-layout--stacked.asenha-cf-label-pos--right .asenha-cf-field:not(.asenha-cf-submit-wrap) {
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	.asenha-contact-form.asenha-cf-layout--stacked .asenha-cf-field:not(.asenha-cf-submit-wrap) label {
+		flex-basis: auto;
+		text-align: left;
+	}
+
+	.asenha-contact-form.asenha-cf-layout--stacked.asenha-cf-label-pos--right .asenha-cf-field:not(.asenha-cf-submit-wrap) label {
+		text-align: left;
 	}
 }
 

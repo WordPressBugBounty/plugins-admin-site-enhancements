@@ -1,10 +1,37 @@
 ## Changelog
 
-**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **90 _major_ releases** (e.g. 1.1.0 ) and **204 _minor_ releases** (e.g. 4.9.1), for a **total of 294 releases**.
+**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **90 _major_ releases** (e.g. 1.1.0 ) and **205 _minor_ releases** (e.g. 4.9.1), for a **total of 295 releases**.
 
 Each **_major release_** usually corresponds with the addition of one new module/feature. Each module/feature usually is the equivalent of one (or more) single-purpose plugin. Each **_minor release_** usually contain one or more bugfix or improvements to existing modules/features.
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). Lifetime Deal (LTD) available.
+
+### 9.0.1 (2026.08.17) - ASE Free and Pro
+
+* **[SECURITY FIX in Free and Pro] Content Management >> SVG Upload**: 
+  * Fixed a bypass of the CVE-2025-9487 Stored XSS fix in v7.9.8, where a user with SVG upload privilege could store an unsanitised SVG via XML-RPC by supplying a `post_id` they cannot edit. The request still returns 401, but the file is sanitized before that capability check. Props to Mohammed Abd Alrahman for responsibly disclosing the vulnerability via WPScan Security.
+  * SVG sanitizer exceptions are now caught and failed destination files, which may be script-bearing and served as image/svg+xml, are deleted instead of remaining on disk. Props WPScan Security for the responsible disclosure.
+
+* **[IMPROVED in Free] Admin Interface >> Admin Menu Organizer**: added a "Reset Menu" link/feature that let's you start fresh.
+
+* **[IMPROVED in Free and Pro] Utilities >> Contact Form**: added form styling customization options which includes layout (default vs stacked), label position (left vs right), field style (box vs underline), color scheme (dark vs light), button position (left vs right) and button color.
+
+* **[FIXED in Free and Pro] Log In/Out | Register >> Login ID Type**: fixed a conflict with Wordfence 9.0.0 new passkey authentication when Login ID Type is set to "Email address only", which caused passkey authentication error, i.e. failed login. Props to Maan D. for reporting the issue and proposing the code fix that this fix is based on.
+
+* **[IMPROVED in Pro] Utilities >> Site Backup and Migration**: allow custom start date selection when backup policy uses "Once every 2 weeks", "Once every week" or "Once every 3 days" frequencies. Props to Benjamin N. for prompting this improvement.
+
+* **[IMPROVED in Pro] Utilities >> File Manager**: when compressing a single folder or a single file, the folder/file name will now be used for the resulting archive/zip file.
+
+* **[IMPROVED in Pro] Security >> Two-Factor Authentication (2FA)**: when using `two_factor_token_email_message` filter hook, you can now use HTML and it will be rendered as such, not as raw HTML. The outgoing email now is sent with the 'Content-Type: text/html; charset=UTF-8' header by default. Props to Jayron C. for prompting this improvement.
+
+* **[FIXED and IMPROVED in Pro] Security >> CAPTCHA Protection**: 
+  * Fixed a conflict with plugins that combines javascript files, e.g. SiteGround Speed Optimizer, when ALTCHA is enabled. This, for example, caused the ALTCHA widget to not render and function properly on the login screen/form at wp-login.php, and ended up blocking first-round login attempts. Props to Jenny L. for reporting the isssue and facilitating the troubleshooting process.
+  * Turnstile, reCAPTCHA and ALTCHA widgets now only verifies ASE’s own WordPress login, password-reset, and registration forms, so third-party forms that reuse the same CAPTCHA fields are no longer double-verified or blocked. Props to Tony B. for reporting the issue in detail along with proposing spot-on solutions.
+
+* **[TRANSLATION in Free and Pro]** ASE is now being translated into [38 languages](https://translate.wpase.com/):
+  * **Added new/improved translation** for:
+    * ASE Free: Updated Swedish, Spanish (Spain), Spanish (Chile), Portuguese (Brazil), Polish, Norwegian, German (Formal), Dutch, Chinese (Taiwan).
+    * ASE Pro: Updated Polish.
 
 ### 9.0.0 (2026.08.10) - ASE Free and Pro
 

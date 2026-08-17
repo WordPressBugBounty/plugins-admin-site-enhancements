@@ -878,6 +878,42 @@ class Settings_Sanitization {
             $options['contact_form_disable_antispam'] = false;
         }
         $options['contact_form_disable_antispam'] = ( 'on' == $options['contact_form_disable_antispam'] ? true : false );
+        // Style
+        if ( !isset( $options['contact_form_layout'] ) ) {
+            $options['contact_form_layout'] = 'default';
+        }
+        $options['contact_form_layout'] = ( in_array( $options['contact_form_layout'], array('default', 'stacked'), true ) ? $options['contact_form_layout'] : 'default' );
+        if ( !isset( $options['contact_form_label_position'] ) ) {
+            $options['contact_form_label_position'] = 'left';
+        }
+        $options['contact_form_label_position'] = ( in_array( $options['contact_form_label_position'], array('left', 'right'), true ) ? $options['contact_form_label_position'] : 'left' );
+        if ( !isset( $options['contact_form_field_style'] ) ) {
+            $options['contact_form_field_style'] = 'box';
+        }
+        $options['contact_form_field_style'] = ( in_array( $options['contact_form_field_style'], array('box', 'underline'), true ) ? $options['contact_form_field_style'] : 'box' );
+        if ( !isset( $options['contact_form_corner_style'] ) ) {
+            $options['contact_form_corner_style'] = 'rounded';
+        }
+        $options['contact_form_corner_style'] = ( in_array( $options['contact_form_corner_style'], array('rounded', 'sharp'), true ) ? $options['contact_form_corner_style'] : 'rounded' );
+        if ( !isset( $options['contact_form_color_scheme'] ) ) {
+            $options['contact_form_color_scheme'] = 'dark';
+        }
+        $options['contact_form_color_scheme'] = ( in_array( $options['contact_form_color_scheme'], array('dark', 'light'), true ) ? $options['contact_form_color_scheme'] : 'dark' );
+        if ( !isset( $options['contact_form_button_position'] ) ) {
+            $options['contact_form_button_position'] = 'left';
+        }
+        $options['contact_form_button_position'] = ( in_array( $options['contact_form_button_position'], array('left', 'right'), true ) ? $options['contact_form_button_position'] : 'left' );
+        if ( !isset( $options['contact_form_submit_button_style'] ) ) {
+            $options['contact_form_submit_button_style'] = 'solid';
+        }
+        $options['contact_form_submit_button_style'] = ( in_array( $options['contact_form_submit_button_style'], array('solid', 'outline'), true ) ? $options['contact_form_submit_button_style'] : 'solid' );
+        if ( !isset( $options['contact_form_submit_button_color'] ) ) {
+            $options['contact_form_submit_button_color'] = '';
+        }
+        $options['contact_form_submit_button_color'] = sanitize_hex_color( $options['contact_form_submit_button_color'] );
+        if ( null === $options['contact_form_submit_button_color'] ) {
+            $options['contact_form_submit_button_color'] = '';
+        }
         if ( !isset( $options['contact_form_use_theme_styles'] ) ) {
             $options['contact_form_use_theme_styles'] = false;
         }

@@ -2209,4 +2209,123 @@ input[type="search"]#module-search-input.has-text-input {
     display: none;
 }
 
+/* Contact Form Style section — vertical centering and inline color picker */
+.fields-utilities .contact-form .asenha-subfields tr.contact-form-layout,
+.fields-utilities .contact-form .asenha-subfields tr.contact-form-label-position,
+.fields-utilities .contact-form .asenha-subfields tr.contact-form-field-style,
+.fields-utilities .contact-form .asenha-subfields tr.contact-form-corner-style,
+.fields-utilities .contact-form .asenha-subfields tr.contact-form-color-scheme,
+.fields-utilities .contact-form .asenha-subfields tr.contact-form-button-position,
+.fields-utilities .contact-form .asenha-subfields tr.contact-form-submit-button-style,
+.fields-utilities .contact-form .asenha-subfields tr.contact-form-submit-button-color {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 10px;
+    flex-wrap: nowrap;
+}
+
+.fields-utilities .contact-form .asenha-subfields .asenha-radio-buttons.with-prefix-suffix th:not(.datatable-th),
+.fields-utilities .contact-form .asenha-subfields .asenha-color-picker.with-prefix-suffix th:not(.datatable-th) {
+    display: flex;
+    align-items: center;
+    height: auto;
+    line-height: 1.4;
+    min-height: 28px;
+    margin-right: 0;
+    padding: 0;
+    flex: 0 0 180px;
+}
+
+.fields-utilities .contact-form .asenha-subfields .asenha-radio-buttons.with-prefix-suffix th:not(.datatable-th) .field-sublabel,
+.fields-utilities .contact-form .asenha-subfields .asenha-color-picker.with-prefix-suffix th:not(.datatable-th) .field-sublabel {
+    line-height: 1.4;
+    display: inline-flex;
+    align-items: center;
+}
+
+.fields-utilities .contact-form .asenha-subfields .asenha-radio-buttons.with-prefix-suffix td:not(.datatable-td),
+.fields-utilities .contact-form .asenha-subfields .asenha-color-picker.with-prefix-suffix td:not(.datatable-td) {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex: 1 1 auto;
+    min-width: 0;
+    justify-content: flex-start;
+    margin-bottom: 0;
+    padding: 0;
+}
+
+.fields-utilities .contact-form .asenha-subfields .asenha-subfield-radio-button-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 4px;
+    flex-wrap: wrap;
+    margin-left: 0;
+    padding-left: 0;
+}
+
+.fields-utilities .contact-form .asenha-subfields .asenha-subfield-radio-button {
+    margin: 0;
+    align-self: center;
+}
+
+.fields-utilities .contact-form .asenha-subfields .asenha-subfield-radio-button + label {
+    top: 0;
+    margin: 0 20px 0 0;
+    line-height: 1.4;
+    display: inline-flex;
+    align-items: center;
+}
+
+.fields-utilities .contact-form .asenha-subfields .asenha-subfield-radio-button-wrapper label:last-of-type {
+    margin-right: 0;
+}
+
+.fields-utilities .contact-form .asenha-subfields tr.contact-form-submit-button-color .color-subfield-wrapper {
+    display: inline-flex;
+    align-items: center;
+}
+
+.fields-utilities .contact-form .asenha-subfields tr.contact-form-submit-button-color .wp-picker-container {
+    display: inline-flex;
+    align-items: center;
+    gap: 0 8px;
+    flex-wrap: wrap;
+    vertical-align: middle;
+}
+
+.fields-utilities .contact-form .asenha-subfields tr.contact-form-submit-button-color .wp-color-result {
+    margin: 0;
+    align-self: center;
+}
+
+.fields-utilities .contact-form .asenha-subfields tr.contact-form-submit-button-color .wp-picker-input-wrap {
+    display: inline-flex;
+    align-items: center;
+}
+
+.fields-utilities .contact-form .asenha-subfields tr.contact-form-submit-button-color .wp-picker-holder {
+    flex-basis: 100%;
+    width: 100%;
+}
+
+.fields-utilities .contact-form .asenha-subfields tr.contact-form-submit-button-color .iris-picker {
+    margin-top: 8px;
+}
+
+@media (max-width: 782px) {
+    .fields-utilities .contact-form .asenha-subfields tr.contact-form-layout,
+    .fields-utilities .contact-form .asenha-subfields tr.contact-form-label-position,
+    .fields-utilities .contact-form .asenha-subfields tr.contact-form-field-style,
+    .fields-utilities .contact-form .asenha-subfields tr.contact-form-corner-style,
+    .fields-utilities .contact-form .asenha-subfields tr.contact-form-color-scheme,
+    .fields-utilities .contact-form .asenha-subfields tr.contact-form-button-position,
+    .fields-utilities .contact-form .asenha-subfields tr.contact-form-submit-button-style,
+    .fields-utilities .contact-form .asenha-subfields tr.contact-form-submit-button-color {
+        flex-wrap: wrap;
+    }
+}
+
 

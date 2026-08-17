@@ -32,12 +32,7 @@ class Contact_Form_Block {
 			return;
 		}
 
-		wp_register_style(
-			'asenha-contact-form-block-editor',
-			CONTACT_FORM_URL . 'assets/css/contact-form-layout.css',
-			array( 'wp-edit-blocks' ),
-			CONTACT_FORM_VERSION
-		);
+		Contact_Form::register_frontend_assets();
 
 		wp_register_script(
 			'asenha-contact-form-block-editor',
@@ -47,6 +42,13 @@ class Contact_Form_Block {
 			true
 		);
 
+		$settings = Contact_Form::get_settings();
+
+		$editor_styles = array( 'asenha-contact-form-layout' );
+		if ( empty( $settings['use_theme_styles'] ) ) {
+			$editor_styles[] = 'asenha-contact-form-default';
+		}
+
 		register_block_type(
 			'asenha/contact-form',
 			array(
@@ -55,7 +57,7 @@ class Contact_Form_Block {
 				'description'     => __( 'Insert the ASE contact form.', 'admin-site-enhancements' ),
 				'category'        => 'widgets',
 				'icon'            => 'email',
-				'editor_style'    => 'asenha-contact-form-block-editor',
+				'editor_style'    => $editor_styles,
 				'editor_script'   => 'asenha-contact-form-block-editor',
 				'render_callback' => array( $this, 'render_block' ),
 				'attributes'      => array(),
@@ -69,15 +71,26 @@ class Contact_Form_Block {
 	 * @return void
 	 */
 	public function enqueue_block_editor_assets() {
-		wp_enqueue_style( 'asenha-contact-form-block-editor' );
 		wp_enqueue_script( 'asenha-contact-form-block-editor' );
 
 		$settings = Contact_Form::get_settings();
+		Contact_Form::register_frontend_assets();
 
-		if ( empty( $settings['use_theme_styles'] ) ) {
-			Contact_Form::register_frontend_assets();
-			wp_enqueue_style( 'asenha-contact-form-default' );
-		}
+		$effective_btn_color = ! empty( $settings['submit_button_color'] ) ? $settings['submit_button_color'] : ( 'light' === $settings['color_scheme'] ? '#ffffff' : '#1e1e1e' );
+		$common              = new Common_Methods();
+		$is_dark             = $common->is_color_dark( $effective_btn_color );
+		$btn_text_color      = $is_dark ? '#ffffff' : '#1e1e1e';
+		$btn_hover_color     = $is_dark ? $common->adjust_bnrightness( $effective_btn_color, 0.15 ) : $common->adjust_bnrightness( $effective_btn_color, -0.15 );
+		$btn_hover_text      = $common->is_color_dark( $btn_hover_color ) ? '#ffffff' : '#1e1e1e';
+		$inline_css          = sprintf(
+			'.asenha-contact-form{--asenha-cf-btn-color:%1$s;--asenha-cf-btn-text:%2$s;--asenha-cf-btn-hover:%3$s;--asenha-cf-btn-hover-text:%4$s;}',
+			esc_html( $effective_btn_color ),
+			esc_html( $btn_text_color ),
+			esc_html( $btn_hover_color ),
+			esc_html( $btn_hover_text )
+		);
+		$inline_handle = empty( $settings['use_theme_styles'] ) ? 'asenha-contact-form-default' : 'asenha-contact-form-layout';
+		wp_add_inline_style( $inline_handle, $inline_css );
 
 		wp_localize_script(
 			'asenha-contact-form-block-editor',

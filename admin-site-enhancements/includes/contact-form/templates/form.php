@@ -9,8 +9,19 @@
  */
 
 defined( 'ABSPATH' ) || exit;
+
+$form_classes = array( 'asenha-contact-form' );
+$form_classes[] = 'asenha-cf-layout--' . ( isset( $settings['layout'] ) ? $settings['layout'] : 'default' );
+$form_classes[] = 'asenha-cf-field-style--' . ( isset( $settings['field_style'] ) ? $settings['field_style'] : 'box' );
+$form_classes[] = 'asenha-cf-corners--' . ( isset( $settings['corner_style'] ) ? $settings['corner_style'] : 'rounded' );
+$form_classes[] = 'asenha-cf-scheme--' . ( isset( $settings['color_scheme'] ) ? $settings['color_scheme'] : 'dark' );
+$form_classes[] = 'asenha-cf-button--' . ( isset( $settings['submit_button_style'] ) ? $settings['submit_button_style'] : 'solid' );
+$form_classes[] = 'asenha-cf-button-pos--' . ( isset( $settings['button_position'] ) ? $settings['button_position'] : 'left' );
+if ( isset( $settings['layout'] ) && 'stacked' === $settings['layout'] ) {
+	$form_classes[] = 'asenha-cf-label-pos--' . ( isset( $settings['label_position'] ) ? $settings['label_position'] : 'left' );
+}
 ?>
-<form class="asenha-contact-form" method="post" novalidate data-js-token="<?php echo esc_attr( $tokens['js_token'] ); ?>">
+<form class="<?php echo esc_attr( implode( ' ', $form_classes ) ); ?>" method="post" novalidate data-js-token="<?php echo esc_attr( $tokens['js_token'] ); ?>">
 	<div class="asenha-cf-messages" aria-live="polite"></div>
 
 	<div class="asenha-cf-field asenha-cf-field--full">

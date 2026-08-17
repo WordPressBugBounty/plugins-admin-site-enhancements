@@ -1231,8 +1231,9 @@ function asenha_admin_scripts(  $hook_suffix  ) {
             false
         );
         $amo_page_vars = array(
-            'saveMenuNonce' => wp_create_nonce( 'save-menu-nonce' ),
-            'strings'       => array(
+            'saveMenuNonce'  => wp_create_nonce( 'save-menu-nonce' ),
+            'resetMenuNonce' => wp_create_nonce( 'reset-menu-nonce' ),
+            'strings'        => array(
                 'saveChangesError' => __( 'Unable to save changes. Please reload the page and try again.', 'admin-site-enhancements' ),
             ),
         );

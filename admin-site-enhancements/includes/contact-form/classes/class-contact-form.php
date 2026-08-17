@@ -171,6 +171,25 @@ class Contact_Form {
 			$notification_email = implode( ', ', $notification_emails );
 		}
 
+		$layout               = isset( $options['contact_form_layout'] ) ? $options['contact_form_layout'] : 'default';
+		$layout               = in_array( $layout, array( 'default', 'stacked' ), true ) ? $layout : 'default';
+		$label_position       = isset( $options['contact_form_label_position'] ) ? $options['contact_form_label_position'] : 'left';
+		$label_position       = in_array( $label_position, array( 'left', 'right' ), true ) ? $label_position : 'left';
+		$field_style          = isset( $options['contact_form_field_style'] ) ? $options['contact_form_field_style'] : 'box';
+		$field_style          = in_array( $field_style, array( 'box', 'underline' ), true ) ? $field_style : 'box';
+		$corner_style         = isset( $options['contact_form_corner_style'] ) ? $options['contact_form_corner_style'] : 'rounded';
+		$corner_style         = in_array( $corner_style, array( 'rounded', 'sharp' ), true ) ? $corner_style : 'rounded';
+		$color_scheme         = isset( $options['contact_form_color_scheme'] ) ? $options['contact_form_color_scheme'] : 'dark';
+		$color_scheme         = in_array( $color_scheme, array( 'dark', 'light' ), true ) ? $color_scheme : 'dark';
+		$button_position      = isset( $options['contact_form_button_position'] ) ? $options['contact_form_button_position'] : 'left';
+		$button_position      = in_array( $button_position, array( 'left', 'right' ), true ) ? $button_position : 'left';
+		$submit_button_style  = isset( $options['contact_form_submit_button_style'] ) ? $options['contact_form_submit_button_style'] : 'solid';
+		$submit_button_style  = in_array( $submit_button_style, array( 'solid', 'outline' ), true ) ? $submit_button_style : 'solid';
+		$submit_button_color  = isset( $options['contact_form_submit_button_color'] ) ? sanitize_hex_color( $options['contact_form_submit_button_color'] ) : '';
+		if ( null === $submit_button_color ) {
+			$submit_button_color = '';
+		}
+
 		return array_merge(
 			$labels,
 			array(
@@ -180,6 +199,14 @@ class Contact_Form {
 				'notification_email'   => $notification_email,
 				'disable_antispam'     => ! empty( $options['contact_form_disable_antispam'] ),
 				'use_theme_styles'     => ! empty( $options['contact_form_use_theme_styles'] ),
+				'layout'               => $layout,
+				'label_position'       => $label_position,
+				'field_style'          => $field_style,
+				'corner_style'         => $corner_style,
+				'color_scheme'         => $color_scheme,
+				'button_position'      => $button_position,
+				'submit_button_style'  => $submit_button_style,
+				'submit_button_color'  => $submit_button_color,
 			)
 		);
 	}
@@ -228,6 +255,25 @@ class Contact_Form {
 
 		if ( empty( $settings['use_theme_styles'] ) ) {
 			wp_enqueue_style( 'asenha-contact-form-default' );
+		}
+
+		$effective_btn_color = ! empty( $settings['submit_button_color'] ) ? $settings['submit_button_color'] : ( 'light' === $settings['color_scheme'] ? '#ffffff' : '#1e1e1e' );
+		$common              = new Common_Methods();
+		$is_dark             = $common->is_color_dark( $effective_btn_color );
+		$btn_text_color      = $is_dark ? '#ffffff' : '#1e1e1e';
+		$btn_hover_color     = $is_dark ? $common->adjust_bnrightness( $effective_btn_color, 0.15 ) : $common->adjust_bnrightness( $effective_btn_color, -0.15 );
+		$btn_hover_text      = $common->is_color_dark( $btn_hover_color ) ? '#ffffff' : '#1e1e1e';
+		$inline_css          = sprintf(
+			'.asenha-contact-form{--asenha-cf-btn-color:%1$s;--asenha-cf-btn-text:%2$s;--asenha-cf-btn-hover:%3$s;--asenha-cf-btn-hover-text:%4$s;}',
+			esc_html( $effective_btn_color ),
+			esc_html( $btn_text_color ),
+			esc_html( $btn_hover_color ),
+			esc_html( $btn_hover_text )
+		);
+		if ( ! empty( $settings['use_theme_styles'] ) ) {
+			wp_add_inline_style( 'asenha-contact-form-layout', $inline_css );
+		} else {
+			wp_add_inline_style( 'asenha-contact-form-default', $inline_css );
 		}
 
 		wp_enqueue_script( 'asenha-contact-form-frontend' );

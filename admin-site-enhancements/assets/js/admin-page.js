@@ -555,9 +555,19 @@
       $('.smtp-send-test-email-to').appendTo('.fields-utilities .smtp-email-delivery .asenha-subfields');
       $('.smtp-send-test-email-result').appendTo('.fields-utilities .smtp-email-delivery .asenha-subfields');
       $('.contact-form').appendTo('.fields-utilities > table > tbody');
-      $('.contact-form-use-theme-styles').appendTo('.fields-utilities .contact-form .asenha-subfields');
       $('.contact-form-shortcode').appendTo('.fields-utilities .contact-form .asenha-subfields');
       $('.contact-form-notification-email').appendTo('.fields-utilities .contact-form .asenha-subfields');
+      $('.heading-for-contact-form-style').appendTo('.fields-utilities .contact-form .asenha-subfields');
+      $('.contact-form-layout').appendTo('.fields-utilities .contact-form .asenha-subfields');
+      $('.contact-form-label-position').appendTo('.fields-utilities .contact-form .asenha-subfields');
+      $('.contact-form-button-position').appendTo('.fields-utilities .contact-form .asenha-subfields');
+      $('.contact-form-field-style').appendTo('.fields-utilities .contact-form .asenha-subfields');
+      $('.contact-form-corner-style').appendTo('.fields-utilities .contact-form .asenha-subfields');
+      $('.contact-form-color-scheme').appendTo('.fields-utilities .contact-form .asenha-subfields');
+      $('.contact-form-submit-button-style').appendTo('.fields-utilities .contact-form .asenha-subfields');
+      $('.contact-form-submit-button-color').appendTo('.fields-utilities .contact-form .asenha-subfields');
+      $('#contact-form-submit-button-color.color-picker').wpColorPicker();
+      $('.contact-form-use-theme-styles').appendTo('.fields-utilities .contact-form .asenha-subfields');
       $('.contact-form-advanced-wrapper').appendTo('.fields-utilities .contact-form .asenha-subfields');
       $('.contact-form-advanced-toggler').appendTo('.fields-utilities .contact-form .asenha-subfields');
       $('.heading-for-contact-form-form-labels').appendTo('.contact-form-advanced-wrapper');
@@ -1024,6 +1034,29 @@
 
       subfieldsToggler( 'smtp_email_delivery', 'smtp-email-delivery' );
       subfieldsToggler( 'contact_form', 'contact-form' );
+
+      function toggleCfLabelPosition() {
+         var stacked = $('input[name="admin_site_enhancements[contact_form_layout]"]:checked').val() === 'stacked';
+         $('.contact-form-label-position').toggle(stacked);
+      }
+      toggleCfLabelPosition();
+      $('input[name="admin_site_enhancements[contact_form_layout]"]').on('change', toggleCfLabelPosition);
+
+      function toggleCfCornerStyle() {
+         var isBox = $('input[name="admin_site_enhancements[contact_form_field_style]"]:checked').val() === 'box';
+         var useTheme = $('input[name="admin_site_enhancements[contact_form_use_theme_styles]"]').is(':checked');
+         $('.contact-form-corner-style').toggle(isBox && !useTheme);
+      }
+
+      function toggleCfThemeDependentRows() {
+         var useTheme = $('input[name="admin_site_enhancements[contact_form_use_theme_styles]"]').is(':checked');
+         $('.contact-form-field-style, .contact-form-color-scheme, .contact-form-submit-button-style, .contact-form-submit-button-color').toggle(!useTheme);
+         toggleCfCornerStyle();
+      }
+      toggleCfThemeDependentRows();
+      toggleCfCornerStyle();
+      $('input[name="admin_site_enhancements[contact_form_field_style]"]').on('change', toggleCfCornerStyle);
+      $('input[name="admin_site_enhancements[contact_form_use_theme_styles]"]').on('change', toggleCfThemeDependentRows);
 
       function copyContactFormShortcode(text) {
          if (navigator.clipboard && navigator.clipboard.writeText) {

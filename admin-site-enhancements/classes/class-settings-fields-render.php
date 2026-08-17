@@ -1205,6 +1205,19 @@ class Settings_Fields_Render {
         ?>
 		</ul>
 		<?php 
+        ?>
+		<div class="admin-menu-actions-wrapper">
+			<?php 
+        ?>
+			<div class="reset-menu-wrapper">
+				<img src="<?php 
+        echo esc_attr( ASENHA_URL );
+        ?>assets/img/oval.svg" class="reset-menu-spinner" style="display: none;" /><a href="#" id="reset-menu"><?php 
+        echo esc_html__( 'Reset Menu', 'admin-site-enhancements' );
+        ?></a>
+			</div>
+		</div>
+		<?php 
         // Hidden input field to store custom menu order (from options as is, or sortupdate) upon clicking Save Changes.
         $field_id = 'custom_menu_order';
         $field_option_value = ( isset( $options[$field_id] ) ? $options[$field_id] : '' );
