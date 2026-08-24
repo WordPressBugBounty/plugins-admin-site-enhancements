@@ -1986,7 +1986,8 @@ class Settings_Sections_Fields {
         $field_id = 'ads_txt_content';
         $field_slug = 'ads-txt-content';
         $ads_txt_url_urlencoded = urlencode( site_url( 'ads.txt' ) );
-        $ads_txt_str_replaced = str_replace( '.', '-', sanitize_text_field( $_SERVER['SERVER_NAME'] ) );
+        $server_name = wp_parse_url( site_url(), PHP_URL_HOST );
+        $ads_txt_str_replaced = str_replace( '.', '-', sanitize_text_field( (string) $server_name ) );
         add_settings_field(
             $field_id,
             '',
@@ -2560,14 +2561,38 @@ class Settings_Sections_Fields {
         $field_slug = 'disable-plugin-theme-editor';
         $is_wpconfig_writeable = $wp_config->wpconfig_file( 'writeability' );
         $disallow_file_edit_exists = $wp_config->exists( 'constant', 'DISALLOW_FILE_EDIT' );
-        if ( $is_wpconfig_writeable ) {
-            $field_label = __( 'Disable the <strong>plugin and theme editor</strong>.', 'admin-site-enhancements' );
-        } else {
-            if ( $disallow_file_edit_exists ) {
-                $field_label = __( 'Disable the <strong>plugin and theme editor</strong>. <span class="warning-text">Note that wp-config.php in this site is not writeable and <code>DISALLOW_FILE_EDIT</code> constant is already defined there. You either need to make it writeable to make this setting functional, or, you need to manually change the value of <code>DISALLOW_FILE_EDIT</code> there.</span>', 'admin-site-enhancements' );
+        $disallow_file_edit_value = ( $disallow_file_edit_exists ? $wp_config->get_value( 'constant', 'DISALLOW_FILE_EDIT' ) : '' );
+        $options_extra = get_option( ASENHA_SLUG_U . '_extra', array() );
+        $disallow_file_edit_managed_by_ase = !empty( $options_extra['disallow_file_edit_managed_by_ase'] );
+        $disallow_file_mods_true = $wp_config->exists( 'constant', 'DISALLOW_FILE_MODS' ) && 'true' === $wp_config->get_value( 'constant', 'DISALLOW_FILE_MODS' );
+        $field_disabled = false;
+        if ( $disallow_file_mods_true ) {
+            $field_disabled = true;
+        } elseif ( !$is_wpconfig_writeable ) {
+            $field_disabled = true;
+        } elseif ( $disallow_file_edit_exists && 'true' === $disallow_file_edit_value && !$disallow_file_edit_managed_by_ase ) {
+            $field_disabled = true;
+        }
+        if ( $disallow_file_mods_true ) {
+            $field_label = __( 'Disable the <strong>plugin and theme editor</strong>. <span class="warning-text">Note that <code>DISALLOW_FILE_MODS</code> is set to <code>true</code> in wp-config.php, which already blocks plugin and theme file editing. This setting is unavailable until that is changed.</span>', 'admin-site-enhancements' );
+        } elseif ( $disallow_file_edit_exists && 'true' === $disallow_file_edit_value ) {
+            if ( $disallow_file_edit_managed_by_ase ) {
+                if ( $is_wpconfig_writeable ) {
+                    $field_label = __( 'Disable the <strong>plugin and theme editor</strong>. <span class="warning-text">Note that ASE set <code>DISALLOW_FILE_EDIT</code> to <code>true</code> in wp-config.php. Unchecking this setting will set it to <code>false</code>.</span>', 'admin-site-enhancements' );
+                } else {
+                    $field_label = __( 'Disable the <strong>plugin and theme editor</strong>. <span class="warning-text">Note that ASE set <code>DISALLOW_FILE_EDIT</code> to <code>true</code> in wp-config.php, but the file is not writeable. This setting is locked until wp-config.php is writeable.</span>', 'admin-site-enhancements' );
+                }
             } else {
-                $field_label = __( 'Disable the <strong>plugin and theme editor</strong>.', 'admin-site-enhancements' );
+                if ( $is_wpconfig_writeable ) {
+                    $field_label = __( 'Disable the <strong>plugin and theme editor</strong>. <span class="warning-text">Note that <code>DISALLOW_FILE_EDIT</code> is already set to <code>true</code> in wp-config.php (not by ASE). This setting is unavailable; manage that value manually there.</span>', 'admin-site-enhancements' );
+                } else {
+                    $field_label = __( 'Disable the <strong>plugin and theme editor</strong>. <span class="warning-text">Note that wp-config.php is not writeable and <code>DISALLOW_FILE_EDIT</code> is already set to <code>true</code> there (not by ASE). This setting is unavailable; manage that value manually.</span>', 'admin-site-enhancements' );
+                }
             }
+        } elseif ( !$is_wpconfig_writeable ) {
+            $field_label = __( 'Disable the <strong>plugin and theme editor</strong>. <span class="warning-text">Note that wp-config.php in this site is not writeable. This setting is unavailable until the file is writeable.</span>', 'admin-site-enhancements' );
+        } else {
+            $field_label = __( 'Disable the <strong>plugin and theme editor</strong>.', 'admin-site-enhancements' );
         }
         add_settings_field(
             $field_id,
@@ -2576,11 +2601,12 @@ class Settings_Sections_Fields {
             ASENHA_SLUG,
             'main-section',
             array(
-                'option_name' => ASENHA_SLUG_U,
-                'field_id'    => $field_id,
-                'field_name'  => ASENHA_SLUG_U . '[' . $field_id . ']',
-                'field_label' => $field_label,
-                'class'       => 'asenha-checkbox asenha-hide-th disable-components ' . $field_slug,
+                'option_name'    => ASENHA_SLUG_U,
+                'field_id'       => $field_id,
+                'field_name'     => ASENHA_SLUG_U . '[' . $field_id . ']',
+                'field_label'    => $field_label,
+                'field_disabled' => $field_disabled,
+                'class'          => 'asenha-checkbox asenha-hide-th disable-components ' . $field_slug,
             )
         );
         // =================================================================

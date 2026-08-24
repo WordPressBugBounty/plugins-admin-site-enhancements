@@ -77,7 +77,12 @@ class Settings_Fields_Render {
         } else {
             $inline_style = '';
         }
-        echo '<input type="checkbox" id="' . esc_attr( $field_name ) . '" class="asenha-subfield-checkbox" style="' . esc_attr( $inline_style ) . '" name="' . esc_attr( $field_name ) . '" ' . checked( $field_option_value, true, false ) . '>';
+        $field_disabled = !empty( $args['field_disabled'] );
+        // Disabled checkboxes are omitted from POST; preserve a checked value so save does not wipe it.
+        if ( $field_disabled && $field_option_value ) {
+            echo '<input type="hidden" name="' . esc_attr( $field_name ) . '" value="on">';
+        }
+        echo '<input type="checkbox" id="' . esc_attr( $field_name ) . '" class="asenha-subfield-checkbox" style="' . esc_attr( $inline_style ) . '" name="' . esc_attr( $field_name ) . '" ' . checked( $field_option_value, true, false ) . ' ' . disabled( $field_disabled, true, false ) . '>';
         echo '<label for="' . esc_attr( $field_name ) . '" class="asenha-subfield-checkbox-label" style="' . esc_attr( $inline_style ) . '">' . wp_kses_post( $field_label ) . '</label>';
     }
 

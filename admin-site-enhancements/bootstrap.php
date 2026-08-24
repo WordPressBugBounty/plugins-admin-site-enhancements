@@ -976,6 +976,7 @@ class Admin_Site_Enhancements {
         // =================================================================
         // Limit Login Attempts — failed-login log cleanup cron (always registered so orphans are cleared)
         $limit_login_attempts = new ASENHA\Classes\Limit_Login_Attempts();
+        add_action( 'plugins_loaded', [$limit_login_attempts, 'maybe_upgrade_failed_logins_log_table'], 5 );
         add_action( 'added_option', [$limit_login_attempts, 'trigger_clear_or_schedule_log_clean_up_by_amount'] );
         add_action( 'updated_option', [$limit_login_attempts, 'trigger_clear_or_schedule_log_clean_up_by_amount'] );
         add_action( 'plugins_loaded', [$limit_login_attempts, 'clear_or_schedule_log_clean_up_by_amount'] );
