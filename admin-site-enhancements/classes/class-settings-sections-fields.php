@@ -2733,6 +2733,97 @@ class Settings_Sections_Fields {
                 'table_name'        => $wpdb->prefix . 'asenha_failed_logins',
             )
         );
+        // Password Policy
+        $field_id = 'password_policy';
+        $field_slug = 'password-policy';
+        $field_title = __( 'Password Policy', 'admin-site-enhancements' );
+        add_settings_field(
+            $field_id,
+            $field_title,
+            [$render_field, 'render_checkbox_toggle'],
+            ASENHA_SLUG,
+            'main-section',
+            array(
+                'option_name'            => ASENHA_SLUG_U,
+                'field_id'               => $field_id,
+                'field_slug'             => $field_slug,
+                'field_title'            => $field_title,
+                'field_name'             => ASENHA_SLUG_U . '[' . $field_id . ']',
+                'field_description'      => __( 'Define and enforce password rules when users register, reset, or update their password.', 'admin-site-enhancements' ),
+                'field_options_wrapper'  => true,
+                'field_options_moreless' => true,
+                'class'                  => 'asenha-toggle security ' . $field_slug,
+            )
+        );
+        $field_id = 'password_policy_min_length';
+        $field_slug = 'password-policy-min-length';
+        add_settings_field(
+            $field_id,
+            '',
+            [$render_field, 'render_number_subfield'],
+            ASENHA_SLUG,
+            'main-section',
+            array(
+                'option_name'       => ASENHA_SLUG_U,
+                'field_id'          => $field_id,
+                'field_name'        => ASENHA_SLUG_U . '[' . $field_id . ']',
+                'field_type'        => 'with-prefix-suffix',
+                'field_prefix'      => '',
+                'field_suffix'      => __( 'characters minimum', 'admin-site-enhancements' ),
+                'field_intro'       => '',
+                'field_placeholder' => '8',
+                'field_min'         => 1,
+                'field_max'         => 256,
+                'field_description' => '',
+                'class'             => 'asenha-text with-prefix-suffix extra-narrow no-margin security ' . $field_slug,
+            )
+        );
+        $field_id = 'password_policy_require';
+        $field_slug = 'password-policy-require';
+        $require_options = array(
+            __( 'Uppercase letters (A–Z)', 'admin-site-enhancements' )          => 'uppercase',
+            __( 'Lowercase letters (a–z)', 'admin-site-enhancements' )          => 'lowercase',
+            __( 'Digits (0–9)', 'admin-site-enhancements' )                     => 'digit',
+            __( 'Special characters (&, @, #, etc.)', 'admin-site-enhancements' ) => 'special',
+        );
+        add_settings_field(
+            $field_id,
+            __( 'Require:', 'admin-site-enhancements' ),
+            [$render_field, 'render_checkboxes_subfield'],
+            ASENHA_SLUG,
+            'main-section',
+            array(
+                'field_id'      => $field_id,
+                'field_name'    => ASENHA_SLUG_U . '[' . $field_id . '][]',
+                'field_options' => $require_options,
+                'field_default' => array(),
+                'layout'        => 'vertical',
+                'class'         => 'asenha-checkboxes margin-top-8 security ' . $field_slug,
+            )
+        );
+        $field_id = 'password_policy_min_unique_chars';
+        $field_slug = 'password-policy-min-unique-chars';
+        add_settings_field(
+            $field_id,
+            '',
+            [$render_field, 'render_number_subfield'],
+            ASENHA_SLUG,
+            'main-section',
+            array(
+                'option_name'       => ASENHA_SLUG_U,
+                'field_id'          => $field_id,
+                'field_name'        => ASENHA_SLUG_U . '[' . $field_id . ']',
+                'field_type'        => 'with-prefix-suffix',
+                'field_prefix'      => '',
+                'field_suffix'      => __( 'unique characters required', 'admin-site-enhancements' ),
+                'field_intro'       => '',
+                'field_placeholder' => '0',
+                'field_min'         => 0,
+                'field_max'         => 256,
+                'field_description' => '',
+                'class'             => 'asenha-text with-prefix-suffix extra-narrow no-margin security ' . $field_slug,
+            )
+        );
         // Obfuscate Author Slugs
         $field_id = 'obfuscate_author_slugs';
         $field_slug = 'obfuscate-author-slugs';

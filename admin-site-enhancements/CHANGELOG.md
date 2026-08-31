@@ -1,12 +1,33 @@
 ## Changelog
 
-**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **90 _major_ releases** (e.g. 1.1.0 ) and **206 _minor_ releases** (e.g. 4.9.1), for a **total of 296 releases**.
+**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **91 _major_ releases** (e.g. 1.1.0 ) and **206 _minor_ releases** (e.g. 4.9.1), for a **total of 297 releases**.
 
 Each **_major release_** usually corresponds with the addition of one new module/feature. Each module/feature usually is the equivalent of one (or more) single-purpose plugin. Each **_minor release_** usually contain one or more bugfix or improvements to existing modules/features.
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). Lifetime Deal (LTD) available.
 
+### 9.1.0 (2026.08.31) - ASE Free and Pro
+
+* **[ADDED in Free and Pro] Security >> Password Policy**: enforce a minimum length and optional complexity rules (uppercase, lowercase, digits, special characters, unique characters) when users register, reset, or update their password. Props to Francois G., David M.C. and Marv D. for prompting this addition.
+
+* **[FIXED in Free and Pro] Admin Interface >> Wider Admin Menu**: 
+  * Fixed menu-wide, left-side whitespace/gap in block editor on smaller screen (< 961 pixels). Props to Martin Ž. for reporting the issue.
+  * Fixed wider admin menu overlapping Elementor's Cookie Consent plugin's admin pages. Props to [Diiamo](https://wordpress.org/support/users/luislu/) for [reporting](https://wordpress.org/support/topic/wider-admin-menu-issue/#post-19003147) this.
+
+* **[FIXED in Free and Pro] Admin Interface >> Admin Menu Organizer**: Sticky "Collapse Menu" now works in SureCart Products page. Props to Kenneth S. for reporting the issue in details (with screenshots).
+
+* **[IMPROVED in Pro] Utilities >> Display System Summary**: Added async, background process with cron fallback to calculate the various directory / component sizes. This helps prevents slow down / time out / critical error when opening the dashboard of a very large site. Props to Carsten D. for prompting this improvement.
+
+* **[IMPROVED in Pro] Security >> CAPTCHA Protection**: Site and secret keys will now be obfuscated in the module settings and in HTML. Props to Matt D. for prompting this improvement.
+
+* **[TRANSLATION in Free and Pro]** ASE is now being translated into [38 languages](https://translate.wpase.com/):
+  * **Added new/improved translation** for:
+    * ASE Free: Updated Spanish (Spain), Portuguese (Brazil), Polish, Norwegian, German (Formal), Dutch (Netherlands)
+    * ASE Pro: Updated Indonesian, Portuguese (Brazil), Polish
+
 ### 9.0.2 (2026.08.24) - ASE Free and Pro
+
+* **[ADDED in Free and Pro] Security >> Password Policy**: enforce a minimum length and optional complexity rules (uppercase, lowercase, digits, special characters, unique characters) when users register, reset, or update their password. The default WordPress password hint is replaced with a policy-specific hint based on the active rules.
 
 * **[IMPROVED in Free and Pro] Disable Components >> Disable Smaller Components >> Disable the plugin and theme editor**: this now detects existing `DISALLOW_FILE_EDIT` definition in wp-config.php, and when it's already set to `true`, will disable the checkbox/feature and show a warning note to manage the value directly in wp-config.php. Props to [Diiamo](https://wordpress.org/support/users/luislu/) for [reporting this](https://wordpress.org/support/topic/bug-report-overwrites-disallow_file_edit-in-wp-config-php-issue/) in detail.
 

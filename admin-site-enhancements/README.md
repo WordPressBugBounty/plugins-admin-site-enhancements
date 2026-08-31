@@ -5,7 +5,7 @@ Donate link: https://bowo.io/asenha-sp-rdm
 Tags: enhancements, tweaks, optimizations, tools  
 Requires at least: 4.6  
 Tested up to: 7.1  
-Stable tag: 9.0.2  
+Stable tag: 9.1.0  
 Requires PHP: 5.6  
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -42,8 +42,8 @@ _"ASE is an amazing plugin! **Time and money saver**. Thank you!"_ ~[Iulian Baci
 
 ### FEATURES & MODULES
 
-**76 modules** in total:  
-**59 free modules** (32 has Pro features) | **18 Pro modules**
+**78 modules** in total:  
+**60 free modules** (32 has Pro features) | **18 Pro modules**
 
 [**See all features >>**](https://www.wpase.com/features/)
 
@@ -124,6 +124,7 @@ _"ASE is an amazing plugin! **Time and money saver**. Thank you!"_ ~[Iulian Baci
 ### Security
 
 * **Limit Login Attempts**. Prevent brute force attacks by limiting the number of failed login attempts allowed per IP address. [ASE Pro](https://www.wpase.com/rdme-to-web) adds IP whitelisting, which is also useful to unblock users.
+* **Password Policy**. Enforce a minimum length and optional complexity rules (uppercase, lowercase, digits, special characters, unique characters) when users register, reset, or update their password.
 **[[ASE Pro](https://www.wpase.com/rdme-to-web)] CAPTCHA Protection**. Support for [ALTCHA](https://altcha.org/) self-hosted version (GDPR-compliant, open source, free), Google reCaptcha v2 and v3, and Cloudflare Turnstile for WordPress and WooCommerce default forms (login, password reset, registration and comment forms).
 **[[ASE Pro](https://www.wpase.com/rdme-to-web)] Two-Factor Authentication (2FA)**. Apply 2FA for some or all user roles with grace period settings and the option to apply different 2FA settings for each user role. Supported methods are authenticator app (TOTP), recovery codes and email.
 * **Obfuscate Author Slugs**. Obfuscate publicly exposed author page URLs that shows the user slugs / usernames.
@@ -207,41 +208,30 @@ ASE does not officially support multisite. Please use at your own risk. That sai
 
 ## Changelog
 
-**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **90 _major_ releases** (e.g. 1.1.0 ) and **206 _minor_ releases** (e.g. 4.9.1), for a **total of 296 releases**.
+**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **91 _major_ releases** (e.g. 1.1.0 ) and **206 _minor_ releases** (e.g. 4.9.1), for a **total of 297 releases**.
 
 Each **_major release_** usually corresponds with the addition of one new module/feature. Each module/feature usually is the equivalent of one (or more) single-purpose plugin. Each **_minor release_** usually contain one or more bugfix or improvements to existing modules/features.
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). Lifetime Deal (LTD) available.
 
-### 9.0.2 (2026.08.24) - ASE Free and Pro
+### 9.1.0 (2026.08.31) - ASE Free and Pro
 
-* **[IMPROVED in Free and Pro] Disable Components >> Disable Smaller Components >> Disable the plugin and theme editor**: this now detects existing `DISALLOW_FILE_EDIT` definition in wp-config.php, and when it's already set to `true`, will disable the checkbox/feature and show a warning note to manage the value directly in wp-config.php. Props to [Diiamo](https://wordpress.org/support/users/luislu/) for [reporting this](https://wordpress.org/support/topic/bug-report-overwrites-disallow_file_edit-in-wp-config-php-issue/) in detail.
+* **[ADDED in Free and Pro] Security >> Password Policy**: enforce a minimum length and optional complexity rules (uppercase, lowercase, digits, special characters, unique characters) when users register, reset, or update their password. Props to Francois G., David M.C. and Marv D. for prompting this addition.
 
-* **[IMPROVED in Free and Pro] Custom Code >> Manage ads.txt and app-ads.txt**: replaced `$_SERVER['SERVER_NAME']` with `site_url()`, which is more reliable to construct URL structure for validating ads.txt content. Props to [@robman87](https://wordpress.org/support/users/robman87/) for [reporting this](https://wordpress.org/support/topic/bug-ads-txt-module-uses-server_name-instead-of-the-configured-site-host/) along with the code improvement.
+* **[FIXED in Free and Pro] Admin Interface >> Wider Admin Menu**: 
+  * Fixed menu-wide, left-side whitespace/gap in block editor on smaller screen (< 961 pixels). Props to Martin Ž. for reporting the issue.
+  * Fixed wider admin menu overlapping Elementor's Cookie Consent plugin's admin pages. Props to [Diiamo](https://wordpress.org/support/users/luislu/) for [reporting](https://wordpress.org/support/topic/wider-admin-menu-issue/#post-19003147) this.
 
-* **[FIXED and IMPROVED in Free and Pro] Security >> Limit Login Attempts**: add compatibility with login from WPEngine by lengthening username and request_uri columns in the database. Props to [Adam H.](https://wordpress.org/support/users/adamboxcarstudio/) for [reporting the issue](https://wordpress.org/support/topic/wpengine-compatibility-with-limit-login-attempt/) along with suggestions for the fix.
+* **[FIXED in Free and Pro] Admin Interface >> Admin Menu Organizer**: Sticky "Collapse Menu" now works in SureCart Products page. Props to Kenneth S. for reporting the issue in details (with screenshots).
 
-* **[FIXED in Free and Pro] ASE Settings**: Added a mechanism to prevent other plugins from loading TinyMCE plugins in ASE Settings page, which is not needed and may cause a Javascript error when an adblocker is active in the browser. 
+* **[IMPROVED in Pro] Utilities >> Display System Summary**: Added async, background process with cron fallback to calculate the various directory / component sizes. This helps prevents slow down / time out / critical error when opening the dashboard of a very large site. Props to Carsten D. for prompting this improvement.
 
-* **[IMPROVED in Pro] Content Management >> Media Replacement**: implement advanced replacement process that will also replace references to the media file, including image sub-sizes (thumbnail, medium, etc.), in post content across all post types and also in `wp_options` table (widgets, customizer). This new replacement process allows for replacemeng using a different file type, e.g. JPG with WEBP, DOC with PDF, etc. A replacement confirmation screen is presented upon clicking "Perform Replacement", that will provide an overview of current media (and relevant file(s)), replacement media (and relevant file(s)) and content that use the media. Props to Jake H., Filip, @betaplus and Rodlens H. for prompting this improvement.
-
-* **[IMPROVED in Pro] Custom Code >> Code Snippets Manager**: 
-  * Fixed a bug with older PHP snippets where in a certain scenario, the code execution settings is / remains empty and do not fallback to the correct default, especially when active code snippets tree is being rebuilt during saving of a / another snippet. This may cause the snippet to stop being executed. Props to Nils L. for reporting the issue in detail and facilitating the troubleshooting process.
-  * Added more hook options for PHP snippets: `wp_enqueue_scripts`, `admin_enqueue_scripts` and `enqueue_block_assets`. Props to Stijn V. for prompting this improvement.
-
-* **[FIXED in Pro] Activation**: Fixed a fatal error caused by the dreamhost-panel-login.php single-file plugin that interferes with wordpress.org plugins update-check API during ASE Pro activation. Props to Espo D. for reporting the issue and facilitating the troubleshooting process.
-
-* **[FIXED in Pro] Content Management >> Custom Content Types >> Custom Field Groups**: 
-  * Added an improved fix for WPML integration when translating repeater field row/sub-field values. Props to Stijn V. for the continued reporting and testing of this issue.
-  * Fixed an issue where certain post types are not being listed as eligible post types to relate to in a relationship field. Props to Paul R. for reporting the issue in detail and facilitating the troubleshooting process.
-  * Fixed slow query issues related to WPML integration. Props to Stijn V. for reporting the issue with screenshots.
-
-* **[FIXED in Pro] Utilities >> Site Backup and Migration**: Fixed an issue where administrator is being locked out on the destination site once a migration operation has completed. This can occur in a certain scenario where the database table prefix is different between the two sites where the source site uses `wp_` prefix.
+* **[IMPROVED in Pro] Security >> CAPTCHA Protection**: Site and secret keys will now be obfuscated in the module settings and in HTML. Props to Matt D. for prompting this improvement.
 
 * **[TRANSLATION in Free and Pro]** ASE is now being translated into [38 languages](https://translate.wpase.com/):
   * **Added new/improved translation** for:
-    * ASE Free: Updated Portuguese (Brazil), Polish, Norwegian, German (Formal), Dutch (Netherlands)
-    * ASE Pro: Updated Portuguese (Brazil), Indonesian.
+    * ASE Free: Updated Spanish (Spain), Portuguese (Brazil), Polish, Norwegian, German (Formal), Dutch (Netherlands)
+    * ASE Pro: Updated Indonesian, Portuguese (Brazil), Polish
   * **More strings have been internationalized**. @Translators, please visit the respective project pages for the Free and Pro versions to translate the new strings, if you havent' done so already.
   * **Interested to help translate or improve the translation?** Please go to [https://translate.wpase.com](https://translate.wpase.com) for more info.
   * **[Chinese (China)](https://translate.wordpress.org/locale/zh-cn/default/wp-plugins/admin-site-enhancements/)**: ASE Free and Pro (completed). Props to [@bricksvip](https://profiles.wordpress.org/bricksvip/) et al. Current status: [39 strings untranslated](https://translate.wordpress.org/projects/wp-plugins/admin-site-enhancements/stable/zh-cn/default/?filters%5Bstatus%5D=untranslated).
