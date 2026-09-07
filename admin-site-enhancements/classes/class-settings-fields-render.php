@@ -102,7 +102,11 @@ class Settings_Fields_Render {
         $field_label = $args['field_label'];
         $parent_field_id = ( isset( $args['parent_field_id'] ) ? $args['parent_field_id'] : '' );
         $sub_field_id = ( isset( $args['sub_field_id'] ) ? $args['sub_field_id'] : '' );
-        if ( in_array( $parent_field_id, array('enable_duplication_for', 'enable_rest_api_for') ) ) {
+        $field_id = ( isset( $args['field_id'] ) ? $args['field_id'] : '' );
+        if ( 'image_upload_control_client_side_processing' === $field_id ) {
+            // Default on for WP 7.1+ when the option has never been saved.
+            $default_value = true;
+        } elseif ( in_array( $parent_field_id, array('enable_duplication_for', 'enable_rest_api_for') ) ) {
             // Default is true/enabled. Usually for options introduced at a later date where the previous default is true/enabled.
             $default_value = true;
         } else {

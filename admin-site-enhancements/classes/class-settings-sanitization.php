@@ -733,6 +733,9 @@ class Settings_Sanitization {
             $options['image_upload_control'] = false;
         }
         $options['image_upload_control'] = ( 'on' == $options['image_upload_control'] ? true : false );
+        if ( function_exists( 'wp_is_client_side_media_processing_enabled' ) ) {
+            $options['image_upload_control_client_side_processing'] = isset( $options['image_upload_control_client_side_processing'] ) && 'on' == $options['image_upload_control_client_side_processing'];
+        }
         if ( !isset( $options['image_max_width'] ) ) {
             $options['image_max_width'] = 1920;
         }

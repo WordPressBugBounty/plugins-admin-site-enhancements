@@ -2994,6 +2994,28 @@ class Settings_Sections_Fields {
                 'class'             => 'asenha-number asenha-hide-th narrow margin-bottom-4 optimizations ' . $field_slug,
             )
         );
+        if ( function_exists( 'wp_is_client_side_media_processing_enabled' ) ) {
+            $field_id = 'image_upload_control_client_side_processing';
+            $field_slug = 'image-upload-control-client-side-processing';
+            add_settings_field(
+                $field_id,
+                '',
+                [$render_field, 'render_checkbox_subfield'],
+                ASENHA_SLUG,
+                'main-section',
+                array(
+                    'option_name' => ASENHA_SLUG_U,
+                    'field_id'    => $field_id,
+                    'field_name'  => ASENHA_SLUG_U . '[' . $field_id . ']',
+                    'field_label' => sprintf( 
+                        /* translators: %s is the URL of the WordPress 7.1 client-side media processing dev note. */
+                        __( 'In block editor uploads, use <a href="%s" target="_blank" rel="noopener noreferrer">client-side media processing</a> in WordPress 7.1+.', 'admin-site-enhancements' ),
+                        'https://make.wordpress.org/core/2026/07/22/client-side-media-processing-in-wordpress-7-1/'
+                     ),
+                    'class'       => 'asenha-checkbox asenha-hide-th optimizations ' . $field_slug,
+                )
+            );
+        }
         $field_id = 'image_upload_control_description';
         $field_slug = 'image-upload-control-description';
         $field_description = __( 'To exclude an image from conversion and resizing, append \'-nr\' suffix to the file name, e.g. bird-photo-4k-nr.jpg', 'admin-site-enhancements' );

@@ -1092,6 +1092,24 @@ class Admin_Site_Enhancements {
             }
             // Resize and convert happens here
             add_filter( 'wp_handle_upload', [$image_upload_control, 'image_upload_handler'] );
+            if ( function_exists( 'wp_is_client_side_media_processing_enabled' ) ) {
+                add_filter( 'wp_client_side_media_processing_enabled', [$image_upload_control, 'maybe_disable_client_side_media_processing'] );
+                add_filter( 'big_image_size_threshold', [$image_upload_control, 'maybe_set_big_image_size_threshold'] );
+                add_filter( 'image_editor_output_format', [$image_upload_control, 'maybe_set_image_editor_output_format'] );
+                add_filter(
+                    'wp_editor_set_quality',
+                    [$image_upload_control, 'maybe_set_editor_quality'],
+                    10,
+                    3
+                );
+                add_filter( 'jpeg_quality', [$image_upload_control, 'maybe_set_jpeg_quality'] );
+                add_filter(
+                    'wp_generate_attachment_metadata',
+                    [$image_upload_control, 'maybe_delete_original_image_after_client_side_processing'],
+                    10,
+                    3
+                );
+            }
             if ( array_key_exists( 'disabled_image_sizes', $options ) && isset( $options['disabled_image_sizes'] ) ) {
                 add_filter(
                     'intermediate_image_sizes_advanced',

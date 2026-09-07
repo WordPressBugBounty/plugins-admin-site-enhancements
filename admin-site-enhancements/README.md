@@ -5,7 +5,7 @@ Donate link: https://bowo.io/asenha-sp-rdm
 Tags: enhancements, tweaks, optimizations, tools  
 Requires at least: 4.6  
 Tested up to: 7.1  
-Stable tag: 9.1.0  
+Stable tag: 9.1.1  
 Requires PHP: 5.6  
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -208,30 +208,29 @@ ASE does not officially support multisite. Please use at your own risk. That sai
 
 ## Changelog
 
-**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **91 _major_ releases** (e.g. 1.1.0 ) and **206 _minor_ releases** (e.g. 4.9.1), for a **total of 297 releases**.
+**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **91 _major_ releases** (e.g. 1.1.0 ) and **207 _minor_ releases** (e.g. 4.9.1), for a **total of 298 releases**.
 
 Each **_major release_** usually corresponds with the addition of one new module/feature. Each module/feature usually is the equivalent of one (or more) single-purpose plugin. Each **_minor release_** usually contain one or more bugfix or improvements to existing modules/features.
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). Lifetime Deal (LTD) available.
 
-### 9.1.0 (2026.08.31) - ASE Free and Pro
+### 9.1.1 (2026.09.07) - ASE Free and Pro
 
-* **[ADDED in Free and Pro] Security >> Password Policy**: enforce a minimum length and optional complexity rules (uppercase, lowercase, digits, special characters, unique characters) when users register, reset, or update their password. Props to Francois G., David M.C. and Marv D. for prompting this addition.
+* **[IMPROVED in Free and Pro] Optimizations >> Image Upload Control**: add compatibility with [client-side media processing](https://make.wordpress.org/core/2026/07/22/client-side-media-processing-in-wordpress-7-1/) for block editor uploads in WP 7.1+. This shows up as a new checkbox option in the module's settings, that if unchecked, will turn that processing off and use the server-side processing (GD or Imagick). Props @visedfaq for prompting this improvement.
 
-* **[FIXED in Free and Pro] Admin Interface >> Wider Admin Menu**: 
-  * Fixed menu-wide, left-side whitespace/gap in block editor on smaller screen (< 961 pixels). Props to Martin Ž. for reporting the issue.
-  * Fixed wider admin menu overlapping Elementor's Cookie Consent plugin's admin pages. Props to [Diiamo](https://wordpress.org/support/users/luislu/) for [reporting](https://wordpress.org/support/topic/wider-admin-menu-issue/#post-19003147) this.
+* **[IMPROVED in Pro] Security >> Email Address Obfuscator**: auto-obfuscation of email addresses in post content now also applies to Bricks builder elements (Basic Text, Rich Text, Heading, and other text-outputting elements). Props to Patric S. for prompting this improvement.
 
-* **[FIXED in Free and Pro] Admin Interface >> Admin Menu Organizer**: Sticky "Collapse Menu" now works in SureCart Products page. Props to Kenneth S. for reporting the issue in details (with screenshots).
+* **[IMPROVED in Pro] Utilities >> Site Backup and Migration**: 
+  * Added the ability to sync posts and the associated data (attachments/images, taxonomy terms, revisions, along with the configuration for custom post type, custom taxonomies and custom field groups). Currently supports four providers: WP Core (pages, posts), ASE, ACF and Meta Box.
+  * Added a mechanism to automatically clean up leftover, sensitive DB runner scripts from restore and migration operations. An admin notice will also be shown if such leftover scripts are found before the scheduled clean up runs, which has a button to perform manual clean up. Props to Leigh H. for prompting this improvement.
+  * Added a mechanism to prevent leftover database tables with `wp_` prefix from overwriting database tables during migration on the destination site. Props to Uli L. for prompting the improvement.
 
-* **[IMPROVED in Pro] Utilities >> Display System Summary**: Added async, background process with cron fallback to calculate the various directory / component sizes. This helps prevents slow down / time out / critical error when opening the dashboard of a very large site. Props to Carsten D. for prompting this improvement.
-
-* **[IMPROVED in Pro] Security >> CAPTCHA Protection**: Site and secret keys will now be obfuscated in the module settings and in HTML. Props to Matt D. for prompting this improvement.
+* **[FIXED in Pro] Security >> CAPTCHA Protection**: fixed a regression introduced in v9.0.1 that causes fail-open bypasses via crafted POST requests. Props to Kenny D. and John E. for reporting two inter-related issues.
 
 * **[TRANSLATION in Free and Pro]** ASE is now being translated into [38 languages](https://translate.wpase.com/):
   * **Added new/improved translation** for:
-    * ASE Free: Updated Spanish (Spain), Portuguese (Brazil), Polish, Norwegian, German (Formal), Dutch (Netherlands)
-    * ASE Pro: Updated Indonesian, Portuguese (Brazil), Polish
+    * ASE Free: Updated Spanish, Slovak, Portuguese (Brazil), Polish, Persian, Norwegian, Italian, German (Formal), Dutch (Netherlands), Chinese (Taiwan)
+    * ASE Pro: Updated Polish
   * **More strings have been internationalized**. @Translators, please visit the respective project pages for the Free and Pro versions to translate the new strings, if you havent' done so already.
   * **Interested to help translate or improve the translation?** Please go to [https://translate.wpase.com](https://translate.wpase.com) for more info.
   * **[Chinese (China)](https://translate.wordpress.org/locale/zh-cn/default/wp-plugins/admin-site-enhancements/)**: ASE Free and Pro (completed). Props to [@bricksvip](https://profiles.wordpress.org/bricksvip/) et al. Current status: [39 strings untranslated](https://translate.wordpress.org/projects/wp-plugins/admin-site-enhancements/stable/zh-cn/default/?filters%5Bstatus%5D=untranslated).

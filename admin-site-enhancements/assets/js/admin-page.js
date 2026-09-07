@@ -524,6 +524,8 @@
       $('.image-max-height').appendTo('.fields-optimizations .image-upload-control .asenha-subfields');
       
       $('.image-upload-control-description').appendTo('.fields-optimizations .image-upload-control .asenha-subfields');
+      $('.image-upload-control-client-side-processing').appendTo('.fields-optimizations .image-upload-control .asenha-subfields');
+      
       
       $('.enable-revisions-control').appendTo('.fields-optimizations > table > tbody');
       $('.revisions-max-number').appendTo('.fields-optimizations .enable-revisions-control .asenha-subfields');

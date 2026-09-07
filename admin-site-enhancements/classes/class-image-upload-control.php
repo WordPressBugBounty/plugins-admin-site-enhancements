@@ -53,6 +53,14 @@ class Image_Upload_Control {
      */
     public function image_upload_handler( $upload ) {
         $options = get_option( ASENHA_SLUG_U, array() );
+        if ( $this->is_client_side_processing_enabled( $options ) && $this->is_client_side_upload_request() ) {
+            $disable_image_conversion = false;
+            // wasm-vips does not handle BMP; keep server-side conversion on the original upload.
+            if ( !$disable_image_conversion && isset( $upload['type'], $upload['file'] ) && ('image/bmp' === $upload['type'] || 'image/x-ms-bmp' === $upload['type']) && false === strpos( $upload['file'], '-nr.' ) ) {
+                return $this->maybe_convert_image( 'bmp', $upload );
+            }
+            return $upload;
+        }
         $applicable_mime_types = array(
             'image/bmp',
             'image/x-ms-bmp',
@@ -276,6 +284,9 @@ class Image_Upload_Control {
      * @return array An array of data for a single file.
      */
     public function prefilter_maybe_fix_image_orientation( $file ) {
+        if ( $this->is_client_side_processing_enabled() && $this->is_client_side_upload_request() ) {
+            return $file;
+        }
         // Get the file extension
         // $suffix = substr( $file['name'], strrpos( $file['name'], '.', -1 ) + 1 );
         $suffix = pathinfo( $file['name'], PATHINFO_EXTENSION );
@@ -307,6 +318,9 @@ class Image_Upload_Control {
      * @return array Array of upload data.
      */
     public function maybe_fix_image_orientation( $file ) {
+        if ( $this->is_client_side_processing_enabled() && $this->is_client_side_upload_request() ) {
+            return $file;
+        }
         $suffix = substr( $file['file'], strrpos( $file['file'], '.', -1 ) + 1 );
         if ( in_array( strtolower( $suffix ), array('jpg', 'jpeg', 'tiff'), true ) ) {
             $this->fix_image_orientation( $file['file'] );
@@ -482,6 +496,219 @@ class Image_Upload_Control {
             return $meta;
         }
         return $meta;
+    }
+
+    /**
+     * Whether browser-based libvips processing is enabled for Image Upload Control.
+     *
+     * Absent option defaults to true on WordPress 7.1+.
+     *
+     * @since 9.2.0
+     *
+     * @param array|null $options Optional cached plugin options.
+     * @return bool
+     */
+    public function is_client_side_processing_enabled( $options = null ) {
+        if ( !function_exists( 'wp_is_client_side_media_processing_enabled' ) ) {
+            return false;
+        }
+        if ( null === $options ) {
+            $options = get_option( ASENHA_SLUG_U, array() );
+        }
+        if ( !is_array( $options ) || !array_key_exists( 'image_upload_control_client_side_processing', $options ) ) {
+            return true;
+        }
+        return (bool) $options['image_upload_control_client_side_processing'];
+    }
+
+    /**
+     * Disable Core client-side media processing when the ASE checkbox is off.
+     *
+     * @since 9.2.0
+     *
+     * @param bool $enabled Whether Core client-side processing is enabled.
+     * @return bool
+     */
+    public function maybe_disable_client_side_media_processing( $enabled ) {
+        if ( !$this->is_client_side_processing_enabled() ) {
+            return false;
+        }
+        return $enabled;
+    }
+
+    /**
+     * Map ASE max dimensions onto Core's longest-side threshold for wasm-vips.
+     *
+     * @since 9.2.0
+     *
+     * @param int|bool $threshold Current big image size threshold.
+     * @return int|bool
+     */
+    public function maybe_set_big_image_size_threshold( $threshold ) {
+        if ( !$this->is_client_side_processing_enabled() ) {
+            return $threshold;
+        }
+        if ( !$this->should_map_client_side_filters() ) {
+            return $threshold;
+        }
+        $options = get_option( ASENHA_SLUG_U, array() );
+        $max_width = ( isset( $options['image_max_width'] ) ? intval( $options['image_max_width'] ) : 1920 );
+        $max_height = ( isset( $options['image_max_height'] ) ? intval( $options['image_max_height'] ) : 1920 );
+        if ( $max_width < 1 ) {
+            $max_width = 1920;
+        }
+        if ( $max_height < 1 ) {
+            $max_height = 1920;
+        }
+        return max( $max_width, $max_height );
+    }
+
+    /**
+     * Map ASE conversion settings onto Core's output format filter for wasm-vips.
+     *
+     * @since 9.2.0
+     *
+     * @param array $formats Mime-type conversion map.
+     * @return array
+     */
+    public function maybe_set_image_editor_output_format( $formats ) {
+        if ( !is_array( $formats ) ) {
+            $formats = array();
+        }
+        if ( !$this->is_client_side_processing_enabled() ) {
+            return $formats;
+        }
+        if ( !$this->should_map_client_side_filters() ) {
+            return $formats;
+        }
+        $options = get_option( ASENHA_SLUG_U, array() );
+        $disable_image_conversion = false;
+        if ( $disable_image_conversion ) {
+            return $formats;
+        }
+        $formats['image/png'] = 'image/jpeg';
+        return $formats;
+    }
+
+    /**
+     * Map ASE quality settings onto Core's editor quality filter for wasm-vips.
+     *
+     * @since 9.2.0
+     *
+     * @param int    $quality    Quality on a 1-100 scale.
+     * @param string $mime_type  Output mime type.
+     * @param array  $size       Size data from Core.
+     * @return int
+     */
+    public function maybe_set_editor_quality( $quality, $mime_type = '', $size = array() ) {
+        if ( !$this->is_client_side_processing_enabled() ) {
+            return $quality;
+        }
+        return $quality;
+    }
+
+    /**
+     * Map ASE JPEG quality onto the legacy jpeg_quality filter.
+     *
+     * @since 9.2.0
+     *
+     * @param int $quality Quality on a 1-100 scale.
+     * @return int
+     */
+    public function maybe_set_jpeg_quality( $quality ) {
+        return $this->maybe_set_editor_quality( $quality, 'image/jpeg' );
+    }
+
+    /**
+     * Delete Core's oversized original after client-side finalize.
+     *
+     * Matches Image Upload Control's "delete originally uploaded files" behavior.
+     *
+     * @since 9.2.0
+     *
+     * @param array  $metadata      Attachment metadata.
+     * @param int    $attachment_id Attachment ID.
+     * @param string $context       Filter context: create or update.
+     * @return array
+     */
+    public function maybe_delete_original_image_after_client_side_processing( $metadata, $attachment_id, $context = 'create' ) {
+        if ( 'update' !== $context ) {
+            return $metadata;
+        }
+        if ( !$this->is_client_side_processing_enabled() ) {
+            return $metadata;
+        }
+        if ( !$this->is_client_side_upload_request() ) {
+            return $metadata;
+        }
+        if ( empty( $metadata['original_image'] ) ) {
+            return $metadata;
+        }
+        $original_basename = $metadata['original_image'];
+        if ( false !== strpos( $original_basename, '-nr.' ) ) {
+            return $metadata;
+        }
+        $attached_file = get_attached_file( $attachment_id );
+        if ( $attached_file && false !== strpos( $attached_file, '-nr.' ) ) {
+            return $metadata;
+        }
+        $original_path = wp_get_original_image_path( $attachment_id );
+        if ( $original_path && file_exists( $original_path ) ) {
+            wp_delete_file( $original_path );
+        }
+        unset($metadata['original_image']);
+        return $metadata;
+    }
+
+    /**
+     * Whether ASE settings should be mapped onto Core client-side filters.
+     *
+     * @since 9.2.0
+     *
+     * @param array|null $options Optional cached plugin options.
+     * @return bool
+     */
+    private function should_map_client_side_filters( $options = null ) {
+        return true;
+    }
+
+    /**
+     * Detect a Core client-side media REST request.
+     *
+     * @since 9.2.0
+     *
+     * @return bool
+     */
+    private function is_client_side_upload_request() {
+        if ( !defined( 'REST_REQUEST' ) || !REST_REQUEST ) {
+            return false;
+        }
+        $generate_sub_sizes = null;
+        if ( isset( $_POST['generate_sub_sizes'] ) ) {
+            // phpcs:ignore WordPress.Security.NonceVerification.Missing
+            $generate_sub_sizes = wp_unslash( $_POST['generate_sub_sizes'] );
+            // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+        } elseif ( isset( $_REQUEST['generate_sub_sizes'] ) ) {
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            $generate_sub_sizes = wp_unslash( $_REQUEST['generate_sub_sizes'] );
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+        }
+        if ( null !== $generate_sub_sizes && false === rest_sanitize_boolean( $generate_sub_sizes ) ) {
+            return true;
+        }
+        $route = '';
+        if ( isset( $_GET['rest_route'] ) ) {
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            $route = (string) wp_unslash( $_GET['rest_route'] );
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+        } elseif ( isset( $_SERVER['REQUEST_URI'] ) ) {
+            $route = (string) wp_unslash( $_SERVER['REQUEST_URI'] );
+            // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+        }
+        if ( '' !== $route && preg_match( '#/media/\\d+/(sideload|finalize)(?:/|\\?|$)#', $route ) ) {
+            return true;
+        }
+        return false;
     }
 
 }

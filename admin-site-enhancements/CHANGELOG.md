@@ -1,10 +1,28 @@
 ## Changelog
 
-**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **91 _major_ releases** (e.g. 1.1.0 ) and **206 _minor_ releases** (e.g. 4.9.1), for a **total of 297 releases**.
+**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **91 _major_ releases** (e.g. 1.1.0 ) and **207 _minor_ releases** (e.g. 4.9.1), for a **total of 298 releases**.
 
 Each **_major release_** usually corresponds with the addition of one new module/feature. Each module/feature usually is the equivalent of one (or more) single-purpose plugin. Each **_minor release_** usually contain one or more bugfix or improvements to existing modules/features.
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). Lifetime Deal (LTD) available.
+
+### 9.1.1 (2026.09.07) - ASE Free and Pro
+
+* **[IMPROVED in Free and Pro] Optimizations >> Image Upload Control**: add compatibility with [client-side media processing](https://make.wordpress.org/core/2026/07/22/client-side-media-processing-in-wordpress-7-1/) for block editor uploads in WP 7.1+. This shows up as a new checkbox option in the module's settings, that if unchecked, will turn that processing off and use the server-side processing (GD or Imagick). Props @visedfaq for prompting this improvement.
+
+* **[IMPROVED in Pro] Security >> Email Address Obfuscator**: auto-obfuscation of email addresses in post content now also applies to Bricks builder elements (Basic Text, Rich Text, Heading, and other text-outputting elements). Props to Patric S. for prompting this improvement.
+
+* **[IMPROVED in Pro] Utilities >> Site Backup and Migration**: 
+  * Added the ability to sync posts and the associated data (attachments/images, taxonomy terms, revisions, along with the configuration for custom post type, custom taxonomies and custom field groups). Currently supports four providers: WP Core (pages, posts), ASE, ACF and Meta Box.
+  * Added a mechanism to automatically clean up leftover, sensitive DB runner scripts from restore and migration operations. An admin notice will also be shown if such leftover scripts are found before the scheduled clean up runs, which has a button to perform manual clean up. Props to Leigh H. for prompting this improvement.
+  * Added a mechanism to prevent leftover database tables with `wp_` prefix from overwriting database tables during migration on the destination site. Props to Uli L. for prompting the improvement.
+
+* **[FIXED in Pro] Security >> CAPTCHA Protection**: fixed a regression introduced in v9.0.1 that causes fail-open bypasses via crafted POST requests. Props to Kenny D. and John E. for reporting two inter-related issues.
+
+* **[TRANSLATION in Free and Pro]** ASE is now being translated into [38 languages](https://translate.wpase.com/):
+  * **Added new/improved translation** for:
+    * ASE Free: Updated Spanish, Slovak, Portuguese (Brazil), Polish, Persian, Norwegian, Italian, German (Formal), Dutch (Netherlands), Chinese (Taiwan)
+    * ASE Pro: Updated Polish
 
 ### 9.1.0 (2026.08.31) - ASE Free and Pro
 
