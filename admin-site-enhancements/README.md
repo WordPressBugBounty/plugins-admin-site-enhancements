@@ -5,7 +5,7 @@ Donate link: https://bowo.io/asenha-sp-rdm
 Tags: enhancements, tweaks, optimizations, tools  
 Requires at least: 4.6  
 Tested up to: 7.1  
-Stable tag: 9.1.1  
+Stable tag: 9.1.2  
 Requires PHP: 5.6  
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -139,7 +139,7 @@ _"ASE is an amazing plugin! **Time and money saver**. Thank you!"_ ~[Iulian Baci
 
 ### Utilities
 
-* **[[ASE Pro](https://www.wpase.com/rdme-to-web)] Site Backup and Migration**. Backup files and database, restore from backups, and migrate or sync to another server.
+* **[[ASE Pro](https://www.wpase.com/rdme-to-web)] Site Backup and Migration**. Backup files and database, restore from backups, migrate to another server and surgical sync of components between sites.
 * **Email Delivery**. Set custom sender name and email. Optionally use external SMTP service to ensure notification and transactional emails from your site are being delivered to inboxes. [ASE Pro](https://www.wpase.com/rdme-to-web) adds the option to specify a custom reply-to name and email, Bcc address(es), disable authentication and the option to log email delivery.
 * **Contact Form**. A simple, customizable contact form (shortcode and block) with AJAX submission, built-in spam protection layers, submission entries management and notification email.
 * **[[ASE Pro](https://www.wpase.com/rdme-to-web)] Form Builder**. Enable the drag-and-drop creation of various types of forms (contact, feedback, booking, application, proposal, admission, support, survey, etc.) on the frontend to collect information from site visitors or users or members. 33 field types are available, including Net Promoter Score (NPS), Likert, Matrix of Uniform and Variable Dropdowns and CAPTCHA fields. Support custom form styles, multi-columns layout, conditional logic, multi-step with saving progress, email notification, auto responder, entries management and webhooks for sending submission data to Zapier, n8n, etc.
@@ -208,29 +208,46 @@ ASE does not officially support multisite. Please use at your own risk. That sai
 
 ## Changelog
 
-**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **91 _major_ releases** (e.g. 1.1.0 ) and **207 _minor_ releases** (e.g. 4.9.1), for a **total of 298 releases**.
+**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **91 _major_ releases** (e.g. 1.1.0 ) and **208 _minor_ releases** (e.g. 4.9.1), for a **total of 299 releases**.
 
 Each **_major release_** usually corresponds with the addition of one new module/feature. Each module/feature usually is the equivalent of one (or more) single-purpose plugin. Each **_minor release_** usually contain one or more bugfix or improvements to existing modules/features.
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). Lifetime Deal (LTD) available.
 
-### 9.1.1 (2026.09.07) - ASE Free and Pro
+### 9.1.2 (2026.09.14) - ASE Free and Pro
 
-* **[IMPROVED in Free and Pro] Optimizations >> Image Upload Control**: add compatibility with [client-side media processing](https://make.wordpress.org/core/2026/07/22/client-side-media-processing-in-wordpress-7-1/) for block editor uploads in WP 7.1+. This shows up as a new checkbox option in the module's settings, that if unchecked, will turn that processing off and use the server-side processing (GD or Imagick). Props @visedfaq for prompting this improvement.
+* **[IMPROVED in Free and Pro] Security Hardening**: Various changes were made to harden the security of the following modules: SVG Upload, AVIF Upload, Admin Menu Organizer, Limit Login Attempts, Custom Admin / Frontend CSS, Insert &lt;head&gt;, &lt;body&gt; and &lt;footer&gt; Code, Obfuscate Author Slugs, Email Delivery, Contact Form, Password Protection, Maintenance Mode.
 
-* **[IMPROVED in Pro] Security >> Email Address Obfuscator**: auto-obfuscation of email addresses in post content now also applies to Bricks builder elements (Basic Text, Rich Text, Heading, and other text-outputting elements). Props to Patric S. for prompting this improvement.
+* **[IMPROVED in Free and Pro] Utilities >> Password Protection**:
+  * REST API (/wp-json/...) and admin-ajax.php are now gated by the password protection. Only after a valid password is entered, will these become accessible again.
+  * Added rate-limiting for wrong password guesses (about 5 tries/ 10 minutes per IP)
+  * Unlock cookies are now HttpOnly and Secure on HTTPS, so they are not readable by frontend JS and are not sent over HTTP.
+  * Site Backup and Migration loopback workers (HMAC-authenticated admin-ajax actions and the REST backup/worker route) are excluded from the gate so server-side backup operations can run.
 
-* **[IMPROVED in Pro] Utilities >> Site Backup and Migration**: 
-  * Added the ability to sync posts and the associated data (attachments/images, taxonomy terms, revisions, along with the configuration for custom post type, custom taxonomies and custom field groups). Currently supports four providers: WP Core (pages, posts), ASE, ACF and Meta Box.
-  * Added a mechanism to automatically clean up leftover, sensitive DB runner scripts from restore and migration operations. An admin notice will also be shown if such leftover scripts are found before the scheduled clean up runs, which has a button to perform manual clean up. Props to Leigh H. for prompting this improvement.
-  * Added a mechanism to prevent leftover database tables with `wp_` prefix from overwriting database tables during migration on the destination site. Props to Uli L. for prompting the improvement.
+* **[IMPROVED in Free and Pro] Utilities >> Maintenance Mode**:
+  * REST API (/wp-josn/...), admin-ajax.php and XML-RPC now returns 503 HTTP response ("This site is currently under maintenance") when maintenance mode is enabled.
+  * Site Backup and Migration loopback workers (HMAC-authenticated admin-ajax actions and the REST backup/worker route) are excluded from the gate so server-side backup operations can run.
 
-* **[FIXED in Pro] Security >> CAPTCHA Protection**: fixed a regression introduced in v9.0.1 that causes fail-open bypasses via crafted POST requests. Props to Kenny D. and John E. for reporting two inter-related issues.
+* **[IMPROVED in Free and Pro] Utilities >> Contact Form**: Added submission retention period settings inside "Advanced Settings", including a "Do not store" option that still sends notification emails. The default is "Forever".
+
+* **[FIXED in Free] Optimizations >> Image Upload Control**: Fixed a regression introduced in v9.1.1 that causes transparent PNGs to be converted to JPG when WebP conversion is not enabled. Props to Richard S. and Brady M. for reporting the issue.
+
+* **[FIXED and IMPROVED in Pro] Content Management >> Media Replacement**:
+  * Fixed serialized postmeta corruption during media replacement in pages/posts handled by page builders, e.g. Bricks builder. Props to Michael L. and Katrine K. for reporting the issue in great detail.
+
+* **[FIXED and Improved in Pro] Utilities >> Site Backup and Migration**:
+  * Improved the reliability of backup, restore and migrate operations in localhost sites, specifically WordPress Studio sites. Props to Matija S. for prompting this improvement.
+  * Fix restore/migration fatals from Composer autoload by extracting each plugin off to the side and replacing the live folder only after that plugin is fully extracted. Props to Nils L. for reporting the issue in detail and facilitating the troubleshooting process.
+  * Fixed runaway wp-cron.php processes that can occur in a specific scenario, which can cause consistently high CPU load and PHP fatal error. Props to Bram C. for reporting the issue in detail.
+
+* **[FIXED in Pro] Custom Code >> Code Snippets Manager**: 
+  * Fixed an error in Breakdance builder preview caused by a code snippet post being the selected post for doing the preview. Code snippet posts now are registered with "public => false". Props to Christian S. for reporting the error and facilitating the troubleshooting process.
+  * Fixed vertical alignment issues in the snippets listing page. Props to Nils L. for reporting the issue in detail.
 
 * **[TRANSLATION in Free and Pro]** ASE is now being translated into [38 languages](https://translate.wpase.com/):
   * **Added new/improved translation** for:
-    * ASE Free: Updated Spanish, Slovak, Portuguese (Brazil), Polish, Persian, Norwegian, Italian, German (Formal), Dutch (Netherlands), Chinese (Taiwan)
-    * ASE Pro: Updated Polish
+    * ASE Free: Updated Spanish (Spain), Portuguese (Brazil), Polish, Norwegian, Dutch (Netherlands), Chinese (Taiwan)
+    * ASE Pro: Updated Czech, Portuguese (Brazil)
   * **More strings have been internationalized**. @Translators, please visit the respective project pages for the Free and Pro versions to translate the new strings, if you havent' done so already.
   * **Interested to help translate or improve the translation?** Please go to [https://translate.wpase.com](https://translate.wpase.com) for more info.
   * **[Chinese (China)](https://translate.wordpress.org/locale/zh-cn/default/wp-plugins/admin-site-enhancements/)**: ASE Free and Pro (completed). Props to [@bricksvip](https://profiles.wordpress.org/bricksvip/) et al. Current status: [39 strings untranslated](https://translate.wordpress.org/projects/wp-plugins/admin-site-enhancements/stable/zh-cn/default/?filters%5Bstatus%5D=untranslated).

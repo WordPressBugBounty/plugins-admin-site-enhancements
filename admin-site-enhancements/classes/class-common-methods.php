@@ -823,9 +823,14 @@ class Common_Methods {
     }
 
     /**
-     * Sanitize user-submitted code from potential security vulnerabilities
-     * 
+     * Best-effort filter for two known cookie-exfil / img-onerror patterns in
+     * user-submitted HTML/JS/CSS. This is not a security boundary — most payloads
+     * pass through. Real protection is the unfiltered_html save gate in
+     * Settings_Sanitization::sanitize_for_options().
+     *
      * @since 7.8.7
+     * @param string $code Raw HTML/JS/CSS.
+     * @return string Code with matching lines removed.
      */
     public function sanitize_html_js_css_code( $code ) {
         $code_lines = explode( PHP_EOL, $code );

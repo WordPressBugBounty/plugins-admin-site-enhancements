@@ -584,6 +584,8 @@
       $('.contact-form-submit-button-label').appendTo('.contact-form-advanced-wrapper');
       $('.contact-form-success-message').appendTo('.contact-form-advanced-wrapper');
       $('.contact-form-error-message').appendTo('.contact-form-advanced-wrapper');
+      $('.heading-for-submission-retention').appendTo('.contact-form-advanced-wrapper');
+      $('.contact-form-submission-retention-days').appendTo('.contact-form-advanced-wrapper');
       $('.heading-for-contact-form-test-mode').appendTo('.contact-form-advanced-wrapper');
       $('.contact-form-disable-antispam').appendTo('.contact-form-advanced-wrapper');
       $('.contact-form-test-mode-description').appendTo('.contact-form-advanced-wrapper');

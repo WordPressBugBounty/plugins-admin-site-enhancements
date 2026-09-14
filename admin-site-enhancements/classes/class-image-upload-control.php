@@ -12,6 +12,27 @@ class Image_Upload_Control {
     public $png_is_transparent;
 
     /**
+     * Per-request cache of PNG transparency checks, keyed by file path.
+     *
+     * @since 9.1.2
+     *
+     * @var array
+     */
+    private $png_transparency_cache;
+
+    /**
+     * Last readable PNG path seen by `image_editor_output_format` in this request.
+     *
+     * WordPress calls the filter with the source path first, then again with
+     * an empty or not-yet-written destination when generating intermediate sizes.
+     *
+     * @since 9.1.2
+     *
+     * @var string
+     */
+    private $png_source_file;
+
+    /**
      * Array storing the file names that were processed, as keys.
      *
      * @since 7.5.0
@@ -42,6 +63,8 @@ class Image_Upload_Control {
      */
     function __construct() {
         $this->png_is_transparent = false;
+        $this->png_transparency_cache = array();
+        $this->png_source_file = '';
         $this->orientation_fixed = array();
         $this->previous_meta = array();
     }
@@ -145,49 +168,14 @@ class Image_Upload_Control {
             }
         }
         if ( 'png' === $file_extension ) {
-            // Detect alpha/transparency in PNG
-            $this->png_is_transparent = false;
-            if ( is_file( $upload['file'] ) ) {
-                if ( function_exists( 'imagecreatefrompng' ) ) {
-                    // GD library is present, so 'imagecreatefrompng' function is available
-                    // Generate image object from PNG for potential conversion to JPG later.
-                    $image_object = \imagecreatefrompng( $upload['file'] );
-                    // Get image dimension
-                    list( $width, $height ) = getimagesize( $upload['file'] );
-                    // Run through pixels until transparent pixel is found
-                    if ( false !== $image_object ) {
-                        for ($x = 0; $x < $width; $x++) {
-                            for ($y = 0; $y < $height; $y++) {
-                                $pixel_color_index = \imagecolorat( $image_object, $x, $y );
-                                $pixel_rgba = \imagecolorsforindex( $image_object, $pixel_color_index );
-                                // array of red, green, blue and alpha values
-                                if ( $pixel_rgba['alpha'] > 0 ) {
-                                    // a pixel with alpha/transparency has been found
-                                    // alpha value range from 0 (completely opaque) to 127 (fully transparent).
-                                    // Ref: https://www.php.net/manual/en/function.imagecolorallocatealpha.php
-                                    $this->png_is_transparent = true;
-                                    break 2;
-                                    // Break both 'for' loops
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    if ( class_exists( 'Imagick' ) ) {
-                        $imagick = new Imagick();
-                        $imagick->readImage( $upload['file'] );
-                        // Ref: https://stackoverflow.com/a/52295997
-                        // Ref: https://www.php.net/manual/en/imagick.getimagechannelrange.php
-                        // If the channel is defined, and has any transparent areas across any frame, then maxima will always be greater then minima.
-                        // If the channel is NOT defined, then minima will be Inf placeholder, and maxima will be -Inf placeholder, so the above check will still work.
-                        $alpha_range = $imagick->getImageChannelRange( Imagick::CHANNEL_ALPHA );
-                        $this->png_is_transparent = $alpha_range['minima'] < $alpha_range['maxima'];
-                    }
-                }
-            }
+            $this->png_is_transparent = $this->png_has_transparency( $upload['file'] );
             // Do not convert PNG with alpha/transparency
             if ( $this->png_is_transparent ) {
                 return $upload;
+            }
+            // Generate image object from PNG for conversion to JPG later.
+            if ( is_file( $upload['file'] ) && function_exists( 'imagecreatefrompng' ) ) {
+                $image_object = \imagecreatefrompng( $upload['file'] );
             }
         }
         // Let's convert BMP and non-transparent PNG into JPG
@@ -238,6 +226,91 @@ class Image_Upload_Control {
             $upload['type'] = 'image/jpeg';
         }
         return $upload;
+    }
+
+    /**
+     * Whether a PNG file has at least one transparent / alpha pixel.
+     *
+     * Results are cached per file path for the current request because
+     * `image_editor_output_format` can run once per intermediate size.
+     *
+     * @since 9.1.2
+     *
+     * @param string $file Absolute path to the PNG file.
+     * @return bool True when a transparent pixel is found.
+     */
+    private function png_has_transparency( $file ) {
+        if ( array_key_exists( $file, $this->png_transparency_cache ) ) {
+            return $this->png_transparency_cache[$file];
+        }
+        $is_transparent = false;
+        if ( is_file( $file ) ) {
+            if ( function_exists( 'imagecreatefrompng' ) ) {
+                $image_object = \imagecreatefrompng( $file );
+                $size = getimagesize( $file );
+                $width = ( is_array( $size ) && isset( $size[0] ) ? (int) $size[0] : 0 );
+                $height = ( is_array( $size ) && isset( $size[1] ) ? (int) $size[1] : 0 );
+                // Run through pixels until a transparent pixel is found.
+                if ( false !== $image_object && $width > 0 && $height > 0 ) {
+                    for ($x = 0; $x < $width; $x++) {
+                        for ($y = 0; $y < $height; $y++) {
+                            $pixel_color_index = \imagecolorat( $image_object, $x, $y );
+                            $pixel_rgba = \imagecolorsforindex( $image_object, $pixel_color_index );
+                            if ( $pixel_rgba['alpha'] > 0 ) {
+                                // Alpha value range from 0 (completely opaque) to 127 (fully transparent).
+                                // Ref: https://www.php.net/manual/en/function.imagecolorallocatealpha.php
+                                $is_transparent = true;
+                                break 2;
+                            }
+                        }
+                    }
+                }
+            } elseif ( class_exists( 'Imagick' ) ) {
+                $imagick = new Imagick();
+                $imagick->readImage( $file );
+                // Ref: https://stackoverflow.com/a/52295997
+                // Ref: https://www.php.net/manual/en/imagick.getimagechannelrange.php
+                $alpha_range = $imagick->getImageChannelRange( Imagick::CHANNEL_ALPHA );
+                $is_transparent = $alpha_range['minima'] < $alpha_range['maxima'];
+                $imagick->clear();
+                $imagick->destroy();
+            }
+        }
+        $this->png_transparency_cache[$file] = $is_transparent;
+        return $is_transparent;
+    }
+
+    /**
+     * Whether PNG should be mapped to JPEG in `image_editor_output_format`.
+     *
+     * WordPress calls this filter with the source path first, then again with
+     * an empty filename (`make_subsize`) or a destination path that does not
+     * exist yet. Remember the last readable PNG and inspect that file when
+     * the current path cannot be read. Fail closed (keep PNG) when no source
+     * is available — empty filename must not imply PNG→JPEG.
+     *
+     * @since 9.1.2
+     *
+     * @param string $filename  Path passed to the output format filter.
+     * @param string $mime_type Source mime type passed to the filter.
+     * @return bool
+     */
+    private function should_convert_png_to_jpeg( $filename, $mime_type ) {
+        $inspect = $filename;
+        $is_png = 'image/png' === $mime_type || '' !== $filename && 'png' === strtolower( pathinfo( $filename, PATHINFO_EXTENSION ) );
+        if ( '' !== $filename && is_readable( $filename ) && $is_png ) {
+            $this->png_source_file = $filename;
+        } elseif ( '' === $filename || !is_readable( $filename ) ) {
+            $inspect = $this->png_source_file;
+        }
+        if ( '' === $inspect || !is_readable( $inspect ) ) {
+            return false;
+        }
+        $inspect_is_png = 'image/png' === $mime_type || 'png' === strtolower( pathinfo( $inspect, PATHINFO_EXTENSION ) );
+        if ( $inspect_is_png && $this->png_has_transparency( $inspect ) ) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -568,10 +641,12 @@ class Image_Upload_Control {
      *
      * @since 9.2.0
      *
-     * @param array $formats Mime-type conversion map.
+     * @param array  $formats   Mime-type conversion map.
+     * @param string $filename  Path to the image being converted, if known.
+     * @param string $mime_type Source mime type, if known.
      * @return array
      */
-    public function maybe_set_image_editor_output_format( $formats ) {
+    public function maybe_set_image_editor_output_format( $formats, $filename = '', $mime_type = '' ) {
         if ( !is_array( $formats ) ) {
             $formats = array();
         }
@@ -586,7 +661,9 @@ class Image_Upload_Control {
         if ( $disable_image_conversion ) {
             return $formats;
         }
-        $formats['image/png'] = 'image/jpeg';
+        if ( $this->should_convert_png_to_jpeg( (string) $filename, (string) $mime_type ) ) {
+            $formats['image/png'] = 'image/jpeg';
+        }
         return $formats;
     }
 

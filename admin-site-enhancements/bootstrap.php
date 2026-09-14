@@ -272,6 +272,15 @@ class Admin_Site_Enhancements {
                 10,
                 5
             );
+            // WP 6.8+/7.1: allow AVIF uploads when the server cannot generate sub-sizes.
+            add_filter(
+                'wp_prevent_unsupported_mime_type_uploads',
+                [$avif_upload, 'allow_avif_without_editor_support'],
+                10,
+                2
+            );
+            add_filter( 'plupload_default_settings', [$avif_upload, 'allow_avif_in_plupload'] );
+            add_filter( 'plupload_init', [$avif_upload, 'allow_avif_in_plupload'] );
         }
         // External Permalinks
         if ( array_key_exists( 'enable_external_permalinks', $options ) && $options['enable_external_permalinks'] ) {
@@ -1095,7 +1104,12 @@ class Admin_Site_Enhancements {
             if ( function_exists( 'wp_is_client_side_media_processing_enabled' ) ) {
                 add_filter( 'wp_client_side_media_processing_enabled', [$image_upload_control, 'maybe_disable_client_side_media_processing'] );
                 add_filter( 'big_image_size_threshold', [$image_upload_control, 'maybe_set_big_image_size_threshold'] );
-                add_filter( 'image_editor_output_format', [$image_upload_control, 'maybe_set_image_editor_output_format'] );
+                add_filter(
+                    'image_editor_output_format',
+                    [$image_upload_control, 'maybe_set_image_editor_output_format'],
+                    10,
+                    3
+                );
                 add_filter(
                     'wp_editor_set_quality',
                     [$image_upload_control, 'maybe_set_editor_quality'],
@@ -1202,6 +1216,16 @@ class Admin_Site_Enhancements {
             $password_protection = new ASENHA\Classes\Password_Protection();
             add_action( 'plugins_loaded', [$password_protection, 'show_password_protection_admin_bar_icon'] );
             add_action( 'init', [$password_protection, 'maybe_disable_page_caching'], 1 );
+            add_filter( 'rest_authentication_errors', [$password_protection, 'rest_gate'], PHP_INT_MAX );
+            // Primary REST gate: runs before dispatch so later rest_pre_dispatch callbacks cannot wipe the 401
+            add_filter( 'rest_pre_dispatch', [$password_protection, 'rest_gate'], PHP_INT_MAX );
+            // Defense in depth after ACF_Rest_Api::initialize (priority 10) which returns null on WP_Error
+            add_filter(
+                'redirect_canonical',
+                [$password_protection, 'preserve_bypass_query_arg'],
+                10,
+                2
+            );
             add_action( 'template_redirect', [$password_protection, 'maybe_show_login_form'], 0 );
             // load early
             add_action( 'init', [$password_protection, 'maybe_process_login'], 1 );
@@ -1216,6 +1240,14 @@ class Admin_Site_Enhancements {
             add_action( 'plugins_loaded', ['ASENHA\\Classes\\Maintenance_Mode', 'ensure_bypass_key_on_load'], 1 );
             $maintenance_mode = new ASENHA\Classes\Maintenance_Mode();
             add_action( 'send_headers', [$maintenance_mode, 'maintenance_mode_redirect'] );
+            add_filter( 'rest_authentication_errors', [$maintenance_mode, 'rest_gate'], PHP_INT_MAX );
+            // Primary REST gate: runs before dispatch so later rest_pre_dispatch callbacks cannot wipe the 503
+            add_filter( 'rest_pre_dispatch', [$maintenance_mode, 'rest_gate'], PHP_INT_MAX );
+            // Defense in depth after callbacks that return null on WP_Error
+            add_action( 'init', [$maintenance_mode, 'ajax_gate'], 1 );
+            // admin-ajax.php never reaches send_headers
+            add_filter( 'xmlrpc_methods', [$maintenance_mode, 'xmlrpc_gate'] );
+            // xmlrpc.php never reaches send_headers
             add_action( 'plugins_loaded', [$maintenance_mode, 'show_maintenance_mode_admin_bar_icon'] );
         }
         // Redirect 404 to Homepage

@@ -1,10 +1,45 @@
 ## Changelog
 
-**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **91 _major_ releases** (e.g. 1.1.0 ) and **207 _minor_ releases** (e.g. 4.9.1), for a **total of 298 releases**.
+**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **91 _major_ releases** (e.g. 1.1.0 ) and **208 _minor_ releases** (e.g. 4.9.1), for a **total of 299 releases**.
 
 Each **_major release_** usually corresponds with the addition of one new module/feature. Each module/feature usually is the equivalent of one (or more) single-purpose plugin. Each **_minor release_** usually contain one or more bugfix or improvements to existing modules/features.
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). Lifetime Deal (LTD) available.
+
+### 9.1.2 (2026.09.14) - ASE Free and Pro
+
+* **[IMPROVED in Free and Pro] Security Hardening**: Various changes were made to harden the security of the following modules: SVG Upload, AVIF Upload, Admin Menu Organizer, Limit Login Attempts, Custom Admin / Frontend CSS, Insert &lt;head&gt;, &lt;body&gt; and &lt;footer&gt; Code, Obfuscate Author Slugs, Email Delivery, Contact Form, Password Protection, Maintenance Mode.
+
+* **[IMPROVED in Free and Pro] Utilities >> Password Protection**:
+  * REST API (/wp-json/...) and admin-ajax.php are now gated by the password protection. Only after a valid password is entered, will these become accessible again.
+  * Added rate-limiting for wrong password guesses (about 5 tries/ 10 minutes per IP)
+  * Unlock cookies are now HttpOnly and Secure on HTTPS, so they are not readable by frontend JS and are not sent over HTTP.
+  * Site Backup and Migration loopback workers (HMAC-authenticated admin-ajax actions and the REST backup/worker route) are excluded from the gate so server-side backup operations can run.
+
+* **[IMPROVED in Free and Pro] Utilities >> Maintenance Mode**:
+  * REST API (/wp-josn/...), admin-ajax.php and XML-RPC now returns 503 HTTP response ("This site is currently under maintenance") when maintenance mode is enabled.
+  * Site Backup and Migration loopback workers (HMAC-authenticated admin-ajax actions and the REST backup/worker route) are excluded from the gate so server-side backup operations can run.
+
+* **[IMPROVED in Free and Pro] Utilities >> Contact Form**: Added submission retention period settings inside "Advanced Settings", including a "Do not store" option that still sends notification emails. The default is "Forever".
+
+* **[FIXED in Free] Optimizations >> Image Upload Control**: Fixed a regression introduced in v9.1.1 that causes transparent PNGs to be converted to JPG when WebP conversion is not enabled. Props to Richard S. and Brady M. for reporting the issue.
+
+* **[FIXED and IMPROVED in Pro] Content Management >> Media Replacement**:
+  * Fixed serialized postmeta corruption during media replacement in pages/posts handled by page builders, e.g. Bricks builder. Props to Michael L. and Katrine K. for reporting the issue in great detail.
+
+* **[FIXED and Improved in Pro] Utilities >> Site Backup and Migration**:
+  * Improved the reliability of backup, restore and migrate operations in localhost sites, specifically WordPress Studio sites. Props to Matija S. for prompting this improvement.
+  * Fix restore/migration fatals from Composer autoload by extracting each plugin off to the side and replacing the live folder only after that plugin is fully extracted. Props to Nils L. for reporting the issue in detail and facilitating the troubleshooting process.
+  * Fixed runaway wp-cron.php processes that can occur in a specific scenario, which can cause consistently high CPU load and PHP fatal error. Props to Bram C. for reporting the issue in detail.
+
+* **[FIXED in Pro] Custom Code >> Code Snippets Manager**: 
+  * Fixed an error in Breakdance builder preview caused by a code snippet post being the selected post for doing the preview. Code snippet posts now are registered with "public => false". Props to Christian S. for reporting the error and facilitating the troubleshooting process.
+  * Fixed vertical alignment issues in the snippets listing page. Props to Nils L. for reporting the issue in detail.
+
+* **[TRANSLATION in Free and Pro]** ASE is now being translated into [38 languages](https://translate.wpase.com/):
+  * **Added new/improved translation** for:
+    * ASE Free: Updated Spanish (Spain), Portuguese (Brazil), Polish, Norwegian, Dutch (Netherlands), Chinese (Taiwan)
+    * ASE Pro: Updated Czech, Portuguese (Brazil)
 
 ### 9.1.1 (2026.09.07) - ASE Free and Pro
 

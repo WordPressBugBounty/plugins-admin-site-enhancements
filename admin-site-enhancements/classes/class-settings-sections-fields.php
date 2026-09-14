@@ -3852,7 +3852,7 @@ class Settings_Sections_Fields {
             'main-section',
             array(
                 'subfields_heading' => __( 'Form labels', 'admin-site-enhancements' ),
-                'class'             => 'asenha-heading margin-bottom-8 utilities ' . $field_slug,
+                'class'             => 'asenha-heading top-border margin-bottom-8 utilities ' . $field_slug,
             )
         );
         $contact_form_label_fields = array(
@@ -3916,6 +3916,55 @@ class Settings_Sections_Fields {
                 )
             );
         }
+        $field_id = 'heading_for_submission_retention';
+        $field_slug = 'heading-for-submission-retention';
+        add_settings_field(
+            $field_id,
+            '',
+            [$render_field, 'render_subfields_heading'],
+            ASENHA_SLUG,
+            'main-section',
+            array(
+                'subfields_heading' => __( 'Retention', 'admin-site-enhancements' ),
+                'class'             => 'asenha-heading top-border utilities ' . $field_slug,
+            )
+        );
+        $field_id = 'contact_form_submission_retention_days';
+        $field_slug = 'contact-form-submission-retention-days';
+        add_settings_field(
+            $field_id,
+            '',
+            [$render_field, 'render_select_subfield'],
+            ASENHA_SLUG,
+            'main-section',
+            array(
+                'option_name'          => ASENHA_SLUG_U,
+                'field_id'             => $field_id,
+                'field_name'           => ASENHA_SLUG_U . '[' . $field_id . ']',
+                'field_type'           => 'with-prefix-suffix',
+                'field_prefix'         => __( 'Keep submissions for', 'admin-site-enhancements' ),
+                'field_suffix'         => '',
+                'field_select_options' => array(
+                    __( 'Do not store', 'admin-site-enhancements' ) => -1,
+                    __( '1 day', 'admin-site-enhancements' )        => 1,
+                    __( '3 days', 'admin-site-enhancements' )       => 3,
+                    __( '1 week', 'admin-site-enhancements' )       => 7,
+                    __( '2 weeks', 'admin-site-enhancements' )      => 14,
+                    __( '1 month', 'admin-site-enhancements' )      => 30,
+                    __( '3 months', 'admin-site-enhancements' )     => 90,
+                    __( '6 months', 'admin-site-enhancements' )     => 180,
+                    __( '1 year', 'admin-site-enhancements' )       => 365,
+                    __( '2 years', 'admin-site-enhancements' )      => 730,
+                    __( '3 years', 'admin-site-enhancements' )      => 1095,
+                    __( '5 years', 'admin-site-enhancements' )      => 1825,
+                    __( 'Forever', 'admin-site-enhancements' )      => 0,
+                ),
+                'field_select_default' => 0,
+                'field_intro'          => '',
+                'field_description'    => __( 'Older submissions are permanently deleted once a day. "Forever" keeps all submissions. "Do not store" skips saving new submissions; notification emails are still sent and existing submissions are left in place.', 'admin-site-enhancements' ),
+                'class'                => 'asenha-select asenha-hide-th with-prefix-suffix with-description utilities ' . $field_slug,
+            )
+        );
         $field_id = 'heading_for_contact_form_test_mode';
         $field_slug = 'heading-for-contact-form-test-mode';
         add_settings_field(
@@ -3926,7 +3975,7 @@ class Settings_Sections_Fields {
             'main-section',
             array(
                 'subfields_heading' => __( 'Test Mode', 'admin-site-enhancements' ),
-                'class'             => 'asenha-heading utilities ' . $field_slug,
+                'class'             => 'asenha-heading top-border utilities ' . $field_slug,
             )
         );
         $field_id = 'contact_form_disable_antispam';
