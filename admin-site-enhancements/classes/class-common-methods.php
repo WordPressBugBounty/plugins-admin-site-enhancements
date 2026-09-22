@@ -129,16 +129,25 @@ class Common_Methods {
     /**
      * Remove html tags and content inside the tags from a string
      *
+     * When the entire title is a wrapper element (e.g. SureCart
+     * `<span class="sc-menu-divider">Dashboard</span>`), the inner text is
+     * recovered so AMO sortables are not blank. Badge/count spans after real
+     * title text (e.g. Learn 22) stay stripped.
+     *
      * @since 3.0.3
      */
     public function strip_html_tags_and_content( $string ) {
         // Strip HTML tags and content inside them. Ref: https://stackoverflow.com/a/39320168
         if ( !is_null( $string ) ) {
+            $original = $string;
             if ( false === strpos( $string, 'fs-submenu-item' ) ) {
                 $string = preg_replace( '@<(\\w+)\\b.*?>.*?</\\1>@si', '', $string );
             }
             // Strip any remaining HTML or PHP tags
             $string = strip_tags( $string );
+            if ( '' === trim( (string) $string ) ) {
+                $string = $this->extract_readable_text_from_html( $original );
+            }
         }
         return $string;
     }

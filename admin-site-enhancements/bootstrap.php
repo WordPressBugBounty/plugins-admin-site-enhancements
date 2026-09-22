@@ -115,6 +115,13 @@ class Admin_Site_Enhancements {
                 2
             );
             add_action( 'admin_bar_menu', [$content_duplication, 'add_admin_bar_duplication_link'], 100 );
+            add_filter(
+                'pre_http_request',
+                [$content_duplication, 'skip_elementor_placeholder_http_import'],
+                10,
+                3
+            );
+            add_filter( 'wp_handle_sideload_prefilter', [$content_duplication, 'skip_elementor_placeholder_sideload'] );
         }
         // Content Order
         if ( array_key_exists( 'content_order', $options ) && $options['content_order'] ) {
@@ -1229,6 +1236,8 @@ class Admin_Site_Enhancements {
             add_action( 'template_redirect', [$password_protection, 'maybe_show_login_form'], 0 );
             // load early
             add_action( 'init', [$password_protection, 'maybe_process_login'], 1 );
+            add_action( 'init', [$password_protection, 'ajax_gate'], 20 );
+            // After typical CPT registration; still before wp_ajax_*
             add_action( 'asenha_password_protection_error_messages', [$password_protection, 'add_login_error_messages'] );
             if ( function_exists( 'wp_site_icon' ) ) {
                 // WP v4.3+

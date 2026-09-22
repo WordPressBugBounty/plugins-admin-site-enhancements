@@ -4100,7 +4100,7 @@ class Settings_Sections_Fields {
                 'field_slug'             => $field_slug,
                 'field_title'            => $field_title,
                 'field_name'             => ASENHA_SLUG_U . '[' . $field_id . ']',
-                'field_description'      => __( 'Password-protect the entire site to hide the content from public view and search engine bots / crawlers. Logged-in administrators can still access the site as usual.', 'admin-site-enhancements' ),
+                'field_description'      => __( 'Password-protect the entire site to hide the content from public view and search engine bots / crawlers. Logged-in administrators can still access the site as usual. Logged-in users retain REST API access. Users who can edit content also retain admin-ajax access so the block editor continues to work.', 'admin-site-enhancements' ),
                 'field_options_moreless' => true,
                 'field_options_wrapper'  => true,
                 'class'                  => 'asenha-toggle utilities ' . $field_slug,

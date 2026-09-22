@@ -2,14 +2,14 @@
 # This file is distributed under the GPL-2.0+.
 msgid ""
 msgstr ""
-"Project-Id-Version: Admin and Site Enhancements (ASE) 9.1.2\n"
+"Project-Id-Version: Admin and Site Enhancements (ASE) 9.1.3\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/admin-site-enhancements\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-11T11:27:04+00:00\n"
+"POT-Creation-Date: 2026-09-18T14:15:16+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: admin-site-enhancements\n"
@@ -117,20 +117,20 @@ msgstr ""
 msgid "You do not have permission to perform this action."
 msgstr ""
 
-#: classes/class-change-login-url.php:430
-#: classes/class-change-login-url.php:435
-#: classes/class-limit-login-attempts.php:274
-#: classes/class-limit-login-attempts.php:381
+#: classes/class-change-login-url.php:619
+#: classes/class-change-login-url.php:624
+#: classes/class-limit-login-attempts.php:337
+#: classes/class-limit-login-attempts.php:403
 msgid "Error:"
 msgstr ""
 
-#: classes/class-change-login-url.php:430
+#: classes/class-change-login-url.php:619
 msgid "Your account has been disabled."
 msgstr ""
 
-#: classes/class-change-login-url.php:435
-#: classes/class-limit-login-attempts.php:274
-#: classes/class-limit-login-attempts.php:381
+#: classes/class-change-login-url.php:624
+#: classes/class-limit-login-attempts.php:337
+#: classes/class-limit-login-attempts.php:403
 msgid "Invalid username/email or incorrect password."
 msgstr ""
 
@@ -138,18 +138,23 @@ msgstr ""
 msgid "DUPLICATE"
 msgstr ""
 
-#: classes/class-content-duplication.php:220
+#: classes/class-content-duplication.php:222
 msgid "Duplicate this as draft"
 msgstr ""
 
-#: classes/class-content-duplication.php:220
+#: classes/class-content-duplication.php:222
 msgid "Duplicate"
 msgstr ""
 
 #. translators: %s is the singular label for the post type
-#: classes/class-content-duplication.php:262
+#: classes/class-content-duplication.php:264
 #, php-format
 msgid "Duplicate %s"
+msgstr ""
+
+#: classes/class-content-duplication.php:484
+#: classes/class-content-duplication.php:518
+msgid "Skipping import of Elementor placeholder image."
 msgstr ""
 
 #: classes/class-content-order.php:61
@@ -257,7 +262,7 @@ msgstr ""
 
 #: classes/class-email-delivery.php:779
 #: classes/class-view-admin-as-role.php:754
-#: settings.php:1973
+#: settings.php:2042
 msgid "Insufficient permissions."
 msgstr ""
 
@@ -313,6 +318,12 @@ msgstr ""
 msgid "Never"
 msgstr ""
 
+#. translators: %s: remaining lockout duration, e.g. "14 minutes and 59 seconds".
+#: classes/class-limit-login-attempts.php:137
+#, php-format
+msgid "<b>WARNING:</b> You've been locked out. You can login again in %s."
+msgstr ""
+
 #: classes/class-login-id-type.php:22
 #: classes/class-login-id-type.php:39
 msgid "Username"
@@ -330,7 +341,7 @@ msgstr ""
 #: includes/contact-form/classes/class-contact-form-admin.php:181
 #: includes/contact-form/classes/class-contact-form-email.php:66
 #: includes/contact-form/classes/class-contact-form-submissions-table.php:54
-#: includes/contact-form/classes/class-contact-form.php:185
+#: includes/contact-form/classes/class-contact-form.php:199
 msgid "Email"
 msgstr ""
 
@@ -488,19 +499,19 @@ msgstr ""
 msgid "Password protection is currently enabled for this site."
 msgstr ""
 
-#: classes/class-password-protection.php:203
+#: classes/class-password-protection.php:237
 msgid "This site is password protected."
 msgstr ""
 
-#: classes/class-password-protection.php:263
+#: classes/class-password-protection.php:314
 msgid "Too many attempts. Please try again in 10 minutes."
 msgstr ""
 
-#: classes/class-password-protection.php:281
+#: classes/class-password-protection.php:332
 msgid "Incorrect password."
 msgstr ""
 
-#: classes/class-password-protection.php:286
+#: classes/class-password-protection.php:337
 msgid "Password can not be empty."
 msgstr ""
 
@@ -598,7 +609,7 @@ msgstr ""
 #: includes/contact-form/classes/class-contact-form-admin.php:175
 #: includes/contact-form/classes/class-contact-form-email.php:63
 #: includes/contact-form/classes/class-contact-form-submissions-table.php:51
-#: includes/contact-form/classes/class-contact-form.php:173
+#: includes/contact-form/classes/class-contact-form.php:187
 msgid "Subject"
 msgstr ""
 
@@ -609,7 +620,7 @@ msgstr ""
 #: includes/contact-form/classes/class-contact-form-admin.php:177
 #: includes/contact-form/classes/class-contact-form-email.php:64
 #: includes/contact-form/classes/class-contact-form-submissions-table.php:52
-#: includes/contact-form/classes/class-contact-form.php:177
+#: includes/contact-form/classes/class-contact-form.php:191
 msgid "Message"
 msgstr ""
 
@@ -620,25 +631,25 @@ msgstr ""
 #: includes/contact-form/classes/class-contact-form-admin.php:179
 #: includes/contact-form/classes/class-contact-form-email.php:65
 #: includes/contact-form/classes/class-contact-form-submissions-table.php:53
-#: includes/contact-form/classes/class-contact-form.php:181
+#: includes/contact-form/classes/class-contact-form.php:195
 msgid "Name"
 msgstr ""
 
 #: classes/class-settings-sanitization.php:900
 #: classes/class-settings-sections-fields.php:3882
-#: includes/contact-form/classes/class-contact-form.php:197
+#: includes/contact-form/classes/class-contact-form.php:211
 msgid "Send Message"
 msgstr ""
 
 #: classes/class-settings-sanitization.php:903
 #: classes/class-settings-sections-fields.php:3887
-#: includes/contact-form/classes/class-contact-form.php:202
+#: includes/contact-form/classes/class-contact-form.php:216
 msgid "Thank you. Your message has been sent."
 msgstr ""
 
 #: classes/class-settings-sanitization.php:904
 #: classes/class-settings-sections-fields.php:3892
-#: includes/contact-form/classes/class-contact-form.php:207
+#: includes/contact-form/classes/class-contact-form.php:221
 msgid "Unable to send your message. Please try again later."
 msgstr ""
 
@@ -1859,180 +1870,184 @@ msgid "Keep submissions for"
 msgstr ""
 
 #: classes/class-settings-sections-fields.php:3948
-msgid "1 day"
+msgid "Do not store"
 msgstr ""
 
 #: classes/class-settings-sections-fields.php:3949
-msgid "3 days"
+msgid "1 day"
 msgstr ""
 
 #: classes/class-settings-sections-fields.php:3950
-msgid "1 week"
+msgid "3 days"
 msgstr ""
 
 #: classes/class-settings-sections-fields.php:3951
-msgid "2 weeks"
+msgid "1 week"
 msgstr ""
 
 #: classes/class-settings-sections-fields.php:3952
-msgid "1 month"
+msgid "2 weeks"
 msgstr ""
 
 #: classes/class-settings-sections-fields.php:3953
-msgid "3 months"
+msgid "1 month"
 msgstr ""
 
 #: classes/class-settings-sections-fields.php:3954
-msgid "6 months"
+msgid "3 months"
 msgstr ""
 
 #: classes/class-settings-sections-fields.php:3955
-msgid "1 year"
+msgid "6 months"
 msgstr ""
 
 #: classes/class-settings-sections-fields.php:3956
-msgid "2 years"
+msgid "1 year"
 msgstr ""
 
 #: classes/class-settings-sections-fields.php:3957
-msgid "3 years"
+msgid "2 years"
 msgstr ""
 
 #: classes/class-settings-sections-fields.php:3958
-msgid "5 years"
+msgid "3 years"
 msgstr ""
 
 #: classes/class-settings-sections-fields.php:3959
+msgid "5 years"
+msgstr ""
+
+#: classes/class-settings-sections-fields.php:3960
 msgid "Forever"
 msgstr ""
 
-#: classes/class-settings-sections-fields.php:3963
-msgid "Older submissions are permanently deleted once a day. Forever keeps all submissions."
+#: classes/class-settings-sections-fields.php:3964
+msgid "Older submissions are permanently deleted once a day. \"Forever\" keeps all submissions. \"Do not store\" skips saving new submissions; notification emails are still sent and existing submissions are left in place."
 msgstr ""
 
-#: classes/class-settings-sections-fields.php:3976
+#: classes/class-settings-sections-fields.php:3977
 msgid "Test Mode"
 msgstr ""
 
-#: classes/class-settings-sections-fields.php:3992
+#: classes/class-settings-sections-fields.php:3993
 msgid "Disable anti-spam measures to perform submission tests"
 msgstr ""
 
-#: classes/class-settings-sections-fields.php:4005
+#: classes/class-settings-sections-fields.php:4006
 msgid "Only enable this while testing. Disable it on production sites to restore spam protection."
 msgstr ""
 
-#: classes/class-settings-sections-fields.php:4012
+#: classes/class-settings-sections-fields.php:4013
 msgid "Multiple User Roles"
 msgstr ""
 
-#: classes/class-settings-sections-fields.php:4025
+#: classes/class-settings-sections-fields.php:4026
 msgid "Enable assignment of multiple roles during user account creation and editing. This maybe useful for working with roles not defined in WordPress core, e.g. from e-commerce or LMS plugins."
 msgstr ""
 
-#: classes/class-settings-sections-fields.php:4033
+#: classes/class-settings-sections-fields.php:4034
 msgid "Image Sizes Panel"
 msgstr ""
 
-#: classes/class-settings-sections-fields.php:4046
+#: classes/class-settings-sections-fields.php:4047
 msgid "Display a panel showing and linking to all available sizes when viewing an image in the media library. Especially useful to quickly get the URL of a particular image size."
 msgstr ""
 
-#: classes/class-settings-sections-fields.php:4054
+#: classes/class-settings-sections-fields.php:4055
 msgid "View Admin as Role"
 msgstr ""
 
-#: classes/class-settings-sections-fields.php:4067
+#: classes/class-settings-sections-fields.php:4068
 msgid "View admin pages and the site (logged-in) as one of the non-administrator user roles."
 msgstr ""
 
-#: classes/class-settings-sections-fields.php:4089
+#: classes/class-settings-sections-fields.php:4090
 msgid "Password Protection"
 msgstr ""
 
-#: classes/class-settings-sections-fields.php:4102
-msgid "Password-protect the entire site to hide the content from public view and search engine bots / crawlers. Logged-in administrators can still access the site as usual."
+#: classes/class-settings-sections-fields.php:4103
+msgid "Password-protect the entire site to hide the content from public view and search engine bots / crawlers. Logged-in administrators can still access the site as usual. Logged-in users retain REST API access. Users who can edit content also retain admin-ajax access so the block editor continues to work."
 msgstr ""
 
-#: classes/class-settings-sections-fields.php:4112
+#: classes/class-settings-sections-fields.php:4113
 msgid "Set the password:"
 msgstr ""
 
-#: classes/class-settings-sections-fields.php:4122
+#: classes/class-settings-sections-fields.php:4123
 msgid "(Default is 'secret')"
 msgstr ""
 
 #. translators: %s is URL to the documentation for nocache_headers()
-#: classes/class-settings-sections-fields.php:4139
+#: classes/class-settings-sections-fields.php:4140
 #, php-format
 msgid "<div class=\"asenha-warning\">When password protection is enabled and the password input form is displayed, caching is disabled using <a href=\"%s\"><code>nocache_headers()</code></a>. Caching remains disabled after submitting the valid password and seeing the actual page content.</div>"
 msgstr ""
 
-#: classes/class-settings-sections-fields.php:4148
+#: classes/class-settings-sections-fields.php:4149
 msgid "Maintenance Mode"
 msgstr ""
 
-#: classes/class-settings-sections-fields.php:4161
+#: classes/class-settings-sections-fields.php:4162
 msgid "Show a customizable maintenance page on the frontend while performing a brief maintenance to your site. Logged-in administrators can still view the site as usual."
 msgstr ""
 
-#: classes/class-settings-sections-fields.php:4183
+#: classes/class-settings-sections-fields.php:4184
 msgid "Heading"
 msgstr ""
 
-#: classes/class-settings-sections-fields.php:4195
+#: classes/class-settings-sections-fields.php:4196
 msgid "We'll be back soon."
 msgstr ""
 
-#: classes/class-settings-sections-fields.php:4203
+#: classes/class-settings-sections-fields.php:4204
 msgid "Description"
 msgstr ""
 
-#: classes/class-settings-sections-fields.php:4216
+#: classes/class-settings-sections-fields.php:4217
 msgid "This site is undergoing maintenance for an extended period today. Thanks for your patience."
 msgstr ""
 
-#: classes/class-settings-sections-fields.php:4223
+#: classes/class-settings-sections-fields.php:4224
 msgid "Stripes"
 msgstr ""
 
-#: classes/class-settings-sections-fields.php:4224
+#: classes/class-settings-sections-fields.php:4225
 msgid "Curves"
 msgstr ""
 
-#: classes/class-settings-sections-fields.php:4225
+#: classes/class-settings-sections-fields.php:4226
 msgid "Lines"
 msgstr ""
 
-#: classes/class-settings-sections-fields.php:4229
+#: classes/class-settings-sections-fields.php:4230
 msgid "Background"
 msgstr ""
 
-#: classes/class-settings-sections-fields.php:4252
+#: classes/class-settings-sections-fields.php:4253
 msgid "Please clear your cache</strong> after enabling or disabling maintenance mode. This ensures site visitors see either the maintenance page or the actual content of each page."
 msgstr ""
 
-#: classes/class-settings-sections-fields.php:4259
+#: classes/class-settings-sections-fields.php:4260
 msgid "Redirect 404 to Homepage"
 msgstr ""
 
-#: classes/class-settings-sections-fields.php:4260
+#: classes/class-settings-sections-fields.php:4261
 msgid "Perform 301 (permanent) redirect to the homepage for all 404 (not found) pages."
 msgstr ""
 
-#: classes/class-settings-sections-fields.php:4285
+#: classes/class-settings-sections-fields.php:4286
 msgid "Display System Summary"
 msgstr ""
 
-#: classes/class-settings-sections-fields.php:4286
+#: classes/class-settings-sections-fields.php:4287
 msgid "Show quick summary of the system the site is running on to admins, in the \"At a Glance\" dashboard widget. This includes the web server software, the PHP version, the database software and server IP address."
 msgstr ""
 
-#: classes/class-settings-sections-fields.php:4307
+#: classes/class-settings-sections-fields.php:4308
 msgid "Search Engines Visibility Status"
 msgstr ""
 
-#: classes/class-settings-sections-fields.php:4322
+#: classes/class-settings-sections-fields.php:4323
 msgid "Show admin bar status when search engines are set to be discouraged from indexing the site. This is set through a \"Search engine visibility\" checkbox in Settings >> Reading."
 msgstr ""
 
@@ -2109,7 +2124,7 @@ msgid "Submission not found."
 msgstr ""
 
 #: includes/contact-form/classes/class-contact-form-admin.php:208
-#: settings.php:1984
+#: settings.php:2053
 msgid "Invalid security token."
 msgstr ""
 
@@ -2140,22 +2155,22 @@ msgid "Sent from"
 msgstr ""
 
 #: includes/contact-form/classes/class-contact-form-handler.php:85
-#: includes/contact-form/classes/class-contact-form.php:339
+#: includes/contact-form/classes/class-contact-form.php:353
 msgid "Please enter a subject."
 msgstr ""
 
 #: includes/contact-form/classes/class-contact-form-handler.php:89
-#: includes/contact-form/classes/class-contact-form.php:340
+#: includes/contact-form/classes/class-contact-form.php:354
 msgid "Please enter a message."
 msgstr ""
 
 #: includes/contact-form/classes/class-contact-form-handler.php:93
-#: includes/contact-form/classes/class-contact-form.php:341
+#: includes/contact-form/classes/class-contact-form.php:355
 msgid "Please enter your name."
 msgstr ""
 
 #: includes/contact-form/classes/class-contact-form-handler.php:97
-#: includes/contact-form/classes/class-contact-form.php:342
+#: includes/contact-form/classes/class-contact-form.php:356
 msgid "Please enter a valid email address."
 msgstr ""
 
@@ -2194,7 +2209,7 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: includes/contact-form/classes/class-contact-form.php:336
+#: includes/contact-form/classes/class-contact-form.php:350
 msgid "Sending..."
 msgstr ""
 
@@ -2495,18 +2510,18 @@ msgstr ""
 msgid "Unable to save changes. Please reload the page and try again."
 msgstr ""
 
-#: settings.php:1797
+#: settings.php:1866
 msgid "Configure"
 msgstr ""
 
-#: settings.php:1978
+#: settings.php:2047
 msgid "Missing required data."
 msgstr ""
 
-#: settings.php:1991
+#: settings.php:2060
 msgid "Invalid IP address."
 msgstr ""
 
-#: settings.php:2001
+#: settings.php:2070
 msgid "Could not release lock."
 msgstr ""

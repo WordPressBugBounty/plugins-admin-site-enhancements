@@ -1,10 +1,35 @@
 ## Changelog
 
-**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **91 _major_ releases** (e.g. 1.1.0 ) and **208 _minor_ releases** (e.g. 4.9.1), for a **total of 299 releases**.
+**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **91 _major_ releases** (e.g. 1.1.0 ) and **209 _minor_ releases** (e.g. 4.9.1), for a **total of 300 releases**.
 
 Each **_major release_** usually corresponds with the addition of one new module/feature. Each module/feature usually is the equivalent of one (or more) single-purpose plugin. Each **_minor release_** usually contain one or more bugfix or improvements to existing modules/features.
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). Lifetime Deal (LTD) available.
+
+### 9.1.3 (2026.09.21) - ASE Free and Pro
+
+* **[SECURITY FIX in Free and Pro] Log In/Out & Register >> Change Login URL**: Requests to `//wp-login.php` (leading double slash) no longer skip redirection to the not-found URL. Props to [@jlop77](https://wordpress.org/support/users/jlop77/) for [reporting this](https://wordpress.org/support/topic/security-custom-login-url-bypass-via-double-slash/) in great detail.
+
+* **[IMPROVED in Free and Pro] Content Management >> Content Duplication**: Prevent Elementor placeholder.php from being sideloaded into the media library on duplicating Elementor pages/templates. Props to Rajan D. for reporting the issue in detail.
+
+* **[FIXED in Free and Pro] Admin Interface >> Admin Menu Organizer**: 
+  * Fixed conflict with WP Vivid Pro plugin causing their snapshot UI to be shown at the bottom of the Admin Menu Organizer page. Props to Stéphane N. for reporting the issue and facilitating the troubleshooting process.
+  * Fixed SureCart submenu items, e.g. "Orders >> Abandoned" wrongly placed towards the end of the SureCart menu, instead of right below their parent. Also fixed "Dashboard", "Customers" and "Custom Forms" showing up blank in AMO page. Props to Kenneth S. for reporting the issue with screenshots.
+  
+* **[IMPROVED in Free and Pro] Utilities >> Password Protection**: 
+  * ASE Free: Logged-in users can use the REST API while Password Protection is on. Guests remain gated. Props to Manfred A. for prompting this change.
+  * ASE Pro: Added a REST API route whitelist so selected endpoints remain accessible while the rest of the site is password-protected. Props to Axel D. and Manfred A. for prompting this improvement.
+
+* **[FIXED in Pro] Security >> CAPTCHA Protection**: ALTCHA verification now works when Password Protection or Maintenance Mode is enabled.
+
+* **[IMPROVED and FIXED in Pro] Utilities >> Site Backup and Migration**: 
+  * Sync now refreshes destination term post counts after scoped posts sync, so terms no longer keep a stale pre-sync count. Props to David M.C. for prompting this improvement.
+  * Fix high-compatibility mode returning "database.sql was never confirmed" error. Props to Curt M. for reporting the issue.
+  * Made some changes so that class-site-backup-admin.php will not trigger false positives with malware scanners. Props to Craig L., John C., Oliver S., Tiago P., Andrew W. and Bent F. for reporting the issue.
+
+* **[FIXED in Pro] Content Management >> Custom Content Types**: Fixed a fatal PHP error that can occur in a certain scenario involving Elementor and deleting a post meta. Props to George N. for reporting the issue.
+
+* **[FIXED in Pro] Custom Code >> Code Snippets Manager**: On new snippet screen, keep the keyboard focus on the title input field, not on the code editor. Props to Ole P. for reporting the issue.
 
 ### 9.1.2 (2026.09.14) - ASE Free and Pro
 

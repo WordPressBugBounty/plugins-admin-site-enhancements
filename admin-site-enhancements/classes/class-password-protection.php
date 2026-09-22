@@ -94,6 +94,37 @@ class Password_Protection {
     }
 
     /**
+     * Whether the current user can edit content in the block editor.
+     *
+     * Used by the admin-ajax gate so contributors, authors, editors,
+     * page-only roles, and CPT-only roles can use Heartbeat and other AJAX
+     * while Password Protection is on. REST allows any logged-in user.
+     * The frontend HTML gate still requires an administrator or a valid
+     * unlock cookie.
+     *
+     * @since 9.1.3
+     * @return bool
+     */
+    private function current_user_can_edit_content() {
+        if ( !is_user_logged_in() ) {
+            return false;
+        }
+        if ( current_user_can( 'edit_posts' ) || current_user_can( 'edit_pages' ) ) {
+            return true;
+        }
+        $post_types = get_post_types( array(
+            'show_ui'      => true,
+            'show_in_rest' => true,
+        ), 'objects' );
+        foreach ( $post_types as $post_type ) {
+            if ( !empty( $post_type->cap->edit_posts ) && current_user_can( $post_type->cap->edit_posts ) ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Determine whether the current request is allowed past the password
      * protection gate. Shared by the template_redirect gate, the REST gate
      * and the admin-ajax gate.
@@ -197,12 +228,40 @@ class Password_Protection {
         if ( is_wp_error( $result ) ) {
             return $result;
         }
+        if ( is_user_logged_in() ) {
+            return $result;
+        }
         if ( $this->is_request_allowed() ) {
             return $result;
         }
         return new WP_Error('asenha_password_protection_required', __( 'This site is password protected.', 'admin-site-enhancements' ), array(
             'status' => 401,
         ));
+    }
+
+    /**
+     * Return 401 for admin-ajax.php requests when the protection gate applies,
+     * since AJAX requests never reach the template_redirect gate.
+     *
+     * Hooked on init priority 20 so plugin CPTs are registered before the
+     * content-editor capability check.
+     *
+     * @since 9.1.3
+     */
+    public function ajax_gate() {
+        if ( !wp_doing_ajax() ) {
+            return;
+        }
+        if ( $this->current_user_can_edit_content() ) {
+            return;
+        }
+        if ( $this->is_request_allowed() ) {
+            return;
+        }
+        wp_die( '', '', array(
+            'response' => 401,
+        ) );
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
     }
 
     /**
@@ -241,14 +300,6 @@ class Password_Protection {
     public function maybe_process_login() {
         global $password_protected_errors;
         $password_protected_errors = new WP_Error();
-        // admin-ajax.php requests never reach the template_redirect gate;
-        // block unauthenticated AJAX here so protected content stays private.
-        if ( wp_doing_ajax() && !$this->is_request_allowed() ) {
-            wp_die( '', '', array(
-                'response' => 401,
-            ) );
-            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-        }
         if ( isset( $_REQUEST['protected_page_pwd'] ) ) {
             $password_input = sanitize_text_field( $_REQUEST['protected_page_pwd'] );
             $options = get_option( ASENHA_SLUG_U, array() );

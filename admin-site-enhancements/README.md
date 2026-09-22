@@ -4,8 +4,8 @@ Contributors: qriouslad
 Donate link: https://bowo.io/asenha-sp-rdm  
 Tags: enhancements, tweaks, optimizations, tools  
 Requires at least: 4.6  
-Tested up to: 7.1  
-Stable tag: 9.1.2  
+Tested up to: 7.1.1  
+Stable tag: 9.1.3  
 Requires PHP: 5.6  
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -148,7 +148,7 @@ _"ASE is an amazing plugin! **Time and money saver**. Thank you!"_ ~[Iulian Baci
 * **Multiple User Roles**. Assign multiple roles during user account creation and editing.
 * **Image Sizes Panel**. Display a panel showing and linking to all available sizes when viewing an image in the media library. [ASE Pro](https://www.wpase.com/rdme-to-web) adds a copy button for the image URL on click.
 * **View Admin as Role**. View admin pages and the site (logged-in) as one of the non-administrator user roles.
-* **Password Protection**. Password-protect the entire site to hide the content from public view and search engine bots / crawlers. [ASE Pro](https://www.wpase.com/rdme-to-web) adds IP whitelisting and bypassing via URL parameter, and also applies design elements from the Login Page Customizer module.
+* **Password Protection**. Password-protect the entire site to hide the content from public view and search engine bots / crawlers. [ASE Pro](https://www.wpase.com/rdme-to-web) adds IP whitelisting, REST API route allowlisting, and bypassing via URL parameter, and also applies design elements from the Login Page Customizer module.
 * **Maintenance Mode**. Show a simple maintenance message. [ASE Pro](https://www.wpase.com/rdme-to-web) adds option to set custom page and browser tab title, use WYSIWYG editor, use pattern, image, solid color background, apply custom CSS, and also add the option to use an existing page created with the block / classic editor or a page builder as the maintenance page. It also adds an option to exclude certain URLs (wildcard support) and allow non-admins to access the frontend.
 * **[[ASE Pro](https://www.wpase.com/rdme-to-web)] Redirect Manager**. Easily manage various types of redirects / redirections (3xx, 4xx, 5xx codes) with support for wildcards and regular expressions (regex).
 * **Redirect 404**. Perform 301 (permanent) redirect to the homepage for all 404 (not found) pages. [ASE Pro](https://www.wpase.com/rdme-to-web) adds option to set custom redirect URL.
@@ -208,11 +208,40 @@ ASE does not officially support multisite. Please use at your own risk. That sai
 
 ## Changelog
 
-**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **91 _major_ releases** (e.g. 1.1.0 ) and **208 _minor_ releases** (e.g. 4.9.1), for a **total of 299 releases**.
+**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **91 _major_ releases** (e.g. 1.1.0 ) and **209 _minor_ releases** (e.g. 4.9.1), for a **total of 300 releases**.
 
 Each **_major release_** usually corresponds with the addition of one new module/feature. Each module/feature usually is the equivalent of one (or more) single-purpose plugin. Each **_minor release_** usually contain one or more bugfix or improvements to existing modules/features.
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). Lifetime Deal (LTD) available.
+
+### 9.1.3.1 (2026.09.22) - ASE Free and Pro
+
+* **[FIXED in Free and Pro] Log In/Out & Register >> Change Login URL**: Fixed a regression in v9.1.3 causing log out from the admin bar profile menu to redirect back to /wp-admin/ (still logged in). Props to Toby B., Jan S. and John K. for reporting the issue.
+
+### 9.1.3 (2026.09.21) - ASE Free and Pro
+
+* **[SECURITY FIX in Free and Pro] Log In/Out & Register >> Change Login URL**: Requests to `//wp-login.php` (leading double slash) no longer skip redirection to the not-found URL. Props to [@jlop77](https://wordpress.org/support/users/jlop77/) for [reporting this](https://wordpress.org/support/topic/security-custom-login-url-bypass-via-double-slash/) in great detail.
+
+* **[IMPROVED in Free and Pro] Content Management >> Content Duplication**: Prevent Elementor placeholder.php from being sideloaded into the media library on duplicating Elementor pages/templates. Props to Rajan D. for reporting the issue in detail.
+
+* **[FIXED in Free and Pro] Admin Interface >> Admin Menu Organizer**: 
+  * Fixed conflict with WP Vivid Pro plugin causing their snapshot UI to be shown at the bottom of the Admin Menu Organizer page. Props to Stéphane N. for reporting the issue and facilitating the troubleshooting process.
+  * Fixed SureCart submenu items, e.g. "Orders >> Abandoned" wrongly placed towards the end of the SureCart menu, instead of right below their parent. Also fixed "Dashboard", "Customers" and "Custom Forms" showing up blank in AMO page. Props to Kenneth S. for reporting the issue with screenshots.
+  
+* **[IMPROVED in Free and Pro] Utilities >> Password Protection**: 
+  * ASE Free: Logged-in users can use the REST API while Password Protection is on. Guests remain gated. Props to Manfred A. for prompting this change.
+  * ASE Pro: Added a REST API route whitelist so selected endpoints remain accessible while the rest of the site is password-protected. Props to Axel D. and Manfred A. for prompting this improvement.
+
+* **[FIXED in Pro] Security >> CAPTCHA Protection**: ALTCHA verification now works when Password Protection or Maintenance Mode is enabled.
+
+* **[IMPROVED and FIXED in Pro] Utilities >> Site Backup and Migration**: 
+  * Sync now refreshes destination term post counts after scoped posts sync, so terms no longer keep a stale pre-sync count. Props to David M.C. for prompting this improvement.
+  * Fix high-compatibility mode returning "database.sql was never confirmed" error. Props to Curt M. for reporting the issue.
+  * Made some changes so that class-site-backup-admin.php will not trigger false positives with malware scanners. Props to Craig L., John C., Oliver S., Tiago P., Andrew W. and Bent F. for reporting the issue.
+
+* **[FIXED in Pro] Content Management >> Custom Content Types**: Fixed a fatal PHP error that can occur in a certain scenario involving Elementor and deleting a post meta. Props to George N. for reporting the issue.
+
+* **[FIXED in Pro] Custom Code >> Code Snippets Manager**: On new snippet screen, keep the keyboard focus on the title input field, not on the code editor. Props to Ole P. for reporting the issue.
 
 ### 9.1.2 (2026.09.14) - ASE Free and Pro
 

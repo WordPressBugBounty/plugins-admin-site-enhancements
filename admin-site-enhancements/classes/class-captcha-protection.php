@@ -122,8 +122,9 @@ class CAPTCHA_Protection {
     /**
      * Whether the request Referer matches a Change Login URL "Allow login from" whitelist path.
      *
-     * Parsing matches Change_Login_URL::redirect_on_default_login_urls(): same-site referer,
-     * protocol stripped, first path segment compared to trimmed whitelist lines.
+     * Parsing matches Change_Login_URL helpers: same-site host, first non-empty
+     * path segment compared to trimmed whitelist lines. Empty lines and
+     * wp-login.php / wp-signup.php never match.
      *
      * @return bool
      */
@@ -134,39 +135,18 @@ class CAPTCHA_Protection {
             return false;
         }
 
-        $custom_login_whitelist_raw = isset( $options['custom_login_whitelist'] ) ? explode( PHP_EOL, $options['custom_login_whitelist'] ) : array();
-        $custom_login_whitelist     = array();
-
-        if ( ! empty( $custom_login_whitelist_raw ) ) {
-            foreach ( $custom_login_whitelist_raw as $path ) {
-                $trimmed = trim( $path );
-                if ( '' !== $trimmed ) {
-                    $custom_login_whitelist[] = $trimmed;
-                }
-            }
-        }
-
-        if ( empty( $custom_login_whitelist ) ) {
-            return false;
-        }
-
         $http_referrer = isset( $_SERVER['HTTP_REFERER'] ) ? sanitize_url( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : '';
 
         if ( empty( $http_referrer ) ) {
             return false;
         }
 
-        if ( false === strpos( $http_referrer, get_site_url() ) ) {
+        $change_login_url = new Change_Login_URL();
+
+        if ( ! $change_login_url->is_same_site_referer( $http_referrer ) ) {
             return false;
         }
 
-        $http_referrer_no_protocol = str_replace( array( 'https://', 'http://' ), '', $http_referrer );
-        $http_referrer_parts       = explode( '/', $http_referrer_no_protocol );
-
-        if ( ! isset( $http_referrer_parts[1] ) ) {
-            return false;
-        }
-
-        return in_array( $http_referrer_parts[1], $custom_login_whitelist, true );
+        return $change_login_url->is_whitelisted_login_referer( $http_referrer );
     }
 }
