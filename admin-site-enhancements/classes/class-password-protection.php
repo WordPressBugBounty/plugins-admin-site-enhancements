@@ -140,6 +140,12 @@ class Password_Protection {
         if ( defined( 'DOING_CRON' ) && DOING_CRON ) {
             return true;
         }
+        // Novamira OAuth discovery and token exchange stay reachable while the site is password protected.
+        // MCP Toolkit tool listing stays reachable on its own HTTP endpoint.
+        $common_methods = new Common_Methods();
+        if ( $common_methods->is_novamira_auth_request() || $common_methods->is_mcp_toolkit_auth_request() ) {
+            return true;
+        }
         $options = get_option( ASENHA_SLUG_U, array() );
         $stored_password = ( isset( $options['password_protection_password'] ) ? $options['password_protection_password'] : '' );
         // When user is logged-in as an administrator
@@ -228,8 +234,14 @@ class Password_Protection {
         if ( is_wp_error( $result ) ) {
             return $result;
         }
+        $common_methods = new Common_Methods();
+        $common_methods->recover_basic_auth_from_request_headers();
         if ( is_user_logged_in() ) {
             return $result;
+        }
+        $application_password_error = $common_methods->get_application_password_authentication_error();
+        if ( is_wp_error( $application_password_error ) ) {
+            return $application_password_error;
         }
         if ( $this->is_request_allowed() ) {
             return $result;

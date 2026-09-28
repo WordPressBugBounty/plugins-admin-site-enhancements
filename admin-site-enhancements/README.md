@@ -4,8 +4,8 @@ Contributors: qriouslad
 Donate link: https://bowo.io/asenha-sp-rdm  
 Tags: enhancements, tweaks, optimizations, tools  
 Requires at least: 4.6  
-Tested up to: 7.1.1  
-Stable tag: 9.1.3  
+Tested up to: 7.1.2  
+Stable tag: 9.1.4  
 Requires PHP: 5.6  
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -208,75 +208,32 @@ ASE does not officially support multisite. Please use at your own risk. That sai
 
 ## Changelog
 
-**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **91 _major_ releases** (e.g. 1.1.0 ) and **209 _minor_ releases** (e.g. 4.9.1), for a **total of 300 releases**.
+**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **91 _major_ releases** (e.g. 1.1.0 ) and **210 _minor_ releases** (e.g. 4.9.1), for a **total of 301 releases**.
 
 Each **_major release_** usually corresponds with the addition of one new module/feature. Each module/feature usually is the equivalent of one (or more) single-purpose plugin. Each **_minor release_** usually contain one or more bugfix or improvements to existing modules/features.
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). Lifetime Deal (LTD) available.
 
-### 9.1.3.1 (2026.09.22) - ASE Free and Pro
+### 9.1.4 (2026.09.28) - ASE Free and Pro
 
-* **[FIXED in Free and Pro] Log In/Out & Register >> Change Login URL**: Fixed a regression in v9.1.3 causing log out from the admin bar profile menu to redirect back to /wp-admin/ (still logged in). Props to Toby B., Jan S. and John K. for reporting the issue.
+* **[FIXED in Free and Pro] Utilities >> Maintenance Mode**: Wordfence Login Security (2FA, CAPTCHA, and passkeys) can complete login while maintenance mode is enabled. Other admin-ajax.php requests and the REST API still return 503 for guests. Props to [Julian M.](https://wordpress.org/support/users/julimuslia/) and [ErinGibsonCo](https://wordpress.org/support/users/erinfriction/) for [reporting](https://wordpress.org/support/topic/login-issue-when-maintenance-mode-is-activated/) the issue.
 
-### 9.1.3 (2026.09.21) - ASE Free and Pro
+* **[FIXED in Free and Pro] Utilities >> Password Protection & Maintenance Mode**: Fixed Novamira connection issue via oAuth when Password Protection or Maintenance Mode is enabled. Props to Antoine L. for reporting the issue.
 
-* **[SECURITY FIX in Free and Pro] Log In/Out & Register >> Change Login URL**: Requests to `//wp-login.php` (leading double slash) no longer skip redirection to the not-found URL. Props to [@jlop77](https://wordpress.org/support/users/jlop77/) for [reporting this](https://wordpress.org/support/topic/security-custom-login-url-bypass-via-double-slash/) in great detail.
+* **[FIXED in Free and Pro] Optimizations >> Image Upload Control**: Fixed an issue preventing Elementor demo content import from completing successfully. Props to [@mztechsnc]() for [reporting](https://wordpress.org/support/topic/ase-image-optimization-conflicts-with-elementor-demo-content-import/) this in detail with the error log entry.
 
-* **[IMPROVED in Free and Pro] Content Management >> Content Duplication**: Prevent Elementor placeholder.php from being sideloaded into the media library on duplicating Elementor pages/templates. Props to Rajan D. for reporting the issue in detail.
+* **[IMPROVED and FIXED in Pro] Custom Code >> Code Snippets Manager**: Improved the robustness of active PHP snippets executions and more reliable, in-context retrieval of post ID, so the snippet works as intended. Props to Stéphane N. for prompting this improvement.
 
-* **[FIXED in Free and Pro] Admin Interface >> Admin Menu Organizer**: 
-  * Fixed conflict with WP Vivid Pro plugin causing their snapshot UI to be shown at the bottom of the Admin Menu Organizer page. Props to Stéphane N. for reporting the issue and facilitating the troubleshooting process.
-  * Fixed SureCart submenu items, e.g. "Orders >> Abandoned" wrongly placed towards the end of the SureCart menu, instead of right below their parent. Also fixed "Dashboard", "Customers" and "Custom Forms" showing up blank in AMO page. Props to Kenneth S. for reporting the issue with screenshots.
-  
-* **[IMPROVED in Free and Pro] Utilities >> Password Protection**: 
-  * ASE Free: Logged-in users can use the REST API while Password Protection is on. Guests remain gated. Props to Manfred A. for prompting this change.
-  * ASE Pro: Added a REST API route whitelist so selected endpoints remain accessible while the rest of the site is password-protected. Props to Axel D. and Manfred A. for prompting this improvement.
+* **[IMPROVED in Pro] Site Backup and Migration**:
+  * During migration operation, plugins in destination site that is not present in the origin site's backup archive can sometimes be cleaned up partially, leaving an empty plugin folder and subfolders that contains only hidden files (filename starts with dot). This causes plugin reinstallation to fail. This fix makes sure plugin clean up completely removes such hidden files. Props to David M.C. for reporting the issue in detail.
+  * WordPress core themes will now be properly carried over and restored during migration via full backup archive import. Props to David M.C. for reporting the issue in great detail.
+  * Improved handling of attachments remap to their parent post during sync. Props David M.C. for reporting the issue and facilitating the troubleshooting process.
 
-* **[FIXED in Pro] Security >> CAPTCHA Protection**: ALTCHA verification now works when Password Protection or Maintenance Mode is enabled.
-
-* **[IMPROVED and FIXED in Pro] Utilities >> Site Backup and Migration**: 
-  * Sync now refreshes destination term post counts after scoped posts sync, so terms no longer keep a stale pre-sync count. Props to David M.C. for prompting this improvement.
-  * Fix high-compatibility mode returning "database.sql was never confirmed" error. Props to Curt M. for reporting the issue.
-  * Made some changes so that class-site-backup-admin.php will not trigger false positives with malware scanners. Props to Craig L., John C., Oliver S., Tiago P., Andrew W. and Bent F. for reporting the issue.
-
-* **[FIXED in Pro] Content Management >> Custom Content Types**: Fixed a fatal PHP error that can occur in a certain scenario involving Elementor and deleting a post meta. Props to George N. for reporting the issue.
-
-* **[FIXED in Pro] Custom Code >> Code Snippets Manager**: On new snippet screen, keep the keyboard focus on the title input field, not on the code editor. Props to Ole P. for reporting the issue.
-
-### 9.1.2 (2026.09.14) - ASE Free and Pro
-
-* **[IMPROVED in Free and Pro] Security Hardening**: Various changes were made to harden the security of the following modules: SVG Upload, AVIF Upload, Admin Menu Organizer, Limit Login Attempts, Custom Admin / Frontend CSS, Insert &lt;head&gt;, &lt;body&gt; and &lt;footer&gt; Code, Obfuscate Author Slugs, Email Delivery, Contact Form, Password Protection, Maintenance Mode.
-
-* **[IMPROVED in Free and Pro] Utilities >> Password Protection**:
-  * REST API (/wp-json/...) and admin-ajax.php are now gated by the password protection. Only after a valid password is entered, will these become accessible again.
-  * Added rate-limiting for wrong password guesses (about 5 tries/ 10 minutes per IP)
-  * Unlock cookies are now HttpOnly and Secure on HTTPS, so they are not readable by frontend JS and are not sent over HTTP.
-  * Site Backup and Migration loopback workers (HMAC-authenticated admin-ajax actions and the REST backup/worker route) are excluded from the gate so server-side backup operations can run.
-
-* **[IMPROVED in Free and Pro] Utilities >> Maintenance Mode**:
-  * REST API (/wp-josn/...), admin-ajax.php and XML-RPC now returns 503 HTTP response ("This site is currently under maintenance") when maintenance mode is enabled.
-  * Site Backup and Migration loopback workers (HMAC-authenticated admin-ajax actions and the REST backup/worker route) are excluded from the gate so server-side backup operations can run.
-
-* **[IMPROVED in Free and Pro] Utilities >> Contact Form**: Added submission retention period settings inside "Advanced Settings", including a "Do not store" option that still sends notification emails. The default is "Forever".
-
-* **[FIXED in Free] Optimizations >> Image Upload Control**: Fixed a regression introduced in v9.1.1 that causes transparent PNGs to be converted to JPG when WebP conversion is not enabled. Props to Richard S. and Brady M. for reporting the issue.
-
-* **[FIXED and IMPROVED in Pro] Content Management >> Media Replacement**:
-  * Fixed serialized postmeta corruption during media replacement in pages/posts handled by page builders, e.g. Bricks builder. Props to Michael L. and Katrine K. for reporting the issue in great detail.
-
-* **[FIXED and Improved in Pro] Utilities >> Site Backup and Migration**:
-  * Improved the reliability of backup, restore and migrate operations in localhost sites, specifically WordPress Studio sites. Props to Matija S. for prompting this improvement.
-  * Fix restore/migration fatals from Composer autoload by extracting each plugin off to the side and replacing the live folder only after that plugin is fully extracted. Props to Nils L. for reporting the issue in detail and facilitating the troubleshooting process.
-  * Fixed runaway wp-cron.php processes that can occur in a specific scenario, which can cause consistently high CPU load and PHP fatal error. Props to Bram C. for reporting the issue in detail.
-
-* **[FIXED in Pro] Custom Code >> Code Snippets Manager**: 
-  * Fixed an error in Breakdance builder preview caused by a code snippet post being the selected post for doing the preview. Code snippet posts now are registered with "public => false". Props to Christian S. for reporting the error and facilitating the troubleshooting process.
-  * Fixed vertical alignment issues in the snippets listing page. Props to Nils L. for reporting the issue in detail.
+* **[FIXED in Pro] Content Management >> Custom Content Types >> Custom Field Groups**: Fixed changes not properly being saved on CFG with a lot of fields, that can occur in a site where PHP `max_input_vars` is on the lower end. Props to Zubair for reporting the issue and facilitating the troubleshooting process.
 
 * **[TRANSLATION in Free and Pro]** ASE is now being translated into [38 languages](https://translate.wpase.com/):
   * **Added new/improved translation** for:
-    * ASE Free: Updated Spanish (Spain), Portuguese (Brazil), Polish, Norwegian, Dutch (Netherlands), Chinese (Taiwan)
-    * ASE Pro: Updated Czech, Portuguese (Brazil)
+    * ASE Free: Updated Spanish (Spain), Spanish (Chile), Portuguese (Brazil), Polish, Dutch (Netherlands), Chinese (Taiwan).
   * **More strings have been internationalized**. @Translators, please visit the respective project pages for the Free and Pro versions to translate the new strings, if you havent' done so already.
   * **Interested to help translate or improve the translation?** Please go to [https://translate.wpase.com](https://translate.wpase.com) for more info.
   * **[Chinese (China)](https://translate.wordpress.org/locale/zh-cn/default/wp-plugins/admin-site-enhancements/)**: ASE Free and Pro (completed). Props to [@bricksvip](https://profiles.wordpress.org/bricksvip/) et al. Current status: [39 strings untranslated](https://translate.wordpress.org/projects/wp-plugins/admin-site-enhancements/stable/zh-cn/default/?filters%5Bstatus%5D=untranslated).

@@ -93,6 +93,12 @@ class Maintenance_Mode {
         if ( is_login() ) {
             return true;
         }
+        // Novamira OAuth discovery and token exchange stay reachable while maintenance mode is on.
+        // MCP Toolkit tool listing stays reachable on its own HTTP endpoint.
+        $common_methods = new Common_Methods();
+        if ( $common_methods->is_novamira_auth_request() || $common_methods->is_mcp_toolkit_auth_request() ) {
+            return true;
+        }
         if ( $this->is_user_allowed_frontend_access() ) {
             return true;
         }
@@ -101,7 +107,57 @@ class Maintenance_Mode {
             // phpcs:ignore WordPress.Security.NonceVerification.Recommended
             return true;
         }
+        if ( $this->is_authentication_ajax_request() ) {
+            return true;
+        }
         return false;
+    }
+
+    /**
+     * Whether this admin-ajax request is a login authentication call that must
+     * succeed while maintenance mode is on.
+     *
+     * Wordfence Login Security posts credentials to admin-ajax.php before it
+     * shows the 2FA, CAPTCHA, or passkey step. Those actions only authenticate.
+     * A non-AJAX request that carries the same action name stays gated.
+     *
+     * @since 9.1.4
+     * @return bool
+     */
+    private function is_authentication_ajax_request() {
+        if ( !wp_doing_ajax() ) {
+            return false;
+        }
+        // Action name only. Wordfence registers these endpoints with nonce verification disabled.
+        $action = ( isset( $_REQUEST['action'] ) ? sanitize_key( wp_unslash( $_REQUEST['action'] ) ) : '' );
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        if ( '' === $action ) {
+            return false;
+        }
+        $allowed_actions = array('wordfence_ls_authenticate', 'wordfence_ls_begin_passkey_login', 'wordfence_ls_finish_passkey_login');
+        /**
+         * Filters admin-ajax actions allowed through Maintenance Mode.
+         *
+         * Only authentication actions belong here. A return value that is not
+         * an array of strings is ignored, and the default list stays in place.
+         *
+         * @since 9.1.4
+         * @param string[] $allowed_actions Action names.
+         */
+        $filtered_actions = apply_filters( 'asenha_maintenance_mode_allowed_ajax_actions', $allowed_actions );
+        if ( is_array( $filtered_actions ) ) {
+            $strings_only = true;
+            foreach ( $filtered_actions as $filtered_action ) {
+                if ( !is_string( $filtered_action ) ) {
+                    $strings_only = false;
+                    break;
+                }
+            }
+            if ( $strings_only ) {
+                $allowed_actions = $filtered_actions;
+            }
+        }
+        return in_array( $action, $allowed_actions, true );
     }
 
     /**
@@ -120,8 +176,14 @@ class Maintenance_Mode {
         if ( is_wp_error( $result ) ) {
             return $result;
         }
+        $common_methods = new Common_Methods();
+        $common_methods->recover_basic_auth_from_request_headers();
         if ( $this->is_request_allowed() ) {
             return $result;
+        }
+        $application_password_error = $common_methods->get_application_password_authentication_error();
+        if ( is_wp_error( $application_password_error ) ) {
+            return $application_password_error;
         }
         return new WP_Error('asenha_maintenance_mode', __( 'This site is currently under maintenance.', 'admin-site-enhancements' ), array(
             'status' => 503,

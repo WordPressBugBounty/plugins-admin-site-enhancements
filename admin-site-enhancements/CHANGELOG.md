@@ -1,10 +1,31 @@
 ## Changelog
 
-**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **91 _major_ releases** (e.g. 1.1.0 ) and **209 _minor_ releases** (e.g. 4.9.1), for a **total of 300 releases**.
+**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **91 _major_ releases** (e.g. 1.1.0 ) and **210 _minor_ releases** (e.g. 4.9.1), for a **total of 301 releases**.
 
 Each **_major release_** usually corresponds with the addition of one new module/feature. Each module/feature usually is the equivalent of one (or more) single-purpose plugin. Each **_minor release_** usually contain one or more bugfix or improvements to existing modules/features.
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). Lifetime Deal (LTD) available.
+
+### 9.1.4 (2026.09.28) - ASE Free and Pro
+
+* **[FIXED in Free and Pro] Utilities >> Maintenance Mode**: Wordfence Login Security (2FA, CAPTCHA, and passkeys) can complete login while maintenance mode is enabled. Other admin-ajax.php requests and the REST API still return 503 for guests. Props to [Julian M.](https://wordpress.org/support/users/julimuslia/) and [ErinGibsonCo](https://wordpress.org/support/users/erinfriction/) for [reporting](https://wordpress.org/support/topic/login-issue-when-maintenance-mode-is-activated/) the issue.
+
+* **[FIXED in Free and Pro] Utilities >> Password Protection & Maintenance Mode**: Fixed Novamira connection issue via oAuth when Password Protection or Maintenance Mode is enabled. Props to Antoine L. for reporting the issue.
+
+* **[FIXED in Free and Pro] Optimizations >> Image Upload Control**: Fixed an issue preventing Elementor demo content import from completing successfully. Props to [@mztechsnc]() for [reporting](https://wordpress.org/support/topic/ase-image-optimization-conflicts-with-elementor-demo-content-import/) this in detail with the error log entry.
+
+* **[IMPROVED and FIXED in Pro] Custom Code >> Code Snippets Manager**: Improved the robustness of active PHP snippets executions and more reliable, in-context retrieval of post ID, so the snippet works as intended. Props to Stéphane N. for prompting this improvement.
+
+* **[IMPROVED in Pro] Site Backup and Migration**:
+  * During migration operation, plugins in destination site that is not present in the origin site's backup archive can sometimes be cleaned up partially, leaving an empty plugin folder and subfolders that contains only hidden files (filename starts with dot). This causes plugin reinstallation to fail. This fix makes sure plugin clean up completely removes such hidden files. Props to David M.C. for reporting the issue in detail.
+  * WordPress core themes will now be properly carried over and restored during migration via full backup archive import. Props to David M.C. for reporting the issue in great detail.
+  * Improved handling of attachments remap to their parent post during sync. Props David M.C. for reporting the issue and facilitating the troubleshooting process.
+
+* **[FIXED in Pro] Content Management >> Custom Content Types >> Custom Field Groups**: Fixed changes not properly being saved on CFG with a lot of fields, that can occur in a site where PHP `max_input_vars` is on the lower end. Props to Zubair for reporting the issue and facilitating the troubleshooting process.
+
+* **[TRANSLATION in Free and Pro]** ASE is now being translated into [38 languages](https://translate.wpase.com/):
+  * **Added new/improved translation** for:
+    * ASE Free: Updated Spanish (Spain), Spanish (Chile), Portuguese (Brazil), Polish, Dutch (Netherlands), Chinese (Taiwan).
 
 ### 9.1.3 (2026.09.21) - ASE Free and Pro
 
@@ -30,6 +51,11 @@ Each **_major release_** usually corresponds with the addition of one new module
 * **[FIXED in Pro] Content Management >> Custom Content Types**: Fixed a fatal PHP error that can occur in a certain scenario involving Elementor and deleting a post meta. Props to George N. for reporting the issue.
 
 * **[FIXED in Pro] Custom Code >> Code Snippets Manager**: On new snippet screen, keep the keyboard focus on the title input field, not on the code editor. Props to Ole P. for reporting the issue.
+
+* **[TRANSLATION in Free and Pro]** ASE is now being translated into [38 languages](https://translate.wpase.com/):
+  * **Added new/improved translation** for:
+    * ASE Free: Updated Spanish (Spain), Spanish (Chile), Slovak, Serbian, Portuguese (Brazil), Indonesian, Norwegian, Dutch (Netherlands), Chinese (Taiwan).
+    * ASE Pro: Updated Norwegian, Portuguese (Brazil).
 
 ### 9.1.2 (2026.09.14) - ASE Free and Pro
 

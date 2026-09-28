@@ -152,31 +152,19 @@ class Image_Upload_Control {
      * @since 4.3.0
      */
     public function maybe_convert_image( $file_extension, $upload ) {
-        $image_object = null;
-        // Get image object from uploaded BMP/PNG
-        if ( 'bmp' === $file_extension ) {
-            if ( is_file( $upload['file'] ) ) {
-                // Generate image object from BMP for conversion to JPG later
-                if ( function_exists( 'imagecreatefrombmp' ) ) {
-                    // PHP >= v7.2
-                    $image_object = \imagecreatefrombmp( $upload['file'] );
-                } else {
-                    // PHP < v7.2
-                    require_once ASENHA_PATH . 'includes/bmp-to-image-object.php';
-                    $image_object = bmp_to_image_object( $upload['file'] );
-                }
-            }
-        }
+        $image_object = false;
+        // Get image object from uploaded BMP/PNG. imagecreatefromstring() accepts
+        // any raster type GD supports, so a valid image with a mismatched
+        // extension (common in demo imports) is still converted.
         if ( 'png' === $file_extension ) {
             $this->png_is_transparent = $this->png_has_transparency( $upload['file'] );
-            // Do not convert PNG with alpha/transparency
+            // Do not convert PNG with alpha/transparency, or a file that could not be decoded.
             if ( $this->png_is_transparent ) {
                 return $upload;
             }
-            // Generate image object from PNG for conversion to JPG later.
-            if ( is_file( $upload['file'] ) && function_exists( 'imagecreatefrompng' ) ) {
-                $image_object = \imagecreatefrompng( $upload['file'] );
-            }
+        }
+        if ( 'bmp' === $file_extension || 'png' === $file_extension ) {
+            $image_object = $this->load_gd_image_from_file( $upload['file'] );
         }
         // Let's convert BMP and non-transparent PNG into JPG
         $converted_to_jpg = false;
@@ -194,26 +182,39 @@ class Image_Upload_Control {
         }
         // Prefer GD when JPEG encode is available. Some custom PHP builds ship GD with PNG
         // support but without imagejpeg(); guard that case and fall back to Imagick below.
-        if ( is_object( $image_object ) && function_exists( 'imagejpeg' ) ) {
+        if ( is_gd_image( $image_object ) && function_exists( 'imagejpeg' ) ) {
             // When conversion from BMP/PNG to JPG is successful using GD. Last parameter is JPG quality (0-100).
             if ( \imagejpeg( $image_object, $wp_uploads['path'] . '/' . $new_filename, 90 ) ) {
                 $converted_to_jpg = true;
             }
         }
+        $this->destroy_gd_image( $image_object );
         // Fall back to Imagick when GD image object creation failed, imagejpeg() is unavailable,
         // or GD JPEG encode returned false.
         if ( !$converted_to_jpg && class_exists( 'Imagick' ) ) {
-            $imagick = new Imagick();
-            $imagick->readImage( $upload['file'] );
-            $imagick->setImageCompressionQuality( 90 );
-            $imagick->setImageFormat( 'jpg' );
-            // $imagick->setFormat( 'jpg' );
-            if ( $imagick->writeImage( $wp_uploads['path'] . '/' . $new_filename ) ) {
-                $converted_to_jpg = true;
+            try {
+                $imagick = new Imagick();
+                $imagick->readImage( $upload['file'] );
+                $imagick->setImageCompressionQuality( 90 );
+                $imagick->setImageFormat( 'jpg' );
+                // $imagick->setFormat( 'jpg' );
+                if ( $imagick->writeImage( $wp_uploads['path'] . '/' . $new_filename ) ) {
+                    $converted_to_jpg = true;
+                }
+                $imagick->clear();
+                $imagick->destroy();
+            } catch ( \Exception $e ) {
+                $converted_to_jpg = false;
+                if ( isset( $imagick ) && $imagick instanceof Imagick ) {
+                    try {
+                        $imagick->clear();
+                        $imagick->destroy();
+                    } catch ( \Exception $cleanup_exception ) {
+                        unset($cleanup_exception);
+                    }
+                }
+                unset($e);
             }
-            // Clear the Imagick object
-            $imagick->clear();
-            $imagick->destroy();
         }
         if ( $converted_to_jpg ) {
             // Delete original BMP / PNG
@@ -229,43 +230,96 @@ class Image_Upload_Control {
     }
 
     /**
+     * Load a raster image into a GD object from file bytes.
+     *
+     * Modeled on WP_Image_Editor_GD::load(). imagecreatefromstring() detects
+     * the format from the binary signature, so a valid JPEG, GIF, WebP, or BMP
+     * stored with a .png name still becomes an image. The silence matches core:
+     * a non-image sideloaded by a demo importer must not emit a warning.
+     *
+     * @since 9.2.0
+     *
+     * @param string $file Absolute path to the image file.
+     * @return GdImage|resource|false GD image on success, false otherwise.
+     */
+    private function load_gd_image_from_file( $file ) {
+        if ( !is_string( $file ) || '' === $file || !is_file( $file ) || !is_readable( $file ) ) {
+            return false;
+        }
+        if ( !function_exists( 'imagecreatefromstring' ) ) {
+            return false;
+        }
+        if ( function_exists( 'wp_raise_memory_limit' ) ) {
+            wp_raise_memory_limit( 'image' );
+        }
+        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+        $contents = file_get_contents( $file );
+        if ( !is_string( $contents ) || '' === $contents ) {
+            return false;
+        }
+        // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- See method docblock. Matches WP_Image_Editor_GD::load().
+        $image = @imagecreatefromstring( $contents );
+        if ( !is_gd_image( $image ) ) {
+            return false;
+        }
+        return $image;
+    }
+
+    /**
+     * Free a GD image created while inspecting or converting an upload.
+     *
+     * @since 9.2.0
+     *
+     * @param mixed $image GD image, or false when loading failed.
+     */
+    private function destroy_gd_image( $image ) {
+        if ( is_gd_image( $image ) && function_exists( 'imagedestroy' ) ) {
+            imagedestroy( $image );
+        }
+    }
+
+    /**
      * Whether a PNG file has at least one transparent / alpha pixel.
      *
      * Results are cached per file path for the current request because
      * `image_editor_output_format` can run once per intermediate size.
      *
+     * A file that GD and Imagick cannot decode returns true. Callers treat
+     * true as "do not convert", so an undecodable demo file is left as uploaded
+     * instead of being treated as an opaque PNG.
+     *
      * @since 9.1.2
      *
      * @param string $file Absolute path to the PNG file.
-     * @return bool True when a transparent pixel is found.
+     * @return bool True when a transparent pixel is found, or the file cannot be decoded.
      */
     private function png_has_transparency( $file ) {
         if ( array_key_exists( $file, $this->png_transparency_cache ) ) {
             return $this->png_transparency_cache[$file];
         }
         $is_transparent = false;
-        if ( is_file( $file ) ) {
-            if ( function_exists( 'imagecreatefrompng' ) ) {
-                $image_object = \imagecreatefrompng( $file );
-                $size = getimagesize( $file );
-                $width = ( is_array( $size ) && isset( $size[0] ) ? (int) $size[0] : 0 );
-                $height = ( is_array( $size ) && isset( $size[1] ) ? (int) $size[1] : 0 );
-                // Run through pixels until a transparent pixel is found.
-                if ( false !== $image_object && $width > 0 && $height > 0 ) {
-                    for ($x = 0; $x < $width; $x++) {
-                        for ($y = 0; $y < $height; $y++) {
-                            $pixel_color_index = \imagecolorat( $image_object, $x, $y );
-                            $pixel_rgba = \imagecolorsforindex( $image_object, $pixel_color_index );
-                            if ( $pixel_rgba['alpha'] > 0 ) {
-                                // Alpha value range from 0 (completely opaque) to 127 (fully transparent).
-                                // Ref: https://www.php.net/manual/en/function.imagecolorallocatealpha.php
-                                $is_transparent = true;
-                                break 2;
-                            }
+        $image_object = $this->load_gd_image_from_file( $file );
+        if ( is_gd_image( $image_object ) ) {
+            $width = \imagesx( $image_object );
+            $height = \imagesy( $image_object );
+            // Run through pixels until a transparent pixel is found.
+            if ( $width > 0 && $height > 0 ) {
+                for ($x = 0; $x < $width; $x++) {
+                    for ($y = 0; $y < $height; $y++) {
+                        $pixel_color_index = \imagecolorat( $image_object, $x, $y );
+                        $pixel_rgba = \imagecolorsforindex( $image_object, $pixel_color_index );
+                        if ( $pixel_rgba['alpha'] > 0 ) {
+                            // Alpha value range from 0 (completely opaque) to 127 (fully transparent).
+                            // Ref: https://www.php.net/manual/en/function.imagecolorallocatealpha.php
+                            $is_transparent = true;
+                            break 2;
                         }
                     }
                 }
-            } elseif ( class_exists( 'Imagick' ) ) {
+            }
+            $this->destroy_gd_image( $image_object );
+        } elseif ( class_exists( 'Imagick' ) ) {
+            try {
                 $imagick = new Imagick();
                 $imagick->readImage( $file );
                 // Ref: https://stackoverflow.com/a/52295997
@@ -274,7 +328,20 @@ class Image_Upload_Control {
                 $is_transparent = $alpha_range['minima'] < $alpha_range['maxima'];
                 $imagick->clear();
                 $imagick->destroy();
+            } catch ( \Exception $e ) {
+                $is_transparent = true;
+                if ( isset( $imagick ) && $imagick instanceof Imagick ) {
+                    try {
+                        $imagick->clear();
+                        $imagick->destroy();
+                    } catch ( \Exception $cleanup_exception ) {
+                        unset($cleanup_exception);
+                    }
+                }
+                unset($e);
             }
+        } elseif ( is_file( $file ) ) {
+            $is_transparent = true;
         }
         $this->png_transparency_cache[$file] = $is_transparent;
         return $is_transparent;
@@ -314,9 +381,15 @@ class Image_Upload_Control {
     }
 
     /**
-     * Generate image object from PNG/JPG with GD library
-     * 
+     * Generate a WebP image from a PNG or JPEG file with GD.
+     *
      * @since 6.9.11
+     *
+     * @param string $file                     Absolute path to the source image.
+     * @param string $file_extension           Source extension: png, jpg, or jpeg.
+     * @param string $webp_path                Destination path for the WebP file.
+     * @param int    $webp_conversion_quality  WebP quality from 0 to 100.
+     * @return bool True when the WebP file was written.
      */
     public function gd_generate_webp(
         $file,
@@ -324,21 +397,20 @@ class Image_Upload_Control {
         $webp_path,
         $webp_conversion_quality
     ) {
-        $image_object = null;
-        if ( 'png' == $file_extension && function_exists( 'imagecreatefrompng' ) ) {
-            $image_object = \imagecreatefrompng( $file );
-            if ( false !== $image_object && $this->png_is_transparent && function_exists( 'imagepalettetotruecolor' ) ) {
-                \imagepalettetotruecolor( $image_object );
-            }
+        $image_object = $this->load_gd_image_from_file( $file );
+        if ( !is_gd_image( $image_object ) ) {
+            return false;
         }
-        if ( ('jpg' == $file_extension || 'jpeg' == $file_extension) && function_exists( 'imagecreatefromjpeg' ) ) {
-            $image_object = \imagecreatefromjpeg( $file );
+        if ( 'png' == $file_extension && $this->png_is_transparent && function_exists( 'imagepalettetotruecolor' ) ) {
+            \imagepalettetotruecolor( $image_object );
         }
-        // When creation of image object from PNG/JPG is successful. let's generate WebP image
+        $created = false;
         // Second parameter is file path, last parameter is WebP quality (0-100).
-        if ( !is_null( $image_object ) && is_object( $image_object ) && function_exists( 'imagewebp' ) ) {
-            \imagewebp( $image_object, $webp_path, $webp_conversion_quality );
+        if ( function_exists( 'imagewebp' ) ) {
+            $created = \imagewebp( $image_object, $webp_path, $webp_conversion_quality );
         }
+        $this->destroy_gd_image( $image_object );
+        return (bool) $created;
     }
 
     /**
