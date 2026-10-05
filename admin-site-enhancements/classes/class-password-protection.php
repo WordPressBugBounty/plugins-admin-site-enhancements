@@ -154,23 +154,109 @@ class Password_Protection {
                 return true;
             }
         }
-        // When site visitor has entered correct password, get the auth cookie.
-        // The value is a wp_hash_password() hash, not user text: do not run it
-        // through sanitize_text_field(), which strips %[a-f0-9]{2} octets.
+        // When site visitor has entered the correct password, get the auth cookie.
+        // The value is a 64-character HMAC, not user text. Do not run it through
+        // sanitize_text_field(), which strips %[a-f0-9]{2} octets.
         $auth_cookie = ( isset( $_COOKIE['asenha_password_protection'] ) ? (string) wp_unslash( $_COOKIE['asenha_password_protection'] ) : '' );
-        // Compared $auth_cookie against hashed string set in maybe_process_login()
-        if ( '' !== $stored_password && '' !== $auth_cookie && true === wp_check_password( $_SERVER['HTTP_HOST'] . '__' . $stored_password, $auth_cookie ) ) {
+        // Compared $auth_cookie against the HMAC set in set_auth_cookie().
+        // A bcrypt, phpass, or Argon2 string fails the hex-format check and
+        // never reaches a password hasher.
+        if ( $this->is_auth_cookie_valid( $auth_cookie, $stored_password ) ) {
+            return true;
+        }
+        if ( $this->is_authentication_ajax_request() ) {
             return true;
         }
         return false;
     }
 
     /**
-     * Set the password protection auth cookie. The value is a portable hash of
-     * the host and site password. Secure follows the current connection
-     * (is_ssl()) so HTTP responses never send a Secure cookie the browser
-     * would discard. TLS-terminating proxies should map X-Forwarded-Proto
-     * so is_ssl() is already true on public HTTPS.
+     * Whether this admin-ajax request is a login authentication call that must
+     * succeed while password protection is on.
+     *
+     * Wordfence Login Security posts credentials to admin-ajax.php before it
+     * shows the 2FA, CAPTCHA, or passkey step. Those actions only authenticate.
+     * A non-AJAX request that carries the same action name stays gated.
+     *
+     * @since 9.1.5
+     * @return bool
+     */
+    private function is_authentication_ajax_request() {
+        if ( !wp_doing_ajax() ) {
+            return false;
+        }
+        // Action name only. Wordfence registers these endpoints with nonce verification disabled.
+        $action = ( isset( $_REQUEST['action'] ) ? sanitize_key( wp_unslash( $_REQUEST['action'] ) ) : '' );
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        if ( '' === $action ) {
+            return false;
+        }
+        $allowed_actions = array('wordfence_ls_authenticate', 'wordfence_ls_begin_passkey_login', 'wordfence_ls_finish_passkey_login');
+        /**
+         * Filters admin-ajax actions allowed through Password Protection.
+         *
+         * Only authentication actions belong here. A return value that is not
+         * an array of strings is ignored, and the default list stays in place.
+         *
+         * @since 9.1.5
+         * @param string[] $allowed_actions Action names.
+         */
+        $filtered_actions = apply_filters( 'asenha_password_protection_allowed_ajax_actions', $allowed_actions );
+        if ( is_array( $filtered_actions ) ) {
+            $strings_only = true;
+            foreach ( $filtered_actions as $filtered_action ) {
+                if ( !is_string( $filtered_action ) ) {
+                    $strings_only = false;
+                    break;
+                }
+            }
+            if ( $strings_only ) {
+                $allowed_actions = $filtered_actions;
+            }
+        }
+        return in_array( $action, $allowed_actions, true );
+    }
+
+    /**
+     * Build the session cookie value for a successful unlock.
+     *
+     * HMAC-SHA256 of the host and site password, keyed with the site auth salt.
+     * This is a bearer token, not a password hash: verification is a fixed-time
+     * compare and never runs bcrypt, phpass, or Argon2 on a client-supplied value.
+     *
+     * @since 9.1.5
+     * @param string $stored_password The site-wide protection password.
+     * @return string 64-character lowercase hex digest.
+     */
+    private function build_auth_cookie_value( $stored_password ) {
+        $host = ( isset( $_SERVER['HTTP_HOST'] ) ? (string) $_SERVER['HTTP_HOST'] : '' );
+        return hash_hmac( 'sha256', $host . '__' . $stored_password, wp_salt( 'auth' ) );
+    }
+
+    /**
+     * Whether the unlock cookie matches the current host and site password.
+     *
+     * Rejects any value that is not a 64-character lowercase hex digest before
+     * comparing, so a bcrypt, phpass, or Argon2 string never reaches a password hasher.
+     *
+     * @since 9.1.5
+     * @param string $auth_cookie     Cookie value.
+     * @param string $stored_password The site-wide protection password.
+     * @return bool
+     */
+    private function is_auth_cookie_valid( $auth_cookie, $stored_password ) {
+        if ( '' === $stored_password || 1 !== preg_match( '/\\A[a-f0-9]{64}\\z/', $auth_cookie ) ) {
+            return false;
+        }
+        return hash_equals( $this->build_auth_cookie_value( $stored_password ), $auth_cookie );
+    }
+
+    /**
+     * Set the password protection auth cookie. The value is an HMAC of the
+     * host and site password, keyed with the site auth salt. Secure follows
+     * the current connection (is_ssl()) so HTTP responses never send a Secure
+     * cookie the browser would discard. TLS-terminating proxies should map
+     * X-Forwarded-Proto so is_ssl() is already true on public HTTPS.
      *
      * @since 9.1.2
      * @param string $stored_password The site-wide protection password.
@@ -179,11 +265,11 @@ class Password_Protection {
         // $expiration = time() + DAY_IN_SECONDS; // in 24 hours
         $expiration = 0;
         // by the end of browsing session
-        $hashed_cookie_value = wp_hash_password( $_SERVER['HTTP_HOST'] . '__' . $stored_password );
+        $cookie_value = $this->build_auth_cookie_value( $stored_password );
         $secure = is_ssl();
         setcookie(
             'asenha_password_protection',
-            $hashed_cookie_value,
+            $cookie_value,
             $expiration,
             COOKIEPATH,
             COOKIE_DOMAIN,
@@ -192,7 +278,7 @@ class Password_Protection {
         );
         // setcookie() does not populate $_COOKIE; mirror it so same-request
         // REST preloads and admin-ajax see the unlock without ?bypass=.
-        $_COOKIE['asenha_password_protection'] = $hashed_cookie_value;
+        $_COOKIE['asenha_password_protection'] = $cookie_value;
     }
 
     /**

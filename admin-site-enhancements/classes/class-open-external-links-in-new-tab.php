@@ -9,7 +9,8 @@ namespace ASENHA\Classes;
  */
 class Open_External_Links_In_New_Tab {
     /**
-     * Parse links in content to add target="_blank" rel="noopener noreferrer nofollow" attributes
+     * Parse links in content to add target="_blank" and rel="noopener noreferrer".
+     * rel="nofollow" is added when the module checkbox is enabled.
      *
      * @since 4.9.0
      * @param string $content HTML content after the_content.
@@ -21,6 +22,12 @@ class Open_External_Links_In_New_Tab {
         }
         $exclude_new_tab_rules = array();
         $exclude_nofollow_rules = array();
+        $options = get_option( ASENHA_SLUG_U, array() );
+        if ( !is_array( $options ) ) {
+            $options = array();
+        }
+        // A missing key means the checkbox has never been saved. Keep adding nofollow.
+        $add_nofollow = !array_key_exists( 'external_links_new_tab_add_nofollow', $options ) || !empty( $options['external_links_new_tab_add_nofollow'] );
         // regex pattern for "a href"
         $regexp = "<a\\s[^>]*href=(\"??)([^\" >]*?)\\1[^>]*>";
         if ( !preg_match_all(
@@ -48,7 +55,7 @@ class Open_External_Links_In_New_Tab {
             }
             // External link. Let's do something.
             $omit_new_tab = !empty( $exclude_new_tab_rules ) && self::url_host_matches_any_rule( $url, $exclude_new_tab_rules );
-            $omit_nofollow = !empty( $exclude_nofollow_rules ) && self::url_host_matches_any_rule( $url, $exclude_nofollow_rules );
+            $omit_nofollow = !$add_nofollow || !empty( $exclude_nofollow_rules ) && self::url_host_matches_any_rule( $url, $exclude_nofollow_rules );
             if ( false === $omit_new_tab ) {
                 // Regex pattern for target="_blank|parent|self|top"
                 $pattern = '/target\\s*=\\s*"\\s*_(blank|parent|self|top)\\s*"/';

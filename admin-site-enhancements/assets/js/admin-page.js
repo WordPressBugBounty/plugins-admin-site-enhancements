@@ -360,6 +360,8 @@
       
       $('.external-links-new-tab').appendTo('.fields-content-management > table > tbody');
       
+      $('.external-links-new-tab-add-nofollow').appendTo('.fields-content-management .external-links-new-tab .asenha-subfields');
+      
       $('.custom-nav-menu-items-new-tab').appendTo('.fields-content-management > table > tbody');
       $('.enable-missed-schedule-posts-auto-publish').appendTo('.fields-content-management > table > tbody');
 
@@ -541,6 +543,7 @@
 
       // Place fields into "Utilities" tab
       
+      $('.plugins-themes-rollback').appendTo('.fields-utilities > table > tbody');
       $('.smtp-email-delivery').appendTo('.fields-utilities > table > tbody');
       $('.smtp-default-from-description').appendTo('.fields-utilities .smtp-email-delivery .asenha-subfields');
       $('.smtp-default-from-name').appendTo('.fields-utilities .smtp-email-delivery .asenha-subfields');
@@ -861,6 +864,7 @@
       subfieldsToggler( 'enable_avif_upload', 'enable-avif-upload' );
       
       subfieldsToggler( 'enable_external_permalinks', 'enable-external-permalinks' );
+      subfieldsToggler( 'external_links_new_tab', 'external-links-new-tab' );
       
       subfieldsToggler( 'enhance_list_tables', 'enhance-list-tables' );
       subfieldsToggler( 'custom_admin_footer_text', 'custom-admin-footer-text' );
@@ -1283,6 +1287,8 @@
          $('.recaptcha-site-key-v3-invisible').show();
          $('.recaptcha-secret-key-v3-invisible').show();
       }
+
+      
 
       // Email Address Obfuscator
       if ( $('input[name="admin_site_enhancements[obfuscate_email_address_in_content]"]').is(':checked') ) {

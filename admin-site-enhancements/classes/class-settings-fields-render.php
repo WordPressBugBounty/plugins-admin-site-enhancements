@@ -106,6 +106,9 @@ class Settings_Fields_Render {
         if ( 'image_upload_control_client_side_processing' === $field_id ) {
             // Default on for WP 7.1+ when the option has never been saved.
             $default_value = true;
+        } elseif ( 'external_links_new_tab_add_nofollow' === $field_id ) {
+            // Default on so existing sites keep adding nofollow until the option is saved.
+            $default_value = true;
         } elseif ( in_array( $parent_field_id, array('enable_duplication_for', 'enable_rest_api_for') ) ) {
             // Default is true/enabled. Usually for options introduced at a later date where the previous default is true/enabled.
             $default_value = true;

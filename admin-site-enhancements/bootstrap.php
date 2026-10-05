@@ -1162,6 +1162,10 @@ class Admin_Site_Enhancements {
             add_action( 'admin_enqueue_scripts', [$heartbeat_control, 'maybe_disable_heartbeat'], 99 );
             add_action( 'wp_enqueue_scripts', [$heartbeat_control, 'maybe_disable_heartbeat'], 99 );
         }
+        // Plugins and Themes Rollback
+        if ( array_key_exists( 'plugins_themes_rollback', $options ) && $options['plugins_themes_rollback'] ) {
+            require_once ASENHA_PATH . 'includes/rollback/rollback.php';
+        }
         // SMTP Email Delivery
         $email_delivery = new ASENHA\Classes\Email_Delivery();
         ASENHA\Classes\Email_Delivery::set_runtime_instance( $email_delivery );

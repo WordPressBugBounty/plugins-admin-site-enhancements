@@ -1,10 +1,35 @@
 ## Changelog
 
-**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **91 _major_ releases** (e.g. 1.1.0 ) and **210 _minor_ releases** (e.g. 4.9.1), for a **total of 301 releases**.
+**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **92 _major_ releases** (e.g. 1.1.0 ) and **210 _minor_ releases** (e.g. 4.9.1), for a **total of 302 releases**.
 
 Each **_major release_** usually corresponds with the addition of one new module/feature. Each module/feature usually is the equivalent of one (or more) single-purpose plugin. Each **_minor release_** usually contain one or more bugfix or improvements to existing modules/features.
 
-[**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). Lifetime Deal (LTD) available.
+[**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). **Currently on YEAR END SALE, 20% discount on new license and license upgrade**. Lifetime Deal (LTD) available.
+
+### 9.2.0 (2026.09.28) - ASE Free and Pro
+
+* **[ADDED in Free and Pro] Utilities >> Plugins and Themes Rollback**: New module to easily rollback plugins and themes to previous versions. ASE Free enables rollback of free plugins and themes hosted in wordpress.org. ASE Pro enabls rollback of paid / premium plugins not hosted in wordpress.org. Props to Yoshihiro T. and Justin T. for suggesting this feature.
+
+* **[IMPROVED in Free and Pro] Content Management >> Open All External Links in New Tab**: implemented an option to not add rel="nofollow" attribute, and use this as a gate for the domain exclusion section for nofollow. Props to Sunny T. for prompting this improvement.
+
+* **[FIXED in Free and Pro] Utilities >> Password Protection**: 
+  * Wordfence Login Security (2FA, CAPTCHA, and passkeys) can complete login while password protection is enabled. Other admin-ajax.php requests and the REST API still return 401 for guests. Props to Craig for reporting the issue in detail.
+  * Unexpected asenha_password_protection cookie values are rejected before password verification, which stops a visitor-supplied hash from forcing a very long bcrypt run on each request. Props to [@okparfait](https://wordpress.org/support/users/okparfait/) for [reporting](https://wordpress.org/support/topic/severe-performance-issue-in-password-protection-module/) the issue in detail.  
+
+* **[CHANGED in Pro] Admin Interface >> Admin Logo**: admin menu logo now opens in the same browser tab, similar to admin bar logo. Props to Henry R. for prompting this change.
+
+* **[IMPROVED in Pro] Content Management >> Custom Content Types >> Custom Field Groups**: added height settings for WYSIWYG field. Props to Stijn V. for prompting this improvement.
+
+* **[IMPROVED and FIXED in Pro] Utilities >> Site Backup and Migration**: 
+  * Sync posts: Added an option to keep posts that exist only in the destination site. Added an option to assign post author on the destination site. Rearrange and reword the sync UI for better clarity.
+  * Fixed an issue where high-compatibility backup policy run fails due to missing chunk during backup archive creation. Props to Tiago P. for reporting the issue in detail.
+
+* **[FIXED in Pro] Utilities >> Disable REST API, Password Protection, Maintenance Mode**: Site Backup and Migration module's sync operation is no longer blocked while either module is enabled.
+
+* **[TRANSLATION in Free and Pro]** ASE is now being translated into [38 languages](https://translate.wpase.com/):
+  * **Added new/improved translation** for:
+    * ASE Free: Updted Slovak, Serbian, Portuguese (Brazil), Polish, Norwegian, Italian.
+    * ASE Pro: Updated Norwegian, Polish, Portuguese (Brazil).
 
 ### 9.1.4 (2026.09.28) - ASE Free and Pro
 

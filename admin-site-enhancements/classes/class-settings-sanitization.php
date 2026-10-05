@@ -108,6 +108,8 @@ class Settings_Sanitization {
             $options['external_links_new_tab'] = false;
         }
         $options['external_links_new_tab'] = ( 'on' == $options['external_links_new_tab'] ? true : false );
+        // Absent on save means the box was unchecked. A never-saved key stays checked in the UI and content filter.
+        $options['external_links_new_tab_add_nofollow'] = isset( $options['external_links_new_tab_add_nofollow'] ) && 'on' == $options['external_links_new_tab_add_nofollow'];
         // Allow Custom Nav Menu Items to Open in New Tab
         if ( !isset( $options['custom_nav_menu_items_new_tab'] ) ) {
             $options['custom_nav_menu_items_new_tab'] = false;
@@ -803,6 +805,11 @@ class Settings_Sanitization {
             $options['heartbeat_interval_for_frontend'] = 60;
         }
         $options['heartbeat_interval_for_frontend'] = ( !empty( $options['heartbeat_interval_for_frontend'] ) ? sanitize_text_field( $options['heartbeat_interval_for_frontend'] ) : 60 );
+        // Plugins and Themes Rollback
+        if ( !isset( $options['plugins_themes_rollback'] ) ) {
+            $options['plugins_themes_rollback'] = false;
+        }
+        $options['plugins_themes_rollback'] = ( 'on' == $options['plugins_themes_rollback'] ? true : false );
         // SMTP Email Delivery
         if ( !isset( $options['smtp_email_delivery'] ) ) {
             $options['smtp_email_delivery'] = false;

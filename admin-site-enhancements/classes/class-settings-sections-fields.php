@@ -459,10 +459,30 @@ class Settings_Sections_Fields {
                 'field_slug'             => $field_slug,
                 'field_title'            => $field_title,
                 'field_name'             => ASENHA_SLUG_U . '[' . $field_id . ']',
-                'field_description'      => __( 'Force all links to external sites in post content, where <a href="https://developer.wordpress.org/reference/hooks/the_content/" target="_blank">the_content</a> hook is used, to open in new browser tab via target="_blank" attribute. The rel="noopener noreferrer nofollow" attribute will also be added for enhanced security and SEO benefits.', 'admin-site-enhancements' ),
+                'field_description'      => __( 'Force all links to external sites in post content, where <a href="https://developer.wordpress.org/reference/hooks/the_content/" target="_blank">the_content</a> hook is used, to open in new browser tab via target="_blank" attribute. The rel="noopener noreferrer" attribute will also be added for enhanced security.', 'admin-site-enhancements' ),
                 'field_options_wrapper'  => true,
                 'field_options_moreless' => true,
                 'class'                  => 'asenha-toggle content-management ' . $field_slug,
+            )
+        );
+        $field_id = 'external_links_new_tab_add_nofollow';
+        $field_slug = 'external-links-new-tab-add-nofollow';
+        add_settings_field(
+            $field_id,
+            '',
+            [$render_field, 'render_checkbox_subfield'],
+            ASENHA_SLUG,
+            'main-section',
+            array(
+                'option_name' => ASENHA_SLUG_U,
+                'field_id'    => $field_id,
+                'field_name'  => ASENHA_SLUG_U . '[' . $field_id . ']',
+                'field_label' => sprintf( 
+                    /* translators: %s: rel attribute markup example */
+                    __( 'Add %s attribute to all external links', 'admin-site-enhancements' ),
+                    '<code>rel="nofollow"</code>'
+                 ),
+                'class'       => 'asenha-checkbox asenha-hide-th content-management ' . $field_slug,
             )
         );
         // Allow Custom Nav Menu Items to Open in New Tab
@@ -3277,6 +3297,34 @@ class Settings_Sections_Fields {
                 'field_description'    => '',
                 'class'                => 'asenha-number asenha-hide-th extra-narrow shift-up optimizations ' . $field_slug,
                 'display_none_on_load' => true,
+            )
+        );
+        // Plugins and Themes Rollback
+        $field_id = 'plugins_themes_rollback';
+        $field_slug = 'plugins-themes-rollback';
+        $field_title = __( 'Plugins and Themes Rollback', 'admin-site-enhancements' );
+        $rollback_page_link = sprintf( 
+            /* translators: %s is the URL to the Rollback page */
+            __( 'Once enabled, you can find the <a href="%s">Rollback</a> page under the Tools menu.', 'admin-site-enhancements' ),
+            admin_url( 'tools.php?page=asenha-rollback' )
+         );
+        $module_description = __( 'Roll back plugins and themes hosted on WordPress.org to an earlier or newer version.', 'admin-site-enhancements' ) . ' ' . $rollback_page_link;
+        add_settings_field(
+            $field_id,
+            $field_title,
+            [$render_field, 'render_checkbox_toggle'],
+            ASENHA_SLUG,
+            'main-section',
+            array(
+                'option_name'            => ASENHA_SLUG_U,
+                'field_id'               => $field_id,
+                'field_slug'             => $field_slug,
+                'field_title'            => $field_title,
+                'field_name'             => ASENHA_SLUG_U . '[' . $field_id . ']',
+                'field_description'      => $module_description,
+                'field_options_wrapper'  => true,
+                'field_options_moreless' => false,
+                'class'                  => 'asenha-toggle utilities ' . $field_slug,
             )
         );
         // SMTP Email Delivery

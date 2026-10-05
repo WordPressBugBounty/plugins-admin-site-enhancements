@@ -5,7 +5,7 @@ Donate link: https://bowo.io/asenha-sp-rdm
 Tags: enhancements, tweaks, optimizations, tools  
 Requires at least: 4.6  
 Tested up to: 7.1.2  
-Stable tag: 9.1.4  
+Stable tag: 9.2.0  
 Requires PHP: 5.6  
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -42,8 +42,8 @@ _"ASE is an amazing plugin! **Time and money saver**. Thank you!"_ ~[Iulian Baci
 
 ### FEATURES & MODULES
 
-**78 modules** in total:  
-**60 free modules** (32 has Pro features) | **18 Pro modules**
+**79 modules** in total:  
+**61 free modules** (33 has Pro features) | **18 Pro modules**
 
 [**See all features >>**](https://www.wpase.com/features/)
 
@@ -140,6 +140,7 @@ _"ASE is an amazing plugin! **Time and money saver**. Thank you!"_ ~[Iulian Baci
 ### Utilities
 
 * **[[ASE Pro](https://www.wpase.com/rdme-to-web)] Site Backup and Migration**. Backup files and database, restore from backups, migrate to another server and surgical sync of components between sites.
+* **Plugins and Themes Rollback**. Roll back plugins and themes to earlier or newer versions from WordPress.org. [ASE Pro](https://www.wpase.com/rdme-to-web) adds the option to roll back paid / premium plugins and themes.
 * **Email Delivery**. Set custom sender name and email. Optionally use external SMTP service to ensure notification and transactional emails from your site are being delivered to inboxes. [ASE Pro](https://www.wpase.com/rdme-to-web) adds the option to specify a custom reply-to name and email, Bcc address(es), disable authentication and the option to log email delivery.
 * **Contact Form**. A simple, customizable contact form (shortcode and block) with AJAX submission, built-in spam protection layers, submission entries management and notification email.
 * **[[ASE Pro](https://www.wpase.com/rdme-to-web)] Form Builder**. Enable the drag-and-drop creation of various types of forms (contact, feedback, booking, application, proposal, admission, support, survey, etc.) on the frontend to collect information from site visitors or users or members. 33 field types are available, including Net Promoter Score (NPS), Likert, Matrix of Uniform and Variable Dropdowns and CAPTCHA fields. Support custom form styles, multi-columns layout, conditional logic, multi-step with saving progress, email notification, auto responder, entries management and webhooks for sending submission data to Zapier, n8n, etc.
@@ -208,32 +209,36 @@ ASE does not officially support multisite. Please use at your own risk. That sai
 
 ## Changelog
 
-**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **91 _major_ releases** (e.g. 1.1.0 ) and **210 _minor_ releases** (e.g. 4.9.1), for a **total of 301 releases**.
+**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **92 _major_ releases** (e.g. 1.1.0 ) and **210 _minor_ releases** (e.g. 4.9.1), for a **total of 302 releases**.
 
 Each **_major release_** usually corresponds with the addition of one new module/feature. Each module/feature usually is the equivalent of one (or more) single-purpose plugin. Each **_minor release_** usually contain one or more bugfix or improvements to existing modules/features.
 
-[**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). Lifetime Deal (LTD) available.
+[**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). **Currently on YEAR END SALE, 20% discount on new license and license upgrade**. Lifetime Deal (LTD) available.
 
-### 9.1.4 (2026.09.28) - ASE Free and Pro
+### 9.2.0 (2026.09.28) - ASE Free and Pro
 
-* **[FIXED in Free and Pro] Utilities >> Maintenance Mode**: Wordfence Login Security (2FA, CAPTCHA, and passkeys) can complete login while maintenance mode is enabled. Other admin-ajax.php requests and the REST API still return 503 for guests. Props to [Julian M.](https://wordpress.org/support/users/julimuslia/) and [ErinGibsonCo](https://wordpress.org/support/users/erinfriction/) for [reporting](https://wordpress.org/support/topic/login-issue-when-maintenance-mode-is-activated/) the issue.
+* **[ADDED in Free and Pro] Utilities >> Plugins and Themes Rollback**: New module to easily rollback plugins and themes to previous versions. ASE Free enables rollback of free plugins and themes hosted in wordpress.org. ASE Pro enabls rollback of paid / premium plugins not hosted in wordpress.org. Props to Yoshihiro T. and Justin T. for suggesting this feature.
 
-* **[FIXED in Free and Pro] Utilities >> Password Protection & Maintenance Mode**: Fixed Novamira connection issue via oAuth when Password Protection or Maintenance Mode is enabled. Props to Antoine L. for reporting the issue.
+* **[IMPROVED in Free and Pro] Content Management >> Open All External Links in New Tab**: implemented an option to not add rel="nofollow" attribute, and use this as a gate for the domain exclusion section for nofollow. Props to Sunny T. for prompting this improvement.
 
-* **[FIXED in Free and Pro] Optimizations >> Image Upload Control**: Fixed an issue preventing Elementor demo content import from completing successfully. Props to [@mztechsnc]() for [reporting](https://wordpress.org/support/topic/ase-image-optimization-conflicts-with-elementor-demo-content-import/) this in detail with the error log entry.
+* **[FIXED in Free and Pro] Utilities >> Password Protection**: 
+  * Wordfence Login Security (2FA, CAPTCHA, and passkeys) can complete login while password protection is enabled. Other admin-ajax.php requests and the REST API still return 401 for guests. Props to Craig for reporting the issue in detail.
+  * Unexpected asenha_password_protection cookie values are rejected before password verification, which stops a visitor-supplied hash from forcing a very long bcrypt run on each request. Props to [@okparfait](https://wordpress.org/support/users/okparfait/) for [reporting](https://wordpress.org/support/topic/severe-performance-issue-in-password-protection-module/) the issue in detail.  
 
-* **[IMPROVED and FIXED in Pro] Custom Code >> Code Snippets Manager**: Improved the robustness of active PHP snippets executions and more reliable, in-context retrieval of post ID, so the snippet works as intended. Props to Stéphane N. for prompting this improvement.
+* **[CHANGED in Pro] Admin Interface >> Admin Logo**: admin menu logo now opens in the same browser tab, similar to admin bar logo. Props to Henry R. for prompting this change.
 
-* **[IMPROVED in Pro] Site Backup and Migration**:
-  * During migration operation, plugins in destination site that is not present in the origin site's backup archive can sometimes be cleaned up partially, leaving an empty plugin folder and subfolders that contains only hidden files (filename starts with dot). This causes plugin reinstallation to fail. This fix makes sure plugin clean up completely removes such hidden files. Props to David M.C. for reporting the issue in detail.
-  * WordPress core themes will now be properly carried over and restored during migration via full backup archive import. Props to David M.C. for reporting the issue in great detail.
-  * Improved handling of attachments remap to their parent post during sync. Props David M.C. for reporting the issue and facilitating the troubleshooting process.
+* **[IMPROVED in Pro] Content Management >> Custom Content Types >> Custom Field Groups**: added height settings for WYSIWYG field. Props to Stijn V. for prompting this improvement.
 
-* **[FIXED in Pro] Content Management >> Custom Content Types >> Custom Field Groups**: Fixed changes not properly being saved on CFG with a lot of fields, that can occur in a site where PHP `max_input_vars` is on the lower end. Props to Zubair for reporting the issue and facilitating the troubleshooting process.
+* **[IMPROVED and FIXED in Pro] Utilities >> Site Backup and Migration**: 
+  * Sync posts: Added an option to keep posts that exist only in the destination site. Added an option to assign post author on the destination site. Rearrange and reword the sync UI for better clarity.
+  * Fixed an issue where high-compatibility backup policy run fails due to missing chunk during backup archive creation. Props to Tiago P. for reporting the issue in detail.
+
+* **[FIXED in Pro] Utilities >> Disable REST API, Password Protection, Maintenance Mode**: Site Backup and Migration module's sync operation is no longer blocked while either module is enabled.
 
 * **[TRANSLATION in Free and Pro]** ASE is now being translated into [38 languages](https://translate.wpase.com/):
   * **Added new/improved translation** for:
-    * ASE Free: Updated Spanish (Spain), Spanish (Chile), Portuguese (Brazil), Polish, Dutch (Netherlands), Chinese (Taiwan).
+    * ASE Free: Updted Slovak, Serbian, Portuguese (Brazil), Polish, Norwegian, Italian.
+    * ASE Pro: Updated Norwegian, Polish, Portuguese (Brazil).
   * **More strings have been internationalized**. @Translators, please visit the respective project pages for the Free and Pro versions to translate the new strings, if you havent' done so already.
   * **Interested to help translate or improve the translation?** Please go to [https://translate.wpase.com](https://translate.wpase.com) for more info.
   * **[Chinese (China)](https://translate.wordpress.org/locale/zh-cn/default/wp-plugins/admin-site-enhancements/)**: ASE Free and Pro (completed). Props to [@bricksvip](https://profiles.wordpress.org/bricksvip/) et al. Current status: [39 strings untranslated](https://translate.wordpress.org/projects/wp-plugins/admin-site-enhancements/stable/zh-cn/default/?filters%5Bstatus%5D=untranslated).
@@ -261,7 +266,7 @@ Each **_major release_** usually corresponds with the addition of one new module
   * **[Turkish](https://translate.wordpress.org/locale/tr/default/wp-plugins/admin-site-enhancements/)**: ASE Free (completed). Props to [@saeead](https://wordpress.org/support/users/saeead/), [@serdaroztrk](https://profiles.wordpress.org/serdaroztrk/) et al. Current status: [0 strings untranslated](https://translate.wordpress.org/projects/wp-plugins/admin-site-enhancements/stable/tr/default/?filters%5Bstatus%5D=untranslated).
   * **[Chinese (Taiwan)](https://translate.wordpress.org/locale/zh-tw/default/wp-plugins/admin-site-enhancements/)**: ASE Free (completed). Props to [@gordon168](https://profiles.wordpress.org/gordon168/) and [Hedula](https://profiles.wordpress.org/hedula/). Current status: [1 strings untranslated](https://translate.wordpress.org/locale/zh-tw/default/wp-plugins/admin-site-enhancements/)
   * **[Spanish (Chile)](https://translate.wordpress.org/locale/es-cl/default/wp-plugins/admin-site-enhancements/)**: ASE Free (completed). Props to [@srgio](https://profiles.wordpress.org/srgio/). Current status: [35 strings untranslated](https://translate.wordpress.org/projects/wp-plugins/admin-site-enhancements/stable/es-cl/default/?filters%5Bstatus%5D=untranslated).
-  * **[Serbian](https://translate.wordpress.org/locale/sr/default/wp-plugins/admin-site-enhancements/)**: ASE Free (partial). Props to [Igor E.](https://wordpress.org/support/users/igorel/) and [@plug-n-play](https://profiles.wordpress.org/plug-n-play/). Current status: [17 strings untranslated](https://translate.wordpress.org/projects/wp-plugins/admin-site-enhancements/stable/sr/default/?filters%5Bstatus%5D=untranslated).
+  * **[Serbian](https://translate.wordpress.org/locale/sr/default/wp-plugins/admin-site-enhancements/)**: ASE Free (partial). Props to [Milan I.](https://profiles.wordpress.org/lanche86/), [Igor E.](https://wordpress.org/support/users/igorel/) and [@plug-n-play](https://profiles.wordpress.org/plug-n-play/). Current status: [17 strings untranslated](https://translate.wordpress.org/projects/wp-plugins/admin-site-enhancements/stable/sr/default/?filters%5Bstatus%5D=untranslated).
   * **[Albanian](https://translate.wordpress.org/locale/sq/default/wp-plugins/admin-site-enhancements/)**: Props to [@algertpateqi](https://profiles.wordpress.org/algertpateqi/). Current status: [34 strings untranslated](https://translate.wordpress.org/projects/wp-plugins/admin-site-enhancements/stable/sq/default/?filters%5Bstatus%5D=untranslated).
   * **[Persian](https://translate.wordpress.org/locale/fa/default/wp-plugins/admin-site-enhancements/)**: ASE Free (completed). Props to [@saeead](https://profiles.wordpress.org/saeead/) et al. Current status: [0 strings untranslated](https://translate.wordpress.org/projects/wp-plugins/admin-site-enhancements/stable/fa/default/?filters%5Bstatus%5D=untranslated).
   * **[Russian](https://translate.wordpress.org/locale/ru/default/wp-plugins/admin-site-enhancements/)**: ASE Free (completed). Props to [@sergey369](https://profiles.wordpress.org/sergey369/), [@pfgr](https://profiles.wordpress.org/pfgr/) et al. Current status: [26 strings untranslated](https://translate.wordpress.org/projects/wp-plugins/admin-site-enhancements/stable/ru/default/?filters%5Bstatus%5D=untranslated).
