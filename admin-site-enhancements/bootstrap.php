@@ -38,6 +38,8 @@ class Admin_Site_Enhancements {
         // Instantiate object for registration of settings section and fields
         $settings = new ASENHA\Classes\Settings_Sections_Fields();
         add_action( 'admin_init', [$settings, 'register_sections_fields'] );
+        // Move admin caches out of the autoloaded extra option before settings registration reads it.
+        add_action( 'admin_init', array('ASENHA\\Classes\\Common_Methods', 'migrate_admin_cache'), 1 );
         // Suppress all notices on the plugin's main page. Then add notification for successful settings update.
         add_action( 'admin_notices', 'asenha_suppress_add_notices', 5 );
         add_action( 'all_admin_notices', 'asenha_suppress_generic_notices', 5 );
@@ -133,6 +135,7 @@ class Admin_Site_Enhancements {
                 add_filter( 'admin_enqueue_scripts', [$content_order, 'add_list_tables_scripts'] );
                 add_action( 'wp_ajax_save_custom_order', [$content_order, 'save_custom_content_order'] );
                 add_filter( 'pre_get_posts', [$content_order, 'orderby_menu_order'], PHP_INT_MAX );
+                add_action( 'update_option_' . ASENHA_SLUG_U, [$content_order, 'reset_orderby_menu_order_settings'] );
                 // TODO: https://developer.wordpress.org/reference/hooks/ajax_query_attachments_args/ (for grid view of media library)
                 add_filter(
                     'save_post',
@@ -435,6 +438,7 @@ class Admin_Site_Enhancements {
         if ( array_key_exists( 'show_custom_taxonomy_filters', $options ) && $options['show_custom_taxonomy_filters'] ) {
             $show_custom_taxonomy_filters = new ASENHA\Classes\Show_Custom_Taxonomy_Filters();
             add_action( 'restrict_manage_posts', [$show_custom_taxonomy_filters, 'show_custom_taxonomy_filters'] );
+            add_action( 'pre_get_posts', [$show_custom_taxonomy_filters, 'filter_admin_list_by_taxonomy'] );
         }
         // Enhance List Tables
         if ( array_key_exists( 'enhance_list_tables', $options ) && $options['enhance_list_tables'] ) {
@@ -1208,7 +1212,10 @@ class Admin_Site_Enhancements {
             $view_admin_as_role = new ASENHA\Classes\View_Admin_As_Role();
             add_action( 'admin_bar_menu', [$view_admin_as_role, 'view_admin_as_admin_bar_menu'], 8 );
             // Priority 8 so it is next to username section
+            add_action( 'init', [$view_admin_as_role, 'maybe_restore_administrator_from_recovery_cookie'], 1 );
             add_action( 'init', [$view_admin_as_role, 'role_switcher_to_view_admin_as'] );
+            add_action( 'init', [$view_admin_as_role, 'maybe_extend_view_as_session'], 20 );
+            add_action( 'wp_logout', [$view_admin_as_role, 'maybe_restore_administrator_on_logout'] );
             add_action( 'profile_update', [$view_admin_as_role, 'maybe_prevent_switchback_to_administrator'], 20 );
             add_action(
                 'set_user_role',
@@ -1218,6 +1225,14 @@ class Admin_Site_Enhancements {
             );
             // add_action( 'wp_die_handler', [ $view_admin_as_role, 'custom_error_page_on_switch_failure' ] );
             add_action( 'admin_footer', [$view_admin_as_role, 'add_floating_reset_button'] );
+            add_action( 'wp_footer', [$view_admin_as_role, 'add_floating_reset_button'] );
+            add_action( 'wp_enqueue_scripts', [$view_admin_as_role, 'enqueue_frontend_switch_back_styles'] );
+            add_action( 'admin_enqueue_scripts', [$view_admin_as_role, 'enqueue_recovery_url_copy_script'] );
+            add_action( 'wp_enqueue_scripts', [$view_admin_as_role, 'enqueue_recovery_url_copy_script'] );
+            add_action( 'admin_enqueue_scripts', [$view_admin_as_role, 'enqueue_recovery_copy_notice_script'] );
+            add_action( 'wp_enqueue_scripts', [$view_admin_as_role, 'enqueue_recovery_copy_notice_script'] );
+            add_action( 'admin_page_access_denied', [$view_admin_as_role, 'maybe_offer_switch_back_on_admin_access_denied'] );
+            add_filter( 'login_message', [$view_admin_as_role, 'maybe_show_role_restored_login_message'] );
             add_action( 'admin_notices', [$view_admin_as_role, 'maybe_show_recovery_url_refreshed_notice'] );
             add_action( 'admin_enqueue_scripts', [$view_admin_as_role, 'enqueue_recovery_url_refreshed_notice_script'] );
             add_action( 'wp_ajax_asenha_dismiss_view_admin_as_recovery_notice', [$view_admin_as_role, 'dismiss_recovery_url_refreshed_notice'] );

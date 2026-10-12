@@ -45,11 +45,64 @@ class View_Admin_As_Role {
     const RECOVERY_NOTICE_URL_META_KEY = '_asenha_view_admin_as_recovery_notice_url';
 
     /**
+     * HttpOnly cookie that restores the administrator role after the login session ends.
+     *
+     * The cookie does not authenticate the user.
+     *
+     * @var string
+     */
+    const RECOVERY_COOKIE_NAME = 'asenha_view_admin_as_restore';
+
+    /**
+     * User meta key for the HMAC of the role-restore cookie.
+     *
+     * @var string
+     */
+    const RECOVERY_COOKIE_HASH_META_KEY = '_asenha_view_admin_as_restore_cookie';
+
+    /**
+     * Query argument for the login notice shown after an automatic role restore.
+     *
+     * @var string
+     */
+    const ROLE_RESTORED_QUERY_ARG = 'asenha-role-restored';
+
+    /**
+     * sessionStorage key for the recovery URL copy result after a role switch.
+     *
+     * @var string
+     */
+    const RECOVERY_COPY_STORAGE_KEY = 'asenha_view_admin_as_recovery_copy';
+
+    /**
+     * How long the role-restore cookie remains valid, in days.
+     *
+     * @var int
+     */
+    const RECOVERY_COOKIE_LIFETIME_DAYS = 30;
+
+    /**
+     * Refresh the remembered login when fewer than this many days remain.
+     *
+     * @var int
+     */
+    const SESSION_REFRESH_THRESHOLD_DAYS = 7;
+
+    /**
      * Whether the current request is performing a plugin-initiated role switch.
      *
      * @var bool
      */
     private static $is_internal_role_switch = false;
+
+    /**
+     * Whether this request already reissued the auth cookie.
+     *
+     * Prevents a second refresh on the same request as a role switch.
+     *
+     * @var bool
+     */
+    private static $did_reissue_auth_cookie = false;
 
     /**
      * Add menu bar item to view admin as one of the user roles
@@ -531,6 +584,10 @@ class View_Admin_As_Role {
                 // Mark that the user has switched to a non-administrator role
                 update_user_meta( get_current_user_id(), '_asenha_viewing_admin_as', $new_role );
 
+                $switched_user_id = get_current_user_id();
+                $this->reissue_remembered_auth_cookie( $switched_user_id );
+                $this->issue_role_recovery_cookie( $switched_user_id );
+
                 wp_safe_redirect( get_admin_url() );
                 exit;
 
@@ -645,7 +702,9 @@ class View_Admin_As_Role {
         delete_user_meta( $user_id, self::RESET_TOKEN_META_KEY );
         delete_user_meta( $user_id, self::PLAIN_TOKEN_META_KEY );
         delete_user_meta( $user_id, self::RECOVERY_NOTICE_URL_META_KEY );
+        delete_user_meta( $user_id, self::RECOVERY_COOKIE_HASH_META_KEY );
         delete_transient( self::RECOVERY_URL_TRANSIENT_PREFIX . $user_id );
+        $this->expire_role_recovery_cookie();
     }
 
     /**
@@ -689,24 +748,811 @@ class View_Admin_As_Role {
     }
     
     /**
+     * Reissue a remembered auth cookie so closing the browser does not end a view-as session.
+     *
+     * WordPress's normal remembered lifetime is 14 days. When an existing session
+     * token is passed, core does not update that token's stored expiration, so
+     * this method copies the expiration from the auth cookie and saves it on the token.
+     *
+     * Do not hook role restore to clear_auth_cookie. That action also runs while
+     * a new auth cookie is being issued, and restoring roles there would end view-as mode.
+     *
+     * @since 9.2.0
+     * @param int    $user_id User ID.
+     * @param string $token   Existing session token. Empty creates a new session.
+     * @return void
+     */
+    private function reissue_remembered_auth_cookie( $user_id, $token = '' ) {
+        $user_id = (int) $user_id;
+
+        if ( $user_id <= 0 || headers_sent() ) {
+            return;
+        }
+
+        self::$did_reissue_auth_cookie = true;
+
+        // Core does not update an existing session token when one is passed in.
+        // Capture the expiration actually written into the auth cookie.
+        $cookie_expiration  = 0;
+        $capture_expiration = static function ( $auth_cookie, $expire, $expiration ) use ( &$cookie_expiration ) {
+            unset( $auth_cookie, $expire );
+            $cookie_expiration = (int) $expiration;
+        };
+
+        add_action( 'set_auth_cookie', $capture_expiration, 10, 3 );
+        wp_set_auth_cookie( $user_id, true, '', $token );
+        remove_action( 'set_auth_cookie', $capture_expiration, 10 );
+
+        if ( '' === $token || $cookie_expiration <= 0 ) {
+            return;
+        }
+
+        $manager = \WP_Session_Tokens::get_instance( $user_id );
+        $session = $manager->get( $token );
+
+        if ( ! is_array( $session ) ) {
+            return;
+        }
+
+        $session['expiration'] = $cookie_expiration;
+        $manager->update( $token, $session );
+    }
+
+    /**
+     * Keep an active view-as login remembered while it is still in use.
+     *
+     * Refreshes the current session when fewer than 7 days remain. The new
+     * lifetime is WordPress's normal 14-day remembered cookie, not an unlimited one.
+     *
+     * @since 9.2.0
+     * @return void
+     */
+    public function maybe_extend_view_as_session() {
+        if ( self::$did_reissue_auth_cookie || ! is_user_logged_in() || headers_sent() ) {
+            return;
+        }
+
+        if ( wp_doing_ajax() || wp_doing_cron() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
+            return;
+        }
+
+        if ( isset( $_REQUEST['action'] ) && 'logout' === sanitize_text_field( wp_unslash( $_REQUEST['action'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            return;
+        }
+
+        $user = wp_get_current_user();
+
+        if ( ! $this->is_allowlisted_non_admin_view( $user ) ) {
+            return;
+        }
+
+        $token = wp_get_session_token();
+
+        if ( ! is_string( $token ) || '' === $token ) {
+            return;
+        }
+
+        $manager = \WP_Session_Tokens::get_instance( $user->ID );
+        $session = $manager->get( $token );
+
+        if ( ! is_array( $session ) || empty( $session['expiration'] ) ) {
+            return;
+        }
+
+        $remaining = (int) $session['expiration'] - time();
+
+        if ( $remaining > ( self::SESSION_REFRESH_THRESHOLD_DAYS * DAY_IN_SECONDS ) ) {
+            return;
+        }
+
+        $this->reissue_remembered_auth_cookie( $user->ID, $token );
+    }
+
+    /**
+     * Whether this user is in an active non-administrator view-as session.
+     *
+     * @since 9.2.0
+     * @param \WP_User $user User object.
+     * @return bool
+     */
+    private function is_allowlisted_non_admin_view( $user ) {
+        if ( ! $user instanceof \WP_User || $user->ID <= 0 ) {
+            return false;
+        }
+
+        $viewing_admin_as = get_user_meta( $user->ID, '_asenha_viewing_admin_as', true );
+
+        if ( empty( $viewing_admin_as ) || 'administrator' === $viewing_admin_as ) {
+            return false;
+        }
+
+        $original_role_slugs = get_user_meta( $user->ID, '_asenha_view_admin_as_original_roles', true );
+
+        if ( empty( $original_role_slugs ) || ! is_array( $original_role_slugs ) ) {
+            return false;
+        }
+
+        $options   = get_option( ASENHA_SLUG_U, array() );
+        $usernames = isset( $options['viewing_admin_as_role_are'] ) ? $options['viewing_admin_as_role_are'] : array();
+
+        if ( empty( $usernames ) || ! is_array( $usernames ) ) {
+            return false;
+        }
+
+        return in_array( $user->user_login, $usernames, true );
+    }
+
+    /**
+     * HMAC a role-restore cookie token for storage and comparison.
+     *
+     * @since 9.2.0
+     * @param string $token Plain cookie token.
+     * @return string
+     */
+    private function hash_recovery_cookie_token( $token ) {
+        return hash_hmac( 'sha256', $token, wp_salt( 'auth' ) );
+    }
+
+    /**
+     * Store and send the role-restore cookie for a user who just switched roles.
+     *
+     * @since 9.2.0
+     * @param int $user_id User ID.
+     * @return void
+     */
+    private function issue_role_recovery_cookie( $user_id ) {
+        $user_id = (int) $user_id;
+
+        if ( $user_id <= 0 || headers_sent() ) {
+            return;
+        }
+
+        $token = wp_generate_password( 43, false, false );
+        update_user_meta( $user_id, self::RECOVERY_COOKIE_HASH_META_KEY, $this->hash_recovery_cookie_token( $token ) );
+        $this->send_recovery_cookie( $token, time() + ( self::RECOVERY_COOKIE_LIFETIME_DAYS * DAY_IN_SECONDS ) );
+        $_COOKIE[ self::RECOVERY_COOKIE_NAME ] = $token;
+    }
+
+    /**
+     * Send the role-restore cookie on the logged-in cookie paths.
+     *
+     * @since 9.2.0
+     * @param string $token   Cookie value. Empty when expiring the cookie.
+     * @param int    $expires Unix timestamp, or a past timestamp to expire the cookie.
+     * @return void
+     */
+    private function send_recovery_cookie( $token, $expires ) {
+        $base = array(
+            'expires'  => (int) $expires,
+            'domain'   => COOKIE_DOMAIN,
+            'secure'   => is_ssl(),
+            'httponly' => true,
+            'samesite' => 'Lax',
+        );
+
+        $paths = array( COOKIEPATH );
+
+        if ( SITECOOKIEPATH !== COOKIEPATH ) {
+            $paths[] = SITECOOKIEPATH;
+        }
+
+        foreach ( $paths as $path ) {
+            $cookie_args         = $base;
+            $cookie_args['path'] = $path;
+            setcookie( self::RECOVERY_COOKIE_NAME, $token, $cookie_args );
+        }
+    }
+
+    /**
+     * Expire the role-restore cookie in the current browser.
+     *
+     * @since 9.2.0
+     * @return void
+     */
+    private function expire_role_recovery_cookie() {
+        unset( $_COOKIE[ self::RECOVERY_COOKIE_NAME ] );
+
+        if ( headers_sent() || 'cli' === PHP_SAPI ) {
+            return;
+        }
+
+        $this->send_recovery_cookie( '', time() - YEAR_IN_SECONDS );
+    }
+
+    /**
+     * Find the allowlisted view-as user that matches a role-restore cookie.
+     *
+     * @since 9.2.0
+     * @param string $token Plain cookie token.
+     * @return \WP_User|null
+     */
+    private function get_user_for_recovery_cookie( $token ) {
+        if ( ! is_string( $token ) || 1 !== preg_match( '/\A[A-Za-z0-9]{43}\z/', $token ) ) {
+            return null;
+        }
+
+        $options   = get_option( ASENHA_SLUG_U, array() );
+        $usernames = isset( $options['viewing_admin_as_role_are'] ) ? $options['viewing_admin_as_role_are'] : array();
+
+        if ( empty( $usernames ) || ! is_array( $usernames ) ) {
+            return null;
+        }
+
+        $actual_hash = $this->hash_recovery_cookie_token( $token );
+
+        foreach ( $usernames as $username ) {
+            $user = get_user_by( 'login', $username );
+
+            if ( ! $user instanceof \WP_User ) {
+                continue;
+            }
+
+            $stored_hash = get_user_meta( $user->ID, self::RECOVERY_COOKIE_HASH_META_KEY, true );
+
+            if ( ! is_string( $stored_hash ) || strlen( $stored_hash ) !== strlen( $actual_hash ) ) {
+                continue;
+            }
+
+            if ( hash_equals( $stored_hash, $actual_hash ) && $this->is_allowlisted_non_admin_view( $user ) ) {
+                return $user;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Restore the administrator role from the role-restore cookie when logged out.
+     *
+     * Runs before login credentials are checked. Does not create a login session.
+     *
+     * @since 9.2.0
+     * @return void
+     */
+    public function maybe_restore_administrator_from_recovery_cookie() {
+        if ( is_user_logged_in() || wp_doing_cron() ) {
+            return;
+        }
+
+        if ( ! isset( $_COOKIE[ self::RECOVERY_COOKIE_NAME ] ) ) {
+            return;
+        }
+
+        $raw_token = wp_unslash( $_COOKIE[ self::RECOVERY_COOKIE_NAME ] );
+
+        if ( ! is_string( $raw_token ) || '' === $raw_token ) {
+            return;
+        }
+
+        $user = $this->get_user_for_recovery_cookie( sanitize_text_field( $raw_token ) );
+
+        if ( ! $user instanceof \WP_User ) {
+            return;
+        }
+
+        if ( ! $this->restore_original_roles_for_user( $user ) ) {
+            return;
+        }
+
+        if ( wp_doing_ajax() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) || headers_sent() ) {
+            return;
+        }
+
+        wp_safe_redirect( $this->get_role_restored_login_url() );
+        exit;
+    }
+
+    /**
+     * Restore the administrator role when a view-as user logs out.
+     *
+     * Does not create a new login session.
+     *
+     * @since 9.2.0
+     * @param int $user_id User ID passed by wp_logout.
+     * @return void
+     */
+    public function maybe_restore_administrator_on_logout( $user_id = 0 ) {
+        $user = get_user_by( 'id', (int) $user_id );
+
+        if ( ! $user instanceof \WP_User || ! $this->is_allowlisted_non_admin_view( $user ) ) {
+            return;
+        }
+
+        $this->restore_original_roles_for_user( $user );
+    }
+
+    /**
+     * Login URL for the notice shown after an automatic role restore.
+     *
+     * Includes the custom login slug when Change Login URL is enabled, so the
+     * notice is not stripped by that module's redirect.
+     *
+     * @since 9.2.0
+     * @return string
+     */
+    private function get_role_restored_login_url() {
+        $options = get_option( ASENHA_SLUG_U, array() );
+
+        if ( ! empty( $options['change_login_url'] ) && ! empty( $options['custom_login_slug'] ) ) {
+            $custom_login_slug = sanitize_text_field( $options['custom_login_slug'] );
+
+            // Keep the slug as a query key, matching Change Login URL, and reject values that would add extra parameters.
+            if ( '' !== $custom_login_slug && ! preg_match( '/[&?#\s]/', $custom_login_slug ) ) {
+                return site_url( 'wp-login.php?' . $custom_login_slug . '&redirect=false&' . self::ROLE_RESTORED_QUERY_ARG . '=1' );
+            }
+        }
+
+        return add_query_arg( self::ROLE_RESTORED_QUERY_ARG, '1', wp_login_url() );
+    }
+
+    /**
+     * Tell the logged-out user that the administrator role was restored.
+     *
+     * @since 9.2.0
+     * @param string $message Existing login message HTML.
+     * @return string
+     */
+    public function maybe_show_role_restored_login_message( $message ) {
+        $message = is_string( $message ) ? $message : '';
+
+        if ( ! isset( $_REQUEST[ self::ROLE_RESTORED_QUERY_ARG ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            return $message;
+        }
+
+        $flag = sanitize_text_field( wp_unslash( $_REQUEST[ self::ROLE_RESTORED_QUERY_ARG ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+        if ( '1' !== $flag ) {
+            return $message;
+        }
+
+        $message .= '<p class="message">' . esc_html__( 'Your administrator role was restored. Please log in with your usual password.', 'admin-site-enhancements' ) . '</p>';
+
+        return $message;
+    }
+
+    /**
+     * Whether the current user should see the switch-back control.
+     *
+     * @since 9.2.0
+     * @return bool
+     */
+    private function should_show_switch_back_button() {
+        if ( ! is_user_logged_in() || current_user_can( 'manage_options' ) ) {
+            return false;
+        }
+
+        $current_user = wp_get_current_user();
+
+        return $this->is_allowlisted_non_admin_view( $current_user );
+    }
+
+    /**
+     * Load front-end styles for the switch-back button.
+     *
+     * Admin screens already style #role-view-reset from the admin stylesheet.
+     *
+     * @since 9.2.0
+     * @return void
+     */
+    public function enqueue_frontend_switch_back_styles() {
+        if ( is_admin() || ! $this->should_show_switch_back_button() ) {
+            return;
+        }
+
+        $css = '
+            #role-view-reset {
+                position: fixed;
+                right: 20px;
+                bottom: 20px;
+                z-index: 999999;
+                max-width: calc(100% - 40px);
+                box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+            }
+            #role-view-reset .asenha-role-view-reset-link {
+                display: inline-block;
+                background: #2271b1;
+                border: 1px solid #2271b1;
+                border-radius: 3px;
+                color: #fff;
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+                font-size: 13px;
+                line-height: 2.15384615;
+                padding: 0 10px;
+                text-decoration: none;
+                cursor: pointer;
+            }
+            #role-view-reset .asenha-role-view-reset-link:hover,
+            #role-view-reset .asenha-role-view-reset-link:focus {
+                background: #135e96;
+                border-color: #135e96;
+                color: #fff;
+            }
+        ';
+
+        wp_register_style( 'asenha-view-admin-as-role-switch-back', false, array(), ASENHA_VERSION );
+        wp_enqueue_style( 'asenha-view-admin-as-role-switch-back' );
+        wp_add_inline_style( 'asenha-view-admin-as-role-switch-back', $css );
+    }
+
+    /**
+     * Offer switch-back when the temporary role cannot open an admin screen.
+     *
+     * @since 9.2.0
+     * @return void
+     */
+    public function maybe_offer_switch_back_on_admin_access_denied() {
+        if ( wp_doing_ajax() || ! $this->should_show_switch_back_button() ) {
+            return;
+        }
+
+        $message  = '<p>' . esc_html__( 'This account is viewing the admin as another role and cannot open this screen.', 'admin-site-enhancements' ) . '</p>';
+        $message .= '<p><a href="' . esc_url( $this->get_switch_back_nonce_url() ) . '">' . esc_html__( 'Switch back to Administrator', 'admin-site-enhancements' ) . '</a></p>';
+
+        // The script reads sessionStorage only. It does not contain the recovery URL.
+        $die_message = wp_kses_post( $message ) . $this->get_recovery_copy_notice_script_tag();
+
+        wp_die(
+            $die_message,
+            esc_html__( 'Switch back to Administrator', 'admin-site-enhancements' ),
+            array(
+                'response' => 403,
+            )
+        );
+    }
+
+    /**
+     * Whether the current user is an administrator who has not switched roles.
+     *
+     * @since 9.2.0
+     * @return bool
+     */
+    private function is_administrator_ready_to_switch() {
+        if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
+            return false;
+        }
+
+        $viewing_admin_as = get_user_meta( get_current_user_id(), '_asenha_viewing_admin_as', true );
+
+        if ( empty( $viewing_admin_as ) ) {
+            $viewing_admin_as = 'administrator';
+        }
+
+        return 'administrator' === $viewing_admin_as;
+    }
+
+    /**
+     * Copy the secret recovery URL when an administrator chooses a role to view as.
+     *
+     * The URL is the same token already shown in the module settings. It is printed
+     * only for the current administrator, and only before the role changes.
+     *
+     * @since 9.2.0
+     * @return void
+     */
+    public function enqueue_recovery_url_copy_script() {
+        if ( wp_doing_ajax() || wp_doing_cron() || ! $this->is_administrator_ready_to_switch() ) {
+            return;
+        }
+
+        $plain_token = $this->ensure_recovery_token( get_current_user_id() );
+
+        if ( '' === $plain_token ) {
+            return;
+        }
+
+        $recovery_url = $this->get_recovery_url_for_token( $plain_token );
+
+        wp_register_script( 'asenha-view-admin-as-role-copy', false, array(), ASENHA_VERSION, true );
+        wp_enqueue_script( 'asenha-view-admin-as-role-copy' );
+        wp_localize_script(
+            'asenha-view-admin-as-role-copy',
+            'asenhaViewAdminAsRoleCopy',
+            array(
+                'recoveryUrl' => $recovery_url,
+                'storageKey'  => self::RECOVERY_COPY_STORAGE_KEY,
+            )
+        );
+        wp_add_inline_script( 'asenha-view-admin-as-role-copy', $this->get_recovery_url_copy_js() );
+    }
+
+    /**
+     * Click handler that copies the recovery URL before the role-switch navigation.
+     *
+     * @since 9.2.0
+     * @return string
+     */
+    private function get_recovery_url_copy_js() {
+        $js = <<<'JS'
+document.addEventListener('click', function (event) {
+	if (!event.target || !event.target.closest) {
+		return;
+	}
+	var link = event.target.closest('#wp-admin-bar-asenha-view-admin-as-role a');
+	if (!link || !link.href || link.href.indexOf('action=switch_role_to') === -1) {
+		return;
+	}
+	if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+		return;
+	}
+	var config = window.asenhaViewAdminAsRoleCopy;
+	if (!config || !config.recoveryUrl || !config.storageKey) {
+		return;
+	}
+	event.preventDefault();
+	var recoveryUrl = config.recoveryUrl;
+	var go = function (copied) {
+		try {
+			sessionStorage.setItem(config.storageKey, JSON.stringify({ ok: !!copied, url: recoveryUrl }));
+		} catch (error) {}
+		window.location.assign(link.href);
+	};
+	var copyWithTextarea = function () {
+		var copied = false;
+		var textarea = document.createElement('textarea');
+		textarea.value = recoveryUrl;
+		textarea.setAttribute('readonly', '');
+		textarea.style.position = 'fixed';
+		textarea.style.top = '0';
+		textarea.style.left = '0';
+		textarea.style.opacity = '0';
+		document.body.appendChild(textarea);
+		textarea.focus();
+		textarea.select();
+		try {
+			copied = document.execCommand('copy');
+		} catch (error) {
+			copied = false;
+		}
+		document.body.removeChild(textarea);
+		go(copied);
+	};
+	if (navigator.clipboard && window.isSecureContext) {
+		navigator.clipboard.writeText(recoveryUrl).then(function () {
+			go(true);
+		}).catch(copyWithTextarea);
+		return;
+	}
+	copyWithTextarea();
+});
+JS;
+
+        return $js;
+    }
+
+    /**
+     * Translated strings for the one-time copy confirmation.
+     *
+     * Does not include the recovery URL.
+     *
+     * @since 9.2.0
+     * @return array<string, string>
+     */
+    private function get_recovery_copy_notice_config() {
+        return array(
+            'storageKey'     => self::RECOVERY_COPY_STORAGE_KEY,
+            'copiedMessage'  => __( 'The secret recovery URL was copied to your clipboard. Opening it will restore your Administrator role.', 'admin-site-enhancements' ),
+            'blockedMessage' => __( 'The browser blocked copying the secret recovery URL. Copy it from here before continuing.', 'admin-site-enhancements' ),
+            'copyLabel'      => __( 'Copy', 'admin-site-enhancements' ),
+            'copiedLabel'    => __( 'Copied', 'admin-site-enhancements' ),
+            'dismissLabel'   => __( 'Dismiss this notice.', 'admin-site-enhancements' ),
+        );
+    }
+
+    /**
+     * Show a one-time notice after switching roles, based on the clipboard result.
+     *
+     * @since 9.2.0
+     * @return void
+     */
+    public function enqueue_recovery_copy_notice_script() {
+        if ( wp_doing_ajax() || wp_doing_cron() ) {
+            return;
+        }
+
+        wp_register_script( 'asenha-view-admin-as-role-copy-notice', false, array(), ASENHA_VERSION, true );
+        wp_enqueue_script( 'asenha-view-admin-as-role-copy-notice' );
+        wp_localize_script(
+            'asenha-view-admin-as-role-copy-notice',
+            'asenhaViewAdminAsRoleCopyNotice',
+            $this->get_recovery_copy_notice_config()
+        );
+        wp_add_inline_script( 'asenha-view-admin-as-role-copy-notice', $this->get_recovery_copy_notice_js() );
+
+        if ( is_admin() ) {
+            return;
+        }
+
+        $css = '
+            .asenha-view-admin-as-role-recovery-copy-toast {
+                position: fixed;
+                top: 46px;
+                left: 20px;
+                right: 20px;
+                z-index: 100000;
+                max-width: 720px;
+                background: #fff;
+                border: 1px solid #c3c4c7;
+                border-left-width: 4px;
+                border-left-color: #72aee6;
+                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+                padding: 12px 16px;
+            }
+            .asenha-view-admin-as-role-recovery-copy-toast p {
+                margin: 0;
+            }
+            .asenha-view-admin-as-role-recovery-copy-toast strong {
+                word-break: break-all;
+            }
+            .asenha-view-admin-as-role-recovery-copy-toast .button {
+                display: inline-block;
+                margin-top: 8px;
+                background: #f6f7f7;
+                border: 1px solid #2271b1;
+                border-radius: 3px;
+                color: #2271b1;
+                cursor: pointer;
+                font-size: 13px;
+                line-height: 2.15384615;
+                padding: 0 10px;
+            }
+        ';
+
+        wp_register_style( 'asenha-view-admin-as-role-copy-notice', false, array(), ASENHA_VERSION );
+        wp_enqueue_style( 'asenha-view-admin-as-role-copy-notice' );
+        wp_add_inline_style( 'asenha-view-admin-as-role-copy-notice', $css );
+    }
+
+    /**
+     * Read the clipboard result from sessionStorage and show it once.
+     *
+     * @since 9.2.0
+     * @return string
+     */
+    private function get_recovery_copy_notice_js() {
+        $js = <<<'JS'
+(function () {
+	var config = window.asenhaViewAdminAsRoleCopyNotice;
+	if (!config || !config.storageKey) {
+		return;
+	}
+	var raw;
+	try {
+		raw = sessionStorage.getItem(config.storageKey);
+		if (!raw) {
+			return;
+		}
+		sessionStorage.removeItem(config.storageKey);
+	} catch (error) {
+		return;
+	}
+	var data;
+	try {
+		data = JSON.parse(raw);
+	} catch (error) {
+		return;
+	}
+	if (!data || typeof data.url !== 'string' || data.url === '') {
+		return;
+	}
+	var notice = document.createElement('div');
+	notice.id = 'asenha-view-admin-as-role-recovery-copy-notice';
+	notice.className = 'notice notice-info is-dismissible asenha-view-admin-as-role-recovery-notice';
+	var paragraph = document.createElement('p');
+	if (data.ok) {
+		paragraph.appendChild(document.createTextNode(config.copiedMessage || ''));
+	} else {
+		paragraph.appendChild(document.createTextNode(config.blockedMessage || ''));
+		paragraph.appendChild(document.createElement('br'));
+		var urlText = document.createElement('strong');
+		urlText.textContent = data.url;
+		paragraph.appendChild(urlText);
+		paragraph.appendChild(document.createElement('br'));
+		var button = document.createElement('button');
+		button.type = 'button';
+		button.className = 'button button-secondary';
+		button.textContent = config.copyLabel || 'Copy';
+		button.addEventListener('click', function () {
+			var markCopied = function () {
+				button.textContent = config.copiedLabel || 'Copied';
+			};
+			var copyWithTextarea = function () {
+				var copied = false;
+				var textarea = document.createElement('textarea');
+				textarea.value = data.url;
+				textarea.setAttribute('readonly', '');
+				textarea.style.position = 'fixed';
+				textarea.style.top = '0';
+				textarea.style.left = '0';
+				textarea.style.opacity = '0';
+				document.body.appendChild(textarea);
+				textarea.focus();
+				textarea.select();
+				try {
+					copied = document.execCommand('copy');
+				} catch (error) {
+					copied = false;
+				}
+				document.body.removeChild(textarea);
+				if (copied) {
+					markCopied();
+				}
+			};
+			if (navigator.clipboard && window.isSecureContext) {
+				navigator.clipboard.writeText(data.url).then(markCopied).catch(copyWithTextarea);
+				return;
+			}
+			copyWithTextarea();
+		});
+		paragraph.appendChild(button);
+	}
+	notice.appendChild(paragraph);
+	var dismiss = document.createElement('button');
+	dismiss.type = 'button';
+	dismiss.className = 'notice-dismiss';
+	var dismissText = document.createElement('span');
+	dismissText.className = 'screen-reader-text';
+	dismissText.textContent = config.dismissLabel || 'Dismiss this notice.';
+	dismiss.appendChild(dismissText);
+	dismiss.addEventListener('click', function () {
+		if (notice.parentNode) {
+			notice.parentNode.removeChild(notice);
+		}
+	});
+	notice.appendChild(dismiss);
+	var dieMessage = document.querySelector('.wp-die-message');
+	var adminContent = document.getElementById('wpbody-content');
+	if (dieMessage) {
+		dieMessage.appendChild(notice);
+	} else if (adminContent) {
+		adminContent.insertBefore(notice, adminContent.firstChild);
+	} else if (document.body) {
+		notice.classList.add('asenha-view-admin-as-role-recovery-copy-toast');
+		document.body.appendChild(notice);
+	}
+})();
+JS;
+
+        return $js;
+    }
+
+    /**
+     * Print the copy-confirmation script for screens that do not load footer scripts.
+     *
+     * The recovery URL is not included. Translated strings are JSON-encoded.
+     *
+     * @since 9.2.0
+     * @return string
+     */
+    private function get_recovery_copy_notice_script_tag() {
+        $config = wp_json_encode(
+            $this->get_recovery_copy_notice_config(),
+            JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+        );
+
+        if ( ! is_string( $config ) ) {
+            return '';
+        }
+
+        return '<script>window.asenhaViewAdminAsRoleCopyNotice = ' . $config . ';' . $this->get_recovery_copy_notice_js() . '</script>';
+    }
+
+    /**
      * Add floating button to reset the view/account back to the administrator
      * 
      * @since 6.1.3
      */
     public function add_floating_reset_button() {
-        $options = get_option( ASENHA_SLUG_U, array() );
-        $admin_usernames_viewing_as_role = isset( $options['viewing_admin_as_role_are'] ) ? $options['viewing_admin_as_role_are'] : array();
-        $current_user = wp_get_current_user();
-        $username = $current_user->user_login;
+        // Show for non-admins who are in an active view-as session.
+        if ( ! $this->should_show_switch_back_button() ) {
+            return;
+        }
 
-        // Show for non-admins
-        if ( ! current_user_can( 'manage_options' ) && in_array( $username, $admin_usernames_viewing_as_role, true ) ) {
-            ?>
-            <div id="role-view-reset">
-                <a href="<?php echo esc_url( $this->get_switch_back_nonce_url() ); ?>" class="button button-primary"><?php esc_html_e( 'Switch back to Administrator', 'admin-site-enhancements' ); ?></a>
-            </div>
-            <?php
-        }           
+        $link_class = is_admin() ? 'button button-primary' : 'asenha-role-view-reset-link';
+        ?>
+        <div id="role-view-reset">
+            <a href="<?php echo esc_url( $this->get_switch_back_nonce_url() ); ?>" class="<?php echo esc_attr( $link_class ); ?>"><?php esc_html_e( 'Switch back to Administrator', 'admin-site-enhancements' ); ?></a>
+        </div>
+        <?php
     }
 
     /**

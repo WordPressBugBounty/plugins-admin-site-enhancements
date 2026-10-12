@@ -39,6 +39,13 @@ class Content_Order {
      */
     private $normalized_wpml_menu_order_post_types = array();
 
+    /**
+     * Request-scoped cache of the settings used by orderby_menu_order(), which runs on every WP_Query.
+     *
+     * @var array{post_types:string[],frontend:bool}|null
+     */
+    private $orderby_menu_order_settings = null;
+
     /** 
      * Add "Custom Order" sub-menu for post types
      * 
@@ -552,21 +559,9 @@ class Content_Order {
      */
     public function orderby_menu_order( $query ) {
         global $pagenow, $typenow;
-        $query_post_type = $query->get( 'post_type' );
-        $options = get_option( ASENHA_SLUG_U, array() );
-        // Hierarchical post types that should be custom ordered
-        $content_order_for = ( isset( $options['content_order_for'] ) ? $options['content_order_for'] : array() );
-        $content_order_enabled_post_types = array();
-        if ( is_array( $content_order_for ) && count( $content_order_for ) > 0 ) {
-            foreach ( $content_order_for as $post_type_slug => $is_custom_order_enabled ) {
-                if ( $is_custom_order_enabled ) {
-                    $content_order_enabled_post_types[] = $post_type_slug;
-                }
-            }
-        }
-        $should_be_custom_sorted = false;
+        $orderby_settings = $this->get_orderby_menu_order_settings();
         // All post types that should be custom ordered
-        $content_order_post_types = $content_order_enabled_post_types;
+        $content_order_post_types = $orderby_settings['post_types'];
         // Use custom order in wp-admin listing pages/tables for enabled post types
         if ( is_admin() && ('edit.php' == $pagenow || 'upload.php' == $pagenow) && !isset( $_GET['orderby'] ) ) {
             if ( in_array( $typenow, $content_order_post_types ) ) {
@@ -611,6 +606,31 @@ class Content_Order {
                 wp_update_post( $args );
             }
         }
+    }
+
+    /**
+     * Get the settings used by orderby_menu_order(), memoized for the current request.
+     *
+     * @return array{post_types:string[],frontend:bool}
+     */
+    private function get_orderby_menu_order_settings() {
+        if ( null === $this->orderby_menu_order_settings ) {
+            $options = get_option( ASENHA_SLUG_U, array() );
+            $this->orderby_menu_order_settings = array(
+                'post_types' => $this->get_content_order_enabled_post_types(),
+                'frontend'   => !empty( $options['content_order_frontend'] ),
+            );
+        }
+        return $this->orderby_menu_order_settings;
+    }
+
+    /**
+     * Reset the memoized orderby_menu_order() settings after ASE settings are updated.
+     *
+     * @return void
+     */
+    public function reset_orderby_menu_order_settings() {
+        $this->orderby_menu_order_settings = null;
     }
 
     /**

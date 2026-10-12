@@ -42,6 +42,13 @@ class ASENHA_Rollback_Admin {
     private $logger;
 
     /**
+     * Update-count handler. Null when premium code is unavailable.
+     *
+     * @var ASENHA_Rollback_Update_Count|null
+     */
+    private $update_count;
+
+    /**
      * Page slug.
      *
      * @var string
@@ -51,21 +58,24 @@ class ASENHA_Rollback_Admin {
     /**
      * Constructor.
      *
-     * @param ASENHA_Rollback_Helper        $helper   Helper instance.
-     * @param ASENHA_Rollback_Archives|null $archives Archives instance.
-     * @param ASENHA_Rollback_Versions      $versions Versions instance.
-     * @param ASENHA_Rollback_Logger        $logger   Logger instance.
+     * @param ASENHA_Rollback_Helper              $helper       Helper instance.
+     * @param ASENHA_Rollback_Archives|null       $archives     Archives instance.
+     * @param ASENHA_Rollback_Versions            $versions     Versions instance.
+     * @param ASENHA_Rollback_Logger              $logger       Logger instance.
+     * @param ASENHA_Rollback_Update_Count|null   $update_count Update-count handler.
      */
     public function __construct(
         $helper,
         $archives,
         $versions,
-        $logger
+        $logger,
+        $update_count = null
     ) {
         $this->helper = $helper;
         $this->archives = $archives;
         $this->versions = $versions;
         $this->logger = $logger;
+        $this->update_count = $update_count;
     }
 
     /**
@@ -114,7 +124,19 @@ class ASENHA_Rollback_Admin {
             'asset_key'  => $plugin_file,
             'open_modal' => 1,
         ), admin_url( 'tools.php' ) );
-        $actions['asenha_rollback'] = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $rollback_url ), esc_html__( 'Rollback', 'admin-site-enhancements' ) );
+        $label = __( 'Rollback', 'admin-site-enhancements' );
+        $suffix = '';
+        $suffix = wp_kses( $suffix, array(
+            'span' => array(
+                'class' => true,
+            ),
+        ) );
+        $actions['asenha_rollback'] = sprintf(
+            '<a href="%1$s">%2$s</a>%3$s',
+            esc_url( $rollback_url ),
+            esc_html( $label ),
+            $suffix
+        );
         return $actions;
     }
 
@@ -141,7 +163,7 @@ class ASENHA_Rollback_Admin {
             ASENHA_ROLLBACK_VERSION,
             true
         );
-        wp_localize_script( 'asenha-rollback-admin', 'asenhaRollback', array(
+        $script_data = array(
             'rollbackPageUrl'    => admin_url( 'tools.php?page=' . $this->page_slug ),
             'eligibleThemeSlugs' => $this->versions->get_eligible_theme_slugs(),
             'autoOpen'           => array(
@@ -154,11 +176,12 @@ class ASENHA_Rollback_Admin {
                 'rollback'       => __( 'Rollback', 'admin-site-enhancements' ),
                 'noVersions'     => __( 'No rollback versions are currently available for this item.', 'admin-site-enhancements' ),
                 'selectVersion'  => __( 'Select version', 'admin-site-enhancements' ),
-                'currentVersion' => __( 'Current version:', 'admin-site-enhancements' ),
+                'currentVersion' => __( 'Installed version:', 'admin-site-enhancements' ),
                 'wordpressOrg'   => __( 'WordPress.org', 'admin-site-enhancements' ),
                 'localArchive'   => __( 'Local archive', 'admin-site-enhancements' ),
             ),
-        ) );
+        );
+        wp_localize_script( 'asenha-rollback-admin', 'asenhaRollback', $script_data );
     }
 
     /**

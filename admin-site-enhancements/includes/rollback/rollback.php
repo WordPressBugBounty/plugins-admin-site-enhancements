@@ -29,18 +29,27 @@ require_once ASENHA_ROLLBACK_PATH . 'classes/class-rollback-admin-page.php';
 function asenha_rollback_init() {
     $helper = new ASENHA_Rollback_Helper();
     $archives = null;
+    $update_count = null;
     $versions = new ASENHA_Rollback_Versions($helper, $archives);
     $logger = new ASENHA_Rollback_Logger($helper);
     $admin = new ASENHA_Rollback_Admin(
         $helper,
         $archives,
         $versions,
-        $logger
+        $logger,
+        $update_count
     );
     $logger->init();
     $admin->init();
+    // Move legacy rollback data out of the autoloaded extra option on the first admin request.
+    add_action( 'admin_init', array($helper, 'get_module_data') );
     if ( is_admin() ) {
-        $admin_page = new ASENHA_Rollback_Admin_Page($helper, $versions, $logger);
+        $admin_page = new ASENHA_Rollback_Admin_Page(
+            $helper,
+            $versions,
+            $logger,
+            $update_count
+        );
         $admin_page->init();
     }
 }

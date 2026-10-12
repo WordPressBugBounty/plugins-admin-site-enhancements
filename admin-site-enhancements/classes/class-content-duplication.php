@@ -135,6 +135,7 @@ class Content_Duplication {
                 // Set some attributes for the duplicate post
                 $new_post_title_suffix = __( 'DUPLICATE', 'admin-site-enhancements' );
                 $new_post_status = 'draft';
+                $duplicate_date_args = array();
                 $current_user = wp_get_current_user();
                 $new_post_author_id = $current_user->ID;
                 // Create the duplicate post and store the ID
@@ -152,6 +153,9 @@ class Content_Duplication {
                     'to_ping'        => $original_post->to_ping,
                     'menu_order'     => $original_post->menu_order,
                 );
+                if ( !empty( $duplicate_date_args ) ) {
+                    $args = array_merge( $args, $duplicate_date_args );
+                }
                 $new_post_id = wp_insert_post( $args );
                 // Copy over the taxonomies
                 $original_taxonomies = get_object_taxonomies( $original_post->post_type );
@@ -184,6 +188,11 @@ class Content_Duplication {
                 }
                 // Prevent Elementor plugin placeholder.png URLs from being sideloaded into the Media Library.
                 $this->normalize_elementor_placeholder_media_in_duplicate( $new_post_id );
+                // wp_insert_post() sets post_modified to post_date for a new post.
+                // Write the original modified timestamps after the rest of the copy.
+                if ( !empty( $duplicate_date_args ) && !is_wp_error( $new_post_id ) ) {
+                    $this->restore_duplicated_modified_dates( $new_post_id, $duplicate_date_args );
+                }
             }
             $options = get_option( ASENHA_SLUG_U, array() );
             $duplication_redirect_destination = ( isset( $options['duplication_redirect_destination'] ) ? $options['duplication_redirect_destination'] : 'edit' );
@@ -191,15 +200,18 @@ class Content_Duplication {
                 case 'edit':
                     // Redirect to edit screen of the duplicate post
                     wp_redirect( admin_url( 'post.php?action=edit&post=' . $new_post_id ) );
-                    break;
+                    exit;
                 case 'list':
-                    // Redirect to list table of the corresponding post type of original post
-                    if ( 'post' == $post_type ) {
-                        wp_redirect( admin_url( 'edit.php' ) );
-                    } else {
-                        wp_redirect( admin_url( 'edit.php?post_type=' . $post_type ) );
+                    // Redirect to list table of the corresponding post type of original post.
+                    // Carry search and taxonomy filters from the list the user duplicated from.
+                    $redirect_args = $this->get_list_view_filters_to_preserve( $post_type );
+                    if ( 'post' !== $post_type ) {
+                        $redirect_args = array_merge( array(
+                            'post_type' => $post_type,
+                        ), $redirect_args );
                     }
-                    break;
+                    wp_safe_redirect( add_query_arg( $redirect_args, admin_url( 'edit.php' ) ) );
+                    exit;
             }
         } else {
             wp_die( 'You do not have permission to perform this action.' );
@@ -219,10 +231,194 @@ class Content_Duplication {
         if ( $allow_duplication && $post_type_is_duplicable ) {
             // Not WooCommerce product
             if ( in_array( 'post-action', $duplication_link_locations ) ) {
-                $actions['asenha-duplicate'] = '<a href="admin.php?action=duplicate_content&amp;post=' . $post->ID . '&amp;nonce=' . wp_create_nonce( 'asenha-duplicate-' . $post->ID ) . '" title="' . __( 'Duplicate this as draft', 'admin-site-enhancements' ) . '">' . __( 'Duplicate', 'admin-site-enhancements' ) . '</a>';
+                $duplicate_args = array(
+                    'action' => 'duplicate_content',
+                    'post'   => $post->ID,
+                    'nonce'  => wp_create_nonce( 'asenha-duplicate-' . $post->ID ),
+                );
+                $options = get_option( ASENHA_SLUG_U, array() );
+                $duplication_redirect_destination = ( isset( $options['duplication_redirect_destination'] ) ? $options['duplication_redirect_destination'] : 'edit' );
+                if ( 'list' === $duplication_redirect_destination ) {
+                    $duplicate_args = array_merge( $duplicate_args, $this->get_list_view_filters_to_preserve( $post_type ) );
+                }
+                $duplicate_url = add_query_arg( $duplicate_args, admin_url( 'admin.php' ) );
+                $actions['asenha-duplicate'] = '<a href="' . esc_url( $duplicate_url ) . '" title="' . esc_attr__( 'Duplicate this as draft', 'admin-site-enhancements' ) . '">' . esc_html__( 'Duplicate', 'admin-site-enhancements' ) . '</a>';
             }
         }
         return $actions;
+    }
+
+    /**
+     * Restore the original modified timestamps on a duplicate.
+     *
+     * wp_insert_post() ignores post_modified for a new post and stores the publish date instead.
+     *
+     * @since 9.2.0
+     *
+     * @param int   $new_post_id Duplicate post ID.
+     * @param array $date_args   Original post_modified and post_modified_gmt.
+     */
+    private function restore_duplicated_modified_dates( $new_post_id, $date_args ) {
+        global $wpdb;
+        $new_post_id = absint( $new_post_id );
+        if ( $new_post_id < 1 || !is_array( $date_args ) ) {
+            return;
+        }
+        $modified = ( isset( $date_args['post_modified'] ) ? $date_args['post_modified'] : '' );
+        $modified_gmt = ( isset( $date_args['post_modified_gmt'] ) ? $date_args['post_modified_gmt'] : '' );
+        $datetime = '/^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$/';
+        if ( !is_string( $modified ) || !preg_match( $datetime, $modified ) ) {
+            return;
+        }
+        if ( !is_string( $modified_gmt ) || !preg_match( $datetime, $modified_gmt ) ) {
+            return;
+        }
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+        $wpdb->update(
+            $wpdb->posts,
+            array(
+                'post_modified'     => $modified,
+                'post_modified_gmt' => $modified_gmt,
+            ),
+            array(
+                'ID' => $new_post_id,
+            ),
+            array('%s', '%s'),
+            array('%d')
+        );
+        clean_post_cache( $new_post_id );
+    }
+
+    /**
+     * List-table query args to carry onto the post-duplication list redirect.
+     *
+     * Date (`m`) and post status are included only when the matching Also duplicate
+     * option is enabled. The current request holds the filtered list URL when the
+     * duplicate row action is rendered, and those same args again when the
+     * duplication request is handled.
+     *
+     * @since 9.2.0
+     *
+     * @param string $post_type Post type being listed.
+     * @return array<string, string> Sanitized query args.
+     */
+    public function get_list_view_filters_to_preserve( $post_type ) {
+        $allowed = array(
+            's',
+            'cat',
+            'tag',
+            'post_format',
+            'author',
+            'show_sticky',
+            'paged',
+            'orderby',
+            'order'
+        );
+        $taxonomies = get_object_taxonomies( $post_type, 'objects' );
+        if ( is_array( $taxonomies ) ) {
+            foreach ( $taxonomies as $taxonomy ) {
+                if ( !is_object( $taxonomy ) ) {
+                    continue;
+                }
+                if ( !empty( $taxonomy->query_var ) && is_string( $taxonomy->query_var ) ) {
+                    $allowed[] = $taxonomy->query_var;
+                }
+                if ( !empty( $taxonomy->name ) && is_string( $taxonomy->name ) ) {
+                    $allowed[] = $taxonomy->name;
+                }
+            }
+        }
+        $disallowed = array(
+            'm',
+            'post_status',
+            'action',
+            'action2',
+            'filter_action',
+            'post',
+            'nonce',
+            'post_type'
+        );
+        $allowed = array_diff( array_unique( $allowed ), $disallowed );
+        $preserved = array();
+        foreach ( $allowed as $key ) {
+            if ( !is_string( $key ) || '' === $key ) {
+                continue;
+            }
+            if ( !isset( $_GET[$key] ) || is_array( $_GET[$key] ) ) {
+                // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Public list-table filters, not a form action.
+                continue;
+            }
+            $raw = wp_unslash( $_GET[$key] );
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized in sanitize_list_view_filter_value().
+            if ( !is_scalar( $raw ) ) {
+                continue;
+            }
+            $sanitized = $this->sanitize_list_view_filter_value( $key, (string) $raw );
+            if ( null === $sanitized || '' === $sanitized ) {
+                continue;
+            }
+            $preserved[$key] = $sanitized;
+        }
+        return $preserved;
+    }
+
+    /**
+     * Sanitize one list-table filter value.
+     *
+     * @since 9.2.0
+     *
+     * @param string $key   Query arg name.
+     * @param string $value Raw query arg value.
+     * @return string|null Sanitized value, or null when the value should be omitted.
+     */
+    private function sanitize_list_view_filter_value( $key, $value ) {
+        $value = trim( $value );
+        if ( '' === $value ) {
+            return null;
+        }
+        switch ( $key ) {
+            case 's':
+                $search = sanitize_text_field( $value );
+                return ( '' === $search ? null : $search );
+            case 'm':
+                // Month filter is YYYYMM. 0 means All dates.
+                if ( !preg_match( '/^[0-9]{6}$/', $value ) ) {
+                    return null;
+                }
+                return $value;
+            case 'post_status':
+                if ( 'all' === $value ) {
+                    return 'all';
+                }
+                $status = sanitize_key( $value );
+                $statuses = get_post_stati();
+                return ( isset( $statuses[$status] ) ? $status : null );
+            case 'cat':
+                $cat = intval( $value );
+                return ( 0 === $cat ? null : (string) $cat );
+            case 'author':
+            case 'paged':
+                $number = absint( $value );
+                return ( 0 === $number ? null : (string) $number );
+            case 'show_sticky':
+                return ( '1' === $value ? '1' : null );
+            case 'order':
+                $order = strtoupper( sanitize_text_field( $value ) );
+                return ( in_array( $order, array('ASC', 'DESC'), true ) ? $order : null );
+            case 'orderby':
+                $orderby = sanitize_key( $value );
+                return ( '' === $orderby ? null : $orderby );
+            default:
+                // Taxonomy slugs, including custom taxonomy filters. "0" is the All option.
+                if ( '0' === $value || '-1' === $value ) {
+                    return null;
+                }
+                $slug = sanitize_title( $value );
+                if ( '' === $slug || '0' === $slug ) {
+                    return null;
+                }
+                return $slug;
+        }
     }
 
     /**

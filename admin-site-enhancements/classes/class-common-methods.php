@@ -10,6 +10,43 @@ use WP_Query;
  */
 class Common_Methods {
     /**
+     * Parse the stored custom_menu_titles value into a menu item ID => title map.
+     *
+     * The option is a comma-separated list of menu_item_id__Title pairs. Malformed
+     * pairs (no separator, empty ID or empty title) are skipped, and the first pair
+     * wins when an ID appears more than once. The ID is only used as a lookup key,
+     * so it is stripped of tags but keeps its case and characters.
+     *
+     * @since 9.2.1
+     * @param string|array $raw Raw custom_menu_titles value.
+     * @return array Map of menu item ID to plain-text custom title.
+     */
+    public function parse_custom_menu_titles( $raw ) {
+        if ( is_array( $raw ) ) {
+            $raw = implode( ',', $raw );
+        }
+        $map = array();
+        foreach ( explode( ',', (string) $raw ) as $pair ) {
+            $pair = trim( $pair );
+            if ( '' === $pair ) {
+                continue;
+            }
+            $parts = explode( '__', $pair, 2 );
+            // Title may legitimately contain '__'.
+            if ( 2 !== count( $parts ) ) {
+                continue;
+            }
+            $menu_item_id = trim( wp_strip_all_tags( $parts[0] ) );
+            $title = sanitize_text_field( $parts[1] );
+            if ( '' === $menu_item_id || '' === $title || isset( $map[$menu_item_id] ) ) {
+                continue;
+            }
+            $map[$menu_item_id] = $title;
+        }
+        return $map;
+    }
+
+    /**
      * Get IP of the current visitor/user. In use by at least the Limit Login Attempts feature.
      * This takes a best guess of the visitor's actual IP address.
      * Takes into account numerous HTTP proxy headers due to variations
@@ -1090,6 +1127,175 @@ class Common_Methods {
             return str_repeat( '*', $len );
         }
         return str_repeat( '*', $len - $visible ) . substr( $key, -$visible );
+    }
+
+    /**
+     * Keys stored in the non-autoloaded admin cache option.
+     *
+     * @since 9.2.0
+     *
+     * @var string[]
+     */
+    const ADMIN_CACHE_KEYS = array('custom_fields', 'admin_columns_available', 'ab_nodes_workable');
+
+    /**
+     * Move admin caches out of the autoloaded extra option on the first wp-admin request.
+     *
+     * @since 9.2.0
+     *
+     * @return void
+     */
+    public static function migrate_admin_cache() {
+        $common_methods = new self();
+        $common_methods->get_cache();
+    }
+
+    /**
+     * Option name for admin-only caches. Not autoloaded.
+     *
+     * @since 9.2.0
+     *
+     * @return string
+     */
+    private function get_admin_cache_option_name() {
+        return ASENHA_SLUG_U . '_cache';
+    }
+
+    /**
+     * Get one admin cache key, or the whole cache.
+     *
+     * @since 9.2.0
+     *
+     * @param string|null $key Cache key. Null returns the full cache.
+     * @return array
+     */
+    public function get_cache( $key = null ) {
+        $cache = $this->get_or_migrate_admin_cache();
+        if ( is_admin() ) {
+            $pruned = $this->prune_stale_post_type_caches( $cache );
+            if ( $pruned !== $cache ) {
+                $cache = $pruned;
+                update_option( $this->get_admin_cache_option_name(), $cache, false );
+            }
+        }
+        if ( null === $key ) {
+            return $cache;
+        }
+        if ( isset( $cache[$key] ) && is_array( $cache[$key] ) ) {
+            return $cache[$key];
+        }
+        return array();
+    }
+
+    /**
+     * Store one admin cache key.
+     *
+     * @since 9.2.0
+     *
+     * @param string $key   Cache key.
+     * @param mixed  $value Cache value.
+     * @return bool
+     */
+    public function set_cache( $key, $value ) {
+        $cache = $this->get_or_migrate_admin_cache();
+        $cache[$key] = $value;
+        if ( is_admin() ) {
+            $cache = $this->prune_stale_post_type_caches( $cache );
+        }
+        return update_option( $this->get_admin_cache_option_name(), $cache, false );
+    }
+
+    /**
+     * Remove a cache key, or one post-type entry under a cache key.
+     *
+     * @since 9.2.0
+     *
+     * @param string      $key    Cache key.
+     * @param string|null $subkey Post type key inside custom_fields or admin_columns_available.
+     * @return bool
+     */
+    public function unset_cache( $key, $subkey = null ) {
+        $cache = $this->get_or_migrate_admin_cache();
+        if ( null === $subkey ) {
+            unset($cache[$key]);
+        } elseif ( isset( $cache[$key] ) && is_array( $cache[$key] ) ) {
+            unset($cache[$key][$subkey]);
+        }
+        return update_option( $this->get_admin_cache_option_name(), $cache, false );
+    }
+
+    /**
+     * Read the cache option, or move the legacy keys out of the extra option once.
+     *
+     * @since 9.2.0
+     *
+     * @return array
+     */
+    private function get_or_migrate_admin_cache() {
+        $cache = get_option( $this->get_admin_cache_option_name(), null );
+        if ( null !== $cache ) {
+            return ( is_array( $cache ) ? $cache : array() );
+        }
+        return $this->migrate_admin_cache_from_extra_option();
+    }
+
+    /**
+     * Copy admin caches into their own option and remove them from the autoloaded extra option.
+     *
+     * @since 9.2.0
+     *
+     * @return array
+     */
+    private function migrate_admin_cache_from_extra_option() {
+        $extra_option_key = ASENHA_SLUG_U . '_extra';
+        $options_extra = get_option( $extra_option_key, array() );
+        if ( !is_array( $options_extra ) ) {
+            $options_extra = array();
+        }
+        $cache = array();
+        $moved = false;
+        foreach ( self::ADMIN_CACHE_KEYS as $cache_key ) {
+            if ( isset( $options_extra[$cache_key] ) && is_array( $options_extra[$cache_key] ) ) {
+                $cache[$cache_key] = $options_extra[$cache_key];
+                unset($options_extra[$cache_key]);
+                $moved = true;
+            }
+        }
+        if ( is_admin() ) {
+            $cache = $this->prune_stale_post_type_caches( $cache );
+        }
+        update_option( $this->get_admin_cache_option_name(), $cache, false );
+        if ( $moved ) {
+            update_option( $extra_option_key, $options_extra, true );
+        }
+        return $cache;
+    }
+
+    /**
+     * Drop custom-field and available-column caches for post types that are not registered.
+     *
+     * Admin bar nodes are not a post-type map and are left unchanged.
+     *
+     * @since 9.2.0
+     *
+     * @param array $cache Cache array.
+     * @return array
+     */
+    private function prune_stale_post_type_caches( $cache ) {
+        if ( !is_array( $cache ) ) {
+            return array();
+        }
+        $post_types = get_post_types();
+        if ( empty( $post_types ) || !is_array( $post_types ) ) {
+            return $cache;
+        }
+        foreach ( array('custom_fields', 'admin_columns_available') as $cache_key ) {
+            if ( empty( $cache[$cache_key] ) || !is_array( $cache[$cache_key] ) ) {
+                continue;
+            }
+            $cache[$cache_key] = array_intersect_key( $cache[$cache_key], $post_types );
+        }
+        return $cache;
     }
 
 }

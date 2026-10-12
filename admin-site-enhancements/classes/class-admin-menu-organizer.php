@@ -256,8 +256,8 @@ class Admin_Menu_Organizer {
             if ( 2 !== count( $parts ) ) {
                 continue;
             }
-            $menu_id = sanitize_key( $parts[0] );
-            // Menu IDs are slugs/CSS IDs: a-z 0-9 _ -.
+            // Keep the ID's case and characters (e.g. toplevel_page_MyPlugin, edit.php?post_type=page) since it must match $menu_info[5] or $menu_info[2] exactly. It is never output as HTML, only compared.
+            $menu_id = trim( wp_strip_all_tags( $parts[0] ) );
             $title = sanitize_text_field( $parts[1] );
             // Strips tags/octets; keeps plain text.
             if ( '' === $menu_id || '' === $title ) {
@@ -277,9 +277,9 @@ class Admin_Menu_Organizer {
         global $menu;
         $options_extra = get_option( ASENHA_SLUG_U . '_extra', array() );
         $options = ( isset( $options_extra['admin_menu'] ) ? $options_extra['admin_menu'] : array() );
-        // Get custom menu item titles
-        $custom_menu_titles = $options['custom_menu_titles'];
-        $custom_menu_titles = explode( ',', $custom_menu_titles );
+        // Parse custom menu item titles once into a menu item ID => title map
+        $common_methods = new Common_Methods();
+        $custom_menu_titles = ( isset( $options['custom_menu_titles'] ) ? $common_methods->parse_custom_menu_titles( $options['custom_menu_titles'] ) : array() );
         foreach ( $menu as $menu_key => $menu_info ) {
             // Determine menu item ID
             if ( false !== strpos( $menu_info[4], 'wp-menu-separator' ) ) {
@@ -292,23 +292,13 @@ class Admin_Menu_Organizer {
                     $menu_item_id = $menu_info[2];
                     // Use slug for custom menus
                 } else {
-                    $menu_item_id = $menu_info[5];
+                    $menu_item_id = ( isset( $menu_info[5] ) ? $menu_info[5] : '' );
                     // Use CSS ID for regular menus
                 }
             }
             // Get defaul/custom menu item title
-            foreach ( $custom_menu_titles as $custom_menu_title ) {
-                // At this point, $custom_menu_title value looks like toplevel_page_snippets__Code Snippets
-                $custom_menu_title = explode( '__', $custom_menu_title );
-                if ( $custom_menu_title[0] == $menu_item_id ) {
-                    $menu_item_title = sanitize_text_field( $custom_menu_title[1] );
-                    // e.g. Code Snippets; sanitized for legacy values saved before sanitization-on-save existed
-                    break;
-                    // stop foreach loop so $menu_item_title is not overwritten in the next iteration
-                } else {
-                    $menu_item_title = $menu_info[0];
-                }
-            }
+            // Custom title e.g. Code Snippets for toplevel_page_snippets, otherwise the default title
+            $menu_item_title = ( isset( $custom_menu_titles[$menu_item_id] ) ? $custom_menu_titles[$menu_item_id] : $menu_info[0] );
             $menu[$menu_key][0] = $menu_item_title;
         }
     }
@@ -324,23 +314,21 @@ class Admin_Menu_Organizer {
         $admin_menu_options = ( isset( $options_extra['admin_menu'] ) ? $options_extra['admin_menu'] : array() );
         // $admin_menu_organizer = new ASENHA\Classes\Admin_Menu_Organizer();
         // For 'Posts' menu, if the title has been changed, try changing the labels for it everywhere
-        $custom_menu_titles = explode( ',', $admin_menu_options['custom_menu_titles'] );
-        foreach ( $custom_menu_titles as $custom_menu_title ) {
-            if ( false !== strpos( $custom_menu_title, 'menu-posts__' ) ) {
-                $custom_menu_title = explode( '__', $custom_menu_title );
-                $posts_custom_title = sanitize_text_field( $custom_menu_title[1] );
-                $posts_default_title = __( 'Posts', 'admin-site-enhancements' );
-                if ( is_array( $wp_post_types ) ) {
-                    if ( isset( $wp_post_types['post'] ) && property_exists( $wp_post_types['post'], 'label' ) ) {
-                        $posts_default_title = $wp_post_types['post']->label;
-                    }
+        $common_methods = new Common_Methods();
+        $custom_menu_titles = ( isset( $admin_menu_options['custom_menu_titles'] ) ? $common_methods->parse_custom_menu_titles( $admin_menu_options['custom_menu_titles'] ) : array() );
+        if ( isset( $custom_menu_titles['menu-posts'] ) ) {
+            $posts_custom_title = $custom_menu_titles['menu-posts'];
+            $posts_default_title = __( 'Posts', 'admin-site-enhancements' );
+            if ( is_array( $wp_post_types ) ) {
+                if ( isset( $wp_post_types['post'] ) && property_exists( $wp_post_types['post'], 'label' ) ) {
+                    $posts_default_title = $wp_post_types['post']->label;
                 }
-                if ( $posts_default_title != $posts_custom_title ) {
-                    add_filter( 'post_type_labels_post', [$this, 'change_post_labels'] );
-                    add_action( 'init', [$this, 'change_post_object_label'] );
-                    add_action( 'admin_menu', [$this, 'change_post_menu_label'], PHP_INT_MAX );
-                    add_action( 'admin_bar_menu', [$this, 'change_wp_admin_bar'], 80 );
-                }
+            }
+            if ( $posts_default_title != $posts_custom_title ) {
+                add_filter( 'post_type_labels_post', [$this, 'change_post_labels'] );
+                add_action( 'init', [$this, 'change_post_object_label'] );
+                add_action( 'admin_menu', [$this, 'change_post_menu_label'], PHP_INT_MAX );
+                add_action( 'admin_bar_menu', [$this, 'change_wp_admin_bar'], 80 );
             }
         }
     }
@@ -364,14 +352,10 @@ class Admin_Menu_Organizer {
         $posts_custom_title = $posts_default_title;
         $options_extra = get_option( ASENHA_SLUG_U . '_extra', array() );
         $options = ( isset( $options_extra['admin_menu'] ) ? $options_extra['admin_menu'] : array() );
-        $custom_menu_titles = ( isset( $options['custom_menu_titles'] ) ? explode( ',', $options['custom_menu_titles'] ) : array() );
-        if ( !empty( $custom_menu_titles ) ) {
-            foreach ( $custom_menu_titles as $custom_menu_title ) {
-                if ( false !== strpos( $custom_menu_title, 'menu-posts__' ) ) {
-                    $custom_menu_title = explode( '__', $custom_menu_title );
-                    $posts_custom_title = sanitize_text_field( $custom_menu_title[1] );
-                }
-            }
+        $common_methods = new Common_Methods();
+        $custom_menu_titles = ( isset( $options['custom_menu_titles'] ) ? $common_methods->parse_custom_menu_titles( $options['custom_menu_titles'] ) : array() );
+        if ( isset( $custom_menu_titles['menu-posts'] ) ) {
+            $posts_custom_title = $custom_menu_titles['menu-posts'];
         }
         return $posts_custom_title;
     }

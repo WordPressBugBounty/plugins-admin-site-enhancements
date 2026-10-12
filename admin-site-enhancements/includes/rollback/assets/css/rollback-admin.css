@@ -12,12 +12,23 @@ table.widefat.asenha-rollback-logs-table {
 	font-size: 12px;
 }
 
+.asenha-rollback-assets-table .asenha-rollback-version {
+	white-space: nowrap;
+}
+
+.asenha-rollback-assets-table .asenha-rollback-version-newer {
+	color: #007017;
+	font-weight: bold;
+}
+
 .asenha-rollback-inline-actions {
 	position: relative;
 	display: flex;
 	gap: 8px;
 	align-items: center;
 }
+
+
 
 /* Hidden data select: options are cloned into the modal by JS; must stay in the DOM. */
 .asenha-rollback-versions-data {

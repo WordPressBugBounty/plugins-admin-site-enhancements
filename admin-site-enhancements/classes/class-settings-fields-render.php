@@ -395,11 +395,16 @@ class Settings_Fields_Render {
     function render_view_admin_as_role_recovery_description( $args ) {
         $view_admin_as_role = new View_Admin_As_Role();
         $recovery_url = $view_admin_as_role->get_recovery_url_for_settings( get_current_user_id() );
-        $field_description = '<div class="asenha-warning"><strong>' . sprintf( 
+        $field_description = '<div class="asenha-warning">';
+        $field_description .= esc_html__( 'Logging out, or returning after the login session ends, restores your administrator role. Log in again with your usual password.', 'admin-site-enhancements' );
+        $field_description .= '<br /><br />' . sprintf( 
             /* translators: %s is the secret recovery URL or instructional text */
-            __( 'If something goes wrong</strong> and you need to regain access to your account as an administrator, please visit the following URL: <br /><strong>%s</strong><br /><br />If you use <strong>Ninja Firewall</strong>, please uncheck "Block attempts to gain administrative privileges" in the Firewall Policies settings before you try to view as a non-admin user role to <strong>prevent being locked out</strong> of your admin account.', 'admin-site-enhancements' ),
+            __( 'If a firewall blocks the account, or that automatic restore does not run, visit this secret URL while logged out: <br /><strong>%s</strong>', 'admin-site-enhancements' ),
             esc_html( $recovery_url )
-         ) . '<br /><br />' . __( 'In any case, please also <strong>create at least one backup admin user</strong> as a last resort should your primary admin user fails to properly login as admin. With this second admin user, you can also restore the admin role for your primary admin user.', 'admin-site-enhancements' ) . '</div>';
+         );
+        $field_description .= '<br /><br />' . __( 'If you use <strong>Ninja Firewall</strong>, please uncheck "Block attempts to gain administrative privileges" in the Firewall Policies settings before you try to view as a non-admin user role to <strong>prevent being locked out</strong> of your admin account.', 'admin-site-enhancements' );
+        $field_description .= '<br /><br />' . __( 'Please also <strong>create at least one backup admin user</strong> as a last resort if your primary admin user cannot log in as an administrator. With this second admin user, you can restore the administrator role for your primary admin user.', 'admin-site-enhancements' );
+        $field_description .= '</div>';
         echo '<div class="asenha-subfield-description">' . wp_kses_post( $field_description ) . '</div>';
     }
 
@@ -895,12 +900,7 @@ class Settings_Fields_Render {
             'menu-settings',
         );
         // Get custom menu item titles
-        if ( array_key_exists( 'custom_menu_titles', $options ) ) {
-            $custom_menu_titles = $options['custom_menu_titles'];
-            $custom_menu_titles = explode( ',', $custom_menu_titles );
-        } else {
-            $custom_menu_titles = array();
-        }
+        $custom_menu_titles = ( array_key_exists( 'custom_menu_titles', $options ) ? $common_methods->parse_custom_menu_titles( $options['custom_menu_titles'] ) : array() );
         // Get menu items hidden by toggle
         $menu_hidden_by_toggle = $common_methods->get_menu_hidden_by_toggle();
         $i = 1;
@@ -955,17 +955,11 @@ class Settings_Fields_Render {
                                 echo wp_kses_post( $common_methods->strip_html_tags_and_content( $menu_item_title ) );
                             } else {
                                 // Get defaul/custom menu item title
-                                foreach ( $custom_menu_titles as $custom_menu_title ) {
-                                    // At this point, $custom_menu_title value looks like toplevel_page_snippets__Code Snippets
-                                    $custom_menu_title = explode( '__', $custom_menu_title );
-                                    if ( $custom_menu_title[0] == $menu_item_id ) {
-                                        $menu_item_title = $common_methods->strip_html_tags_and_content( $custom_menu_title[1] );
-                                        // e.g. Code Snippets
-                                        break;
-                                        // stop foreach loop so $menu_item_title is not overwritten in the next iteration
-                                    } else {
-                                        $menu_item_title = $common_methods->strip_html_tags_and_content( $menu_info[0] );
-                                    }
+                                // Custom title e.g. Code Snippets for toplevel_page_snippets, otherwise the default title
+                                if ( isset( $custom_menu_titles[$menu_item_id] ) ) {
+                                    $menu_item_title = $common_methods->strip_html_tags_and_content( $custom_menu_titles[$menu_item_id] );
+                                } else {
+                                    $menu_item_title = $common_methods->strip_html_tags_and_content( $menu_info[0] );
                                 }
                                 ?>
 													<input type="text" value="<?php 

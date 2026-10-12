@@ -16,56 +16,127 @@ if ( ! defined( 'WPINC' ) ) {
 class ASENHA_Rollback_Helper {
 
 	/**
-	 * Extra option key.
+	 * Dedicated rollback option key. Not autoloaded.
 	 *
 	 * @var string
 	 */
-	private $extra_option_key;
+	private $option_key;
 
 	/**
 	 * Constructor.
 	 */
 	public function __construct() {
-		$this->extra_option_key = ASENHA_SLUG_U . '_extra';
+		$this->option_key = ASENHA_SLUG_U . '_rollback';
 	}
 
 	/**
-	 * Get the full ASE extra option as an array.
+	 * Get rollback module data.
 	 *
-	 * @return array
-	 */
-	public function get_extra_option() {
-		$options_extra = get_option( $this->extra_option_key, array() );
-
-		return is_array( $options_extra ) ? $options_extra : array();
-	}
-
-	/**
-	 * Get rollback module data from the ASE extra option.
+	 * On the first read, module data still stored under the autoloaded extra
+	 * option is moved here. storage_hash is copied unchanged.
 	 *
 	 * @return array
 	 */
 	public function get_module_data() {
-		$options_extra = $this->get_extra_option();
+		$module_data = get_option( $this->option_key, null );
 
-		if ( ! isset( $options_extra['rollback'] ) || ! is_array( $options_extra['rollback'] ) ) {
-			return array();
+		if ( null !== $module_data ) {
+			return is_array( $module_data ) ? $module_data : array();
 		}
 
-		return $options_extra['rollback'];
+		return $this->migrate_module_data_from_extra_option();
 	}
 
 	/**
-	 * Persist rollback module data into the ASE extra option.
+	 * Persist rollback module data.
 	 *
 	 * @param array $module_data Rollback module data.
 	 * @return bool
 	 */
 	public function update_module_data( $module_data ) {
-		$options_extra             = $this->get_extra_option();
-		$options_extra['rollback'] = is_array( $module_data ) ? $module_data : array();
+		$module_data = is_array( $module_data ) ? $module_data : array();
 
-		return update_option( $this->extra_option_key, $options_extra, true );
+		return update_option( $this->option_key, $module_data, false );
+	}
+
+	/**
+	 * Move rollback data out of the autoloaded extra option.
+	 *
+	 * Runs only when the dedicated option row does not exist yet, including
+	 * after a restore of an older database that still keeps the data inline.
+	 *
+	 * @since 9.2.0
+	 *
+	 * @return array
+	 */
+	private function migrate_module_data_from_extra_option() {
+		$extra_option_key = ASENHA_SLUG_U . '_extra';
+		$options_extra    = get_option( $extra_option_key, array() );
+
+		if ( ! is_array( $options_extra ) ) {
+			$options_extra = array();
+		}
+
+		$module_data = array();
+		if ( isset( $options_extra['rollback'] ) && is_array( $options_extra['rollback'] ) ) {
+			$module_data = $options_extra['rollback'];
+		}
+
+		$module_data = $this->prepare_migrated_module_data( $module_data );
+
+		update_option( $this->option_key, $module_data, false );
+
+		if ( isset( $options_extra['rollback'] ) ) {
+			unset( $options_extra['rollback'] );
+			update_option( $extra_option_key, $options_extra, true );
+		}
+
+		return $module_data;
+	}
+
+	/**
+	 * Drop unused version lists and catalog entries for assets that are no longer installed.
+	 *
+	 * Inactive installed plugins and themes are kept. storage_hash is left as-is.
+	 *
+	 * @since 9.2.0
+	 *
+	 * @param array $module_data Rollback module data.
+	 * @return array
+	 */
+	private function prepare_migrated_module_data( $module_data ) {
+		if ( ! isset( $module_data['catalog'] ) || ! is_array( $module_data['catalog'] ) ) {
+			return $module_data;
+		}
+
+		if ( ! function_exists( 'get_plugins' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+
+		$installed_plugins = function_exists( 'get_plugins' ) ? get_plugins() : array();
+		$installed_themes  = function_exists( 'wp_get_themes' ) ? wp_get_themes() : array();
+
+		foreach ( $module_data['catalog'] as $asset_type => $entries ) {
+			if ( ! is_array( $entries ) ) {
+				continue;
+			}
+
+			if ( 'plugin' === $asset_type && ! empty( $installed_plugins ) ) {
+				$entries = array_intersect_key( $entries, $installed_plugins );
+			} elseif ( 'theme' === $asset_type && ! empty( $installed_themes ) ) {
+				$entries = array_intersect_key( $entries, $installed_themes );
+			}
+
+			foreach ( $entries as $asset_key => $entry ) {
+				if ( is_array( $entry ) && array_key_exists( 'available_versions', $entry ) ) {
+					unset( $entries[ $asset_key ]['available_versions'] );
+				}
+			}
+
+			$module_data['catalog'][ $asset_type ] = $entries;
+		}
+
+		return $module_data;
 	}
 
 	/**

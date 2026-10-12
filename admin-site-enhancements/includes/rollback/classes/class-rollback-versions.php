@@ -28,6 +28,14 @@ class ASENHA_Rollback_Versions {
     private $archives;
 
     /**
+     * Newest WordPress.org versions kept in the rollback dropdown, besides trunk,
+     * the current version, and local archives.
+     *
+     * @since 9.2.0
+     */
+    const MAX_WORDPRESS_ORG_VERSIONS = 50;
+
+    /**
      * Constructor.
      *
      * @param ASENHA_Rollback_Helper        $helper   Helper instance.
@@ -265,10 +273,13 @@ class ASENHA_Rollback_Versions {
         $is_wordpress_org = $this->is_plugin_wordpress_org( $plugin_data, $update_entry, $wordpress_slug );
         $archives = array();
         $remote_versions = array();
+        $latest_version = '';
         if ( $is_wordpress_org && '' !== $wordpress_slug ) {
             $remote_versions = $this->get_wordpress_org_versions( 'plugin', $wordpress_slug );
             if ( is_wp_error( $remote_versions ) ) {
                 $remote_versions = array();
+            } else {
+                $latest_version = $this->get_wordpress_org_latest_version( 'plugin', $wordpress_slug );
             }
         }
         return array(
@@ -279,6 +290,7 @@ class ASENHA_Rollback_Versions {
             'package_slug'       => $package_slug,
             'author'             => ( !empty( $plugin_data['AuthorName'] ) ? wp_strip_all_tags( $plugin_data['AuthorName'] ) : wp_strip_all_tags( $plugin_data['Author'] ) ),
             'current_version'    => ( isset( $plugin_data['Version'] ) ? (string) $plugin_data['Version'] : '' ),
+            'latest_version'     => $latest_version,
             'is_wordpress_org'   => $is_wordpress_org,
             'wordpress_org_slug' => $wordpress_slug,
             'archives'           => $archives,
@@ -306,10 +318,13 @@ class ASENHA_Rollback_Versions {
         $is_wordpress_org = $this->is_theme_wordpress_org( $theme, $update_entry, $wordpress_slug );
         $archives = array();
         $remote_versions = array();
+        $latest_version = '';
         if ( $is_wordpress_org && '' !== $wordpress_slug ) {
             $remote_versions = $this->get_wordpress_org_versions( 'theme', $wordpress_slug );
             if ( is_wp_error( $remote_versions ) ) {
                 $remote_versions = array();
+            } else {
+                $latest_version = $this->get_wordpress_org_latest_version( 'theme', $wordpress_slug );
             }
         }
         return array(
@@ -320,6 +335,7 @@ class ASENHA_Rollback_Versions {
             'package_slug'       => $theme_slug,
             'author'             => wp_strip_all_tags( $theme->get( 'Author' ) ),
             'current_version'    => (string) $theme->get( 'Version' ),
+            'latest_version'     => $latest_version,
             'is_wordpress_org'   => $is_wordpress_org,
             'wordpress_org_slug' => $wordpress_slug,
             'archives'           => $archives,
@@ -364,15 +380,53 @@ class ASENHA_Rollback_Versions {
             }
             return version_compare( (string) $second, (string) $first );
         } );
+        $merged_versions = $this->limit_merged_versions( $merged_versions, $current_version, $archives );
         foreach ( $merged_versions as $version => $version_data ) {
             $source_label = ( 'wordpress_org' === $version_data['source'] ? __( 'WordPress.org', 'admin-site-enhancements' ) : __( 'Local archive', 'admin-site-enhancements' ) );
             $label = sprintf( '%1$s (%2$s)', $version, $source_label );
             if ( !empty( $version_data['is_current'] ) ) {
-                $label .= ' ' . __( '- current', 'admin-site-enhancements' );
+                $label .= ' ' . __( '- installed', 'admin-site-enhancements' );
             }
             $merged_versions[$version]['label'] = $label;
         }
         return array_values( $merged_versions );
+    }
+
+    /**
+     * Keep trunk, the current version, every local archive, and the newest WordPress.org versions.
+     *
+     * Older WordPress.org versions stay in the version transient. They are omitted from the dropdown.
+     *
+     * @since 9.2.0
+     *
+     * @param array  $merged_versions Versions sorted newest first, with trunk first.
+     * @param string $current_version Current installed version.
+     * @param array  $archives        Local archive map, keyed by version.
+     * @return array
+     */
+    private function limit_merged_versions( $merged_versions, $current_version, $archives ) {
+        $limited = array();
+        $wordpress_org_kept = 0;
+        $archives = ( is_array( $archives ) ? $archives : array() );
+        foreach ( $merged_versions as $version => $version_data ) {
+            if ( !is_array( $version_data ) ) {
+                continue;
+            }
+            $source = ( isset( $version_data['source'] ) ? (string) $version_data['source'] : '' );
+            $is_trunk = 'trunk' === (string) $version;
+            $is_current = (string) $version === (string) $current_version;
+            $is_local = 'local_archive' === $source;
+            $has_local_archive = array_key_exists( (string) $version, $archives );
+            if ( $is_trunk || $is_current || $is_local || $has_local_archive ) {
+                $limited[$version] = $version_data;
+                continue;
+            }
+            if ( 'wordpress_org' === $source && $wordpress_org_kept < self::MAX_WORDPRESS_ORG_VERSIONS ) {
+                $limited[$version] = $version_data;
+                $wordpress_org_kept++;
+            }
+        }
+        return $limited;
     }
 
     /**
@@ -389,6 +443,7 @@ class ASENHA_Rollback_Versions {
             'slug'               => $asset_context['slug'],
             'author'             => $asset_context['author'],
             'current_version'    => $asset_context['current_version'],
+            'latest_version'     => ( isset( $asset_context['latest_version'] ) ? (string) $asset_context['latest_version'] : '' ),
             'is_wordpress_org'   => $asset_context['is_wordpress_org'],
             'wordpress_org_slug' => $asset_context['wordpress_org_slug'],
             'available_versions' => $asset_context['available_versions'],
@@ -412,12 +467,7 @@ class ASENHA_Rollback_Versions {
         $entry['current_version'] = $asset_context['current_version'];
         $entry['is_wordpress_org'] = $asset_context['is_wordpress_org'];
         $entry['wordpress_org_slug'] = $asset_context['wordpress_org_slug'];
-        $entry['available_versions'] = array_map( function ( $version_data ) {
-            return array(
-                'version' => $version_data['version'],
-                'source'  => $version_data['source'],
-            );
-        }, $asset_context['available_versions'] );
+        unset($entry['available_versions']);
         $entry['archives'] = $asset_context['archives'];
         $entry['updated_at'] = time();
         return $entry;
@@ -431,11 +481,12 @@ class ASENHA_Rollback_Versions {
      * @return array|WP_Error
      */
     public function get_wordpress_org_versions( $asset_type, $wporg_slug ) {
-        $transient_key = 'asenha_rollback_versions_' . md5( $asset_type . '|' . $wporg_slug );
+        $transient_key = $this->get_wordpress_org_versions_transient_key( $asset_type, $wporg_slug );
         $cached = get_transient( $transient_key );
         if ( is_array( $cached ) ) {
-            return $cached;
+            return $this->get_wordpress_org_versions_from_cache( $cached );
         }
+        $latest = '';
         if ( 'plugin' === $asset_type ) {
             require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
             $api = plugins_api( 'plugin_information', (object) array(
@@ -460,6 +511,7 @@ class ASENHA_Rollback_Versions {
                 return $api;
             }
             $versions = ( isset( $api->versions ) && is_array( $api->versions ) ? $api->versions : array() );
+            $latest = ( isset( $api->version ) ? (string) $api->version : '' );
         } else {
             require_once ABSPATH . 'wp-admin/includes/theme-install.php';
             $api = themes_api( 'theme_information', array(
@@ -485,11 +537,92 @@ class ASENHA_Rollback_Versions {
                 return $api;
             }
             $versions = ( isset( $api->versions ) && is_array( $api->versions ) ? $api->versions : array() );
+            $latest = ( isset( $api->version ) ? (string) $api->version : '' );
+        }
+        if ( '' === $latest || 'trunk' === $latest ) {
+            $latest = $this->get_latest_version_from_map( $versions );
         }
         if ( !empty( $versions ) ) {
-            set_transient( $transient_key, $versions, 12 * HOUR_IN_SECONDS );
+            set_transient( $transient_key, array(
+                'latest'   => $latest,
+                'versions' => $versions,
+            ), 12 * HOUR_IN_SECONDS );
         }
         return $versions;
+    }
+
+    /**
+     * Read the stable WordPress.org version stored with the version list.
+     *
+     * Older transients store only the version map. Those fall back to the
+     * highest version key other than trunk.
+     *
+     * @param string $asset_type Asset type.
+     * @param string $wporg_slug WordPress.org slug.
+     * @return string
+     */
+    private function get_wordpress_org_latest_version( $asset_type, $wporg_slug ) {
+        $cached = get_transient( $this->get_wordpress_org_versions_transient_key( $asset_type, $wporg_slug ) );
+        if ( !is_array( $cached ) ) {
+            return '';
+        }
+        if ( isset( $cached['versions'] ) && is_array( $cached['versions'] ) ) {
+            $latest = ( isset( $cached['latest'] ) ? (string) $cached['latest'] : '' );
+            if ( '' !== $latest && 'trunk' !== $latest ) {
+                return $latest;
+            }
+            return $this->get_latest_version_from_map( $cached['versions'] );
+        }
+        return $this->get_latest_version_from_map( $cached );
+    }
+
+    /**
+     * Transient key for a WordPress.org version list.
+     *
+     * @param string $asset_type Asset type.
+     * @param string $wporg_slug WordPress.org slug.
+     * @return string
+     */
+    private function get_wordpress_org_versions_transient_key( $asset_type, $wporg_slug ) {
+        return 'asenha_rollback_versions_' . md5( $asset_type . '|' . $wporg_slug );
+    }
+
+    /**
+     * Return the version map from either cache shape.
+     *
+     * @param array $cached Cached transient value.
+     * @return array
+     */
+    private function get_wordpress_org_versions_from_cache( $cached ) {
+        if ( isset( $cached['versions'] ) && is_array( $cached['versions'] ) ) {
+            return $cached['versions'];
+        }
+        return $cached;
+    }
+
+    /**
+     * Get the newest stable version from a WordPress.org version map.
+     *
+     * Trunk is a development build and is excluded.
+     *
+     * @param array $remote_versions Version map keyed by version string.
+     * @return string
+     */
+    private function get_latest_version_from_map( $remote_versions ) {
+        if ( !is_array( $remote_versions ) || empty( $remote_versions ) ) {
+            return '';
+        }
+        $latest = '';
+        foreach ( array_keys( $remote_versions ) as $version ) {
+            $version = (string) $version;
+            if ( '' === $version || 'trunk' === $version ) {
+                continue;
+            }
+            if ( '' === $latest || version_compare( $version, $latest, '>' ) ) {
+                $latest = $version;
+            }
+        }
+        return $latest;
     }
 
     /**

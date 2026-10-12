@@ -359,7 +359,8 @@ class Hide_Admin_Notices {
                     visibility: visible !important;
                 }
 
-                #wpbody #wpbody-content #asenha-view-admin-as-role-recovery-notice p strong {
+                #wpbody #wpbody-content #asenha-view-admin-as-role-recovery-notice p strong,
+                #wpbody #wpbody-content #asenha-view-admin-as-role-recovery-copy-notice p strong {
                     word-break: break-all;
                 }
 

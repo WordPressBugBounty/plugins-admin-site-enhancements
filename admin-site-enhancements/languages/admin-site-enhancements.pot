@@ -2,14 +2,14 @@
 # This file is distributed under the GPL-2.0+.
 msgid ""
 msgstr ""
-"Project-Id-Version: Admin and Site Enhancements (ASE) 9.2.0\n"
+"Project-Id-Version: Admin and Site Enhancements (ASE) 9.2.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/admin-site-enhancements\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-02T15:08:36+00:00\n"
+"POT-Creation-Date: 2026-10-08T13:54:43+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: admin-site-enhancements\n"
@@ -58,62 +58,62 @@ msgstr ""
 msgid "Save Changes"
 msgstr ""
 
-#: classes/class-admin-menu-organizer.php:332
+#: classes/class-admin-menu-organizer.php:321
 msgid "Posts"
 msgstr ""
 
 #. translators: %s is post type or taxonomy label
-#: classes/class-admin-menu-organizer.php:420
-#: classes/class-admin-menu-organizer.php:456
-#: classes/class-admin-menu-organizer.php:462
+#: classes/class-admin-menu-organizer.php:404
+#: classes/class-admin-menu-organizer.php:440
+#: classes/class-admin-menu-organizer.php:446
 #, php-format
 msgid "All %s"
 msgstr ""
 
-#: classes/class-admin-menu-organizer.php:423
-#: classes/class-admin-menu-organizer.php:424
+#: classes/class-admin-menu-organizer.php:407
+#: classes/class-admin-menu-organizer.php:408
 msgid "Add New"
 msgstr ""
 
-#: classes/class-admin-menu-organizer.php:425
+#: classes/class-admin-menu-organizer.php:409
 #: settings.php:1183
 msgid "Edit"
 msgstr ""
 
-#: classes/class-admin-menu-organizer.php:427
+#: classes/class-admin-menu-organizer.php:411
 #: includes/contact-form/classes/class-contact-form-submissions-table.php:238
 msgid "View"
 msgstr ""
 
 #. translators: %s is post type or taxonomy label
-#: classes/class-admin-menu-organizer.php:430
+#: classes/class-admin-menu-organizer.php:414
 #, php-format
 msgid "Search %s"
 msgstr ""
 
 #. translators: %s is the post type label
-#: classes/class-admin-menu-organizer.php:435
+#: classes/class-admin-menu-organizer.php:419
 #, php-format
 msgid "No %s found"
 msgstr ""
 
 #. translators: %s is the post type label
-#: classes/class-admin-menu-organizer.php:440
+#: classes/class-admin-menu-organizer.php:424
 #, php-format
 msgid "No %s found in Trash"
 msgstr ""
 
-#: classes/class-admin-menu-organizer.php:552
-#: classes/class-admin-menu-organizer.php:553
+#: classes/class-admin-menu-organizer.php:536
+#: classes/class-admin-menu-organizer.php:537
 msgid "Show All"
 msgstr ""
 
-#: classes/class-admin-menu-organizer.php:563
-#: classes/class-admin-menu-organizer.php:564
+#: classes/class-admin-menu-organizer.php:547
+#: classes/class-admin-menu-organizer.php:548
 msgid "Show Less"
 msgstr ""
 
-#: classes/class-admin-menu-organizer.php:608
+#: classes/class-admin-menu-organizer.php:592
 msgid "You do not have permission to perform this action."
 msgstr ""
 
@@ -138,32 +138,32 @@ msgstr ""
 msgid "DUPLICATE"
 msgstr ""
 
-#: classes/class-content-duplication.php:222
+#: classes/class-content-duplication.php:245
 msgid "Duplicate this as draft"
 msgstr ""
 
-#: classes/class-content-duplication.php:222
+#: classes/class-content-duplication.php:245
 msgid "Duplicate"
 msgstr ""
 
 #. translators: %s is the singular label for the post type
-#: classes/class-content-duplication.php:264
+#: classes/class-content-duplication.php:460
 #, php-format
 msgid "Duplicate %s"
 msgstr ""
 
-#: classes/class-content-duplication.php:484
-#: classes/class-content-duplication.php:518
+#: classes/class-content-duplication.php:680
+#: classes/class-content-duplication.php:714
 msgid "Skipping import of Elementor placeholder image."
 msgstr ""
 
-#: classes/class-content-order.php:61
-#: classes/class-content-order.php:78
-#: classes/class-content-order.php:80
-#: classes/class-content-order.php:96
-#: classes/class-content-order.php:98
-#: classes/class-content-order.php:114
-#: classes/class-content-order.php:161
+#: classes/class-content-order.php:68
+#: classes/class-content-order.php:85
+#: classes/class-content-order.php:87
+#: classes/class-content-order.php:103
+#: classes/class-content-order.php:105
+#: classes/class-content-order.php:121
+#: classes/class-content-order.php:168
 msgid "Order"
 msgstr ""
 
@@ -233,7 +233,7 @@ msgid "Not set"
 msgstr ""
 
 #: classes/class-email-delivery.php:535
-#: classes/class-settings-fields-render.php:472
+#: classes/class-settings-fields-render.php:477
 msgid "Leave blank to keep the current password."
 msgstr ""
 
@@ -261,7 +261,7 @@ msgid "Open Email Delivery settings"
 msgstr ""
 
 #: classes/class-email-delivery.php:779
-#: classes/class-view-admin-as-role.php:754
+#: classes/class-view-admin-as-role.php:1600
 #: settings.php:2042
 msgid "Insufficient permissions."
 msgstr ""
@@ -536,70 +536,79 @@ msgstr ""
 msgid "More information"
 msgstr ""
 
+#: classes/class-settings-fields-render.php:399
+msgid "Logging out, or returning after the login session ends, restores your administrator role. Log in again with your usual password."
+msgstr ""
+
 #. translators: %s is the secret recovery URL or instructional text
-#: classes/class-settings-fields-render.php:400
-#, php-format
-msgid "If something goes wrong</strong> and you need to regain access to your account as an administrator, please visit the following URL: <br /><strong>%s</strong><br /><br />If you use <strong>Ninja Firewall</strong>, please uncheck \"Block attempts to gain administrative privileges\" in the Firewall Policies settings before you try to view as a non-admin user role to <strong>prevent being locked out</strong> of your admin account."
-msgstr ""
-
 #: classes/class-settings-fields-render.php:402
-msgid "In any case, please also <strong>create at least one backup admin user</strong> as a last resort should your primary admin user fails to properly login as admin. With this second admin user, you can also restore the admin role for your primary admin user."
+#, php-format
+msgid "If a firewall blocks the account, or that automatic restore does not run, visit this secret URL while logged out: <br /><strong>%s</strong>"
 msgstr ""
 
-#: classes/class-settings-fields-render.php:761
+#: classes/class-settings-fields-render.php:405
+msgid "If you use <strong>Ninja Firewall</strong>, please uncheck \"Block attempts to gain administrative privileges\" in the Firewall Policies settings before you try to view as a non-admin user role to <strong>prevent being locked out</strong> of your admin account."
+msgstr ""
+
+#: classes/class-settings-fields-render.php:406
+msgid "Please also <strong>create at least one backup admin user</strong> as a last resort if your primary admin user cannot log in as an administrator. With this second admin user, you can restore the administrator role for your primary admin user."
+msgstr ""
+
+#: classes/class-settings-fields-render.php:766
 #: settings.php:1102
 msgid "Select an Image"
 msgstr ""
 
-#: classes/class-settings-fields-render.php:986
-#: classes/class-settings-fields-render.php:1107
-#: classes/class-settings-fields-render.php:1221
+#: classes/class-settings-fields-render.php:980
+#: classes/class-settings-fields-render.php:1101
+#: classes/class-settings-fields-render.php:1215
 msgid "Hide until toggled"
 msgstr ""
 
-#: classes/class-settings-fields-render.php:1280
+#: classes/class-settings-fields-render.php:1274
 msgid "Reset Menu"
 msgstr ""
 
-#: classes/class-settings-fields-render.php:1381
+#: classes/class-settings-fields-render.php:1375
 msgid "IP Address<br />Last Username"
 msgstr ""
 
-#: classes/class-settings-fields-render.php:1384
+#: classes/class-settings-fields-render.php:1378
 msgid "Attempts<br />Lockouts"
 msgstr ""
 
-#: classes/class-settings-fields-render.php:1387
+#: classes/class-settings-fields-render.php:1381
 msgid "Last Attempt On"
 msgstr ""
 
-#: classes/class-settings-fields-render.php:1390
-#: includes/rollback/classes/class-rollback-admin-page.php:224
+#: classes/class-settings-fields-render.php:1384
+#: includes/rollback/classes/class-rollback-admin-page.php:270
 msgid "Actions"
 msgstr ""
 
-#: classes/class-settings-fields-render.php:1442
+#: classes/class-settings-fields-render.php:1436
 msgid "Release Lock"
 msgstr ""
 
-#: classes/class-settings-fields-render.php:1475
+#: classes/class-settings-fields-render.php:1469
 msgid "with AVIF support"
 msgstr ""
 
-#: classes/class-settings-fields-render.php:1477
+#: classes/class-settings-fields-render.php:1471
 msgid "without AVIF support"
 msgstr ""
 
-#: classes/class-settings-fields-render.php:1482
-#: classes/class-settings-fields-render.php:1503
+#: classes/class-settings-fields-render.php:1476
+#: classes/class-settings-fields-render.php:1497
+#: includes/rollback/classes/class-rollback-admin-page.php:331
 msgid "Not available"
 msgstr ""
 
-#: classes/class-settings-fields-render.php:1506
+#: classes/class-settings-fields-render.php:1500
 msgid "AVIF Support Status"
 msgstr ""
 
-#: classes/class-settings-fields-render.php:1512
+#: classes/class-settings-fields-render.php:1506
 msgid "Full AVIF support requires that your server / hosting has <a href=\"https://php.watch/versions/8.1/gd-avif\" target=\"_blank\">GD extension</a> compiled with AVIF support in PHP 8.1 or greater, or, <a href=\"https://web.archive.org/web/20240104012918/https://avif.io/blog/tutorials/imagemagick/\" target=\"_blank\">ImageMagick 7.0.25 or greater</a> installed. Without either, you can still upload AVIF files but without auto-generation of the smaller thumbnail sizes. A majority of <a href=\"https://web.archive.org/web/20231207174740/https://avif.io/blog/articles/avif-browser-support/\" target=\"_blank\">modern desktop and mobile browsers</a> support the display of AVIF files."
 msgstr ""
 
@@ -633,7 +642,7 @@ msgstr ""
 #: includes/contact-form/classes/class-contact-form-email.php:65
 #: includes/contact-form/classes/class-contact-form-submissions-table.php:53
 #: includes/contact-form/classes/class-contact-form.php:195
-#: includes/rollback/classes/class-rollback-admin-page.php:219
+#: includes/rollback/classes/class-rollback-admin-page.php:249
 msgid "Name"
 msgstr ""
 
@@ -1614,8 +1623,8 @@ msgid "On the frontend"
 msgstr ""
 
 #: classes/class-settings-sections-fields.php:3305
-#: includes/rollback/classes/class-rollback-admin-page.php:77
-#: includes/rollback/classes/class-rollback-admin-page.php:175
+#: includes/rollback/classes/class-rollback-admin-page.php:89
+#: includes/rollback/classes/class-rollback-admin-page.php:183
 msgid "Plugins and Themes Rollback"
 msgstr ""
 
@@ -2075,15 +2084,45 @@ msgstr ""
 msgid "Show admin bar status when search engines are set to be discouraged from indexing the site. This is set through a \"Search engine visibility\" checkbox in Settings >> Reading."
 msgstr ""
 
-#: classes/class-view-admin-as-role.php:366
+#: classes/class-view-admin-as-role.php:419
 msgid "Enable this module to generate your secret recovery URL."
 msgstr ""
 
-#: classes/class-view-admin-as-role.php:706
+#: classes/class-view-admin-as-role.php:1108
+msgid "Your administrator role was restored. Please log in with your usual password."
+msgstr ""
+
+#: classes/class-view-admin-as-role.php:1188
+msgid "This account is viewing the admin as another role and cannot open this screen."
+msgstr ""
+
+#: classes/class-view-admin-as-role.php:1189
+#: classes/class-view-admin-as-role.php:1196
+#: classes/class-view-admin-as-role.php:1553
 msgid "Switch back to Administrator"
 msgstr ""
 
-#: classes/class-view-admin-as-role.php:733
+#: classes/class-view-admin-as-role.php:1333
+msgid "The secret recovery URL was copied to your clipboard. Opening it will restore your Administrator role."
+msgstr ""
+
+#: classes/class-view-admin-as-role.php:1334
+msgid "The browser blocked copying the secret recovery URL. Copy it from here before continuing."
+msgstr ""
+
+#: classes/class-view-admin-as-role.php:1335
+msgid "Copy"
+msgstr ""
+
+#: classes/class-view-admin-as-role.php:1336
+msgid "Copied"
+msgstr ""
+
+#: classes/class-view-admin-as-role.php:1337
+msgid "Dismiss this notice."
+msgstr ""
+
+#: classes/class-view-admin-as-role.php:1579
 msgid "You switched back to the administrator role. Your secret recovery URL has been refreshed. Bookmark the new URL below before testing again."
 msgstr ""
 
@@ -2118,7 +2157,7 @@ msgstr ""
 #: includes/contact-form/classes/class-contact-form-admin.php:183
 #: includes/contact-form/classes/class-contact-form-email.php:67
 #: includes/contact-form/classes/class-contact-form-submissions-table.php:55
-#: includes/rollback/classes/class-rollback-admin-page.php:302
+#: includes/rollback/classes/class-rollback-admin-page.php:446
 msgid "Date"
 msgstr ""
 
@@ -2250,187 +2289,191 @@ msgstr ""
 msgid "View Content"
 msgstr ""
 
-#: includes/rollback/classes/class-rollback-admin-page.php:78
-#: includes/rollback/classes/class-rollback-admin-page.php:157
-#: includes/rollback/classes/class-rollback-admin-page.php:273
-#: includes/rollback/classes/class-rollback-admin-page.php:378
-#: includes/rollback/classes/class-rollback-admin.php:117
-#: includes/rollback/classes/class-rollback-admin.php:154
+#: includes/rollback/classes/class-rollback-admin-page.php:90
+#: includes/rollback/classes/class-rollback-admin-page.php:164
+#: includes/rollback/classes/class-rollback-admin-page.php:398
+#: includes/rollback/classes/class-rollback-admin-page.php:560
+#: includes/rollback/classes/class-rollback-admin.php:127
+#: includes/rollback/classes/class-rollback-admin.php:176
 msgid "Rollback"
 msgstr ""
 
 #. translators: Explains why the Rollback button is disabled when no rollback targets exist.
-#: includes/rollback/classes/class-rollback-admin-page.php:155
-#: includes/rollback/classes/class-rollback-admin-page.php:264
-#: includes/rollback/classes/class-rollback-admin.php:155
+#: includes/rollback/classes/class-rollback-admin-page.php:162
+#: includes/rollback/classes/class-rollback-admin-page.php:384
+#: includes/rollback/classes/class-rollback-admin.php:177
 msgid "No rollback versions are currently available for this item."
 msgstr ""
 
-#: includes/rollback/classes/class-rollback-admin-page.php:156
-#: includes/rollback/classes/class-rollback-admin-page.php:250
-#: includes/rollback/classes/class-rollback-admin.php:156
+#: includes/rollback/classes/class-rollback-admin-page.php:163
+#: includes/rollback/classes/class-rollback-admin-page.php:359
+#: includes/rollback/classes/class-rollback-admin.php:178
 msgid "Select version"
 msgstr ""
 
-#: includes/rollback/classes/class-rollback-admin-page.php:158
-#: includes/rollback/classes/class-rollback-admin.php:157
-msgid "Current version:"
+#: includes/rollback/classes/class-rollback-admin-page.php:165
+#: includes/rollback/classes/class-rollback-admin.php:179
+msgid "Installed version:"
 msgstr ""
 
-#: includes/rollback/classes/class-rollback-admin-page.php:159
-#: includes/rollback/classes/class-rollback-admin.php:158
-#: includes/rollback/classes/class-rollback-versions.php:368
+#: includes/rollback/classes/class-rollback-admin-page.php:166
+#: includes/rollback/classes/class-rollback-admin.php:180
+#: includes/rollback/classes/class-rollback-versions.php:385
 msgid "WordPress.org"
 msgstr ""
 
-#: includes/rollback/classes/class-rollback-admin-page.php:160
-#: includes/rollback/classes/class-rollback-admin.php:159
-#: includes/rollback/classes/class-rollback-versions.php:368
+#: includes/rollback/classes/class-rollback-admin-page.php:167
+#: includes/rollback/classes/class-rollback-admin.php:181
+#: includes/rollback/classes/class-rollback-versions.php:385
 msgid "Local archive"
 msgstr ""
 
-#: includes/rollback/classes/class-rollback-admin-page.php:178
+#: includes/rollback/classes/class-rollback-admin-page.php:194
 msgid "Plugins"
 msgstr ""
 
-#: includes/rollback/classes/class-rollback-admin-page.php:179
+#: includes/rollback/classes/class-rollback-admin-page.php:201
 msgid "Themes"
 msgstr ""
 
-#: includes/rollback/classes/class-rollback-admin-page.php:180
+#: includes/rollback/classes/class-rollback-admin-page.php:208
 msgid "Logs"
 msgstr ""
 
-#: includes/rollback/classes/class-rollback-admin-page.php:214
+#: includes/rollback/classes/class-rollback-admin-page.php:243
 msgid "No installed themes were found."
 msgstr ""
 
-#: includes/rollback/classes/class-rollback-admin-page.php:214
+#: includes/rollback/classes/class-rollback-admin-page.php:243
 msgid "No installed plugins were found."
 msgstr ""
 
-#: includes/rollback/classes/class-rollback-admin-page.php:220
-#: includes/rollback/classes/class-rollback-admin-page.php:298
+#: includes/rollback/classes/class-rollback-admin-page.php:252
+#: includes/rollback/classes/class-rollback-admin-page.php:434
 msgid "Slug"
 msgstr ""
 
-#: includes/rollback/classes/class-rollback-admin-page.php:221
+#: includes/rollback/classes/class-rollback-admin-page.php:255
 msgid "Author"
 msgstr ""
 
-#: includes/rollback/classes/class-rollback-admin-page.php:222
-msgid "Current Version"
+#: includes/rollback/classes/class-rollback-admin-page.php:258
+msgid "Installed Version"
 msgstr ""
 
-#: includes/rollback/classes/class-rollback-admin-page.php:223
+#: includes/rollback/classes/class-rollback-admin-page.php:261
+msgid "Latest Version"
+msgstr ""
+
+#: includes/rollback/classes/class-rollback-admin-page.php:264
 msgid "Source"
 msgstr ""
 
-#: includes/rollback/classes/class-rollback-admin-page.php:241
+#: includes/rollback/classes/class-rollback-admin-page.php:342
 msgid "WordPress.org versions"
 msgstr ""
 
-#: includes/rollback/classes/class-rollback-admin-page.php:243
+#: includes/rollback/classes/class-rollback-admin-page.php:348
 msgid "Local archives only"
 msgstr ""
 
-#: includes/rollback/classes/class-rollback-admin-page.php:297
+#: includes/rollback/classes/class-rollback-admin-page.php:431
 msgid "Asset"
 msgstr ""
 
-#: includes/rollback/classes/class-rollback-admin-page.php:299
+#: includes/rollback/classes/class-rollback-admin-page.php:437
 msgid "Change"
 msgstr ""
 
-#: includes/rollback/classes/class-rollback-admin-page.php:300
+#: includes/rollback/classes/class-rollback-admin-page.php:440
 msgid "Performed By"
 msgstr ""
 
-#: includes/rollback/classes/class-rollback-admin-page.php:301
+#: includes/rollback/classes/class-rollback-admin-page.php:443
 msgid "Note"
 msgstr ""
 
-#: includes/rollback/classes/class-rollback-admin-page.php:308
+#: includes/rollback/classes/class-rollback-admin-page.php:456
 msgid "No rollback activity has been logged yet."
 msgstr ""
 
-#: includes/rollback/classes/class-rollback-admin-page.php:325
+#: includes/rollback/classes/class-rollback-admin-page.php:497
 msgid "No note added."
 msgstr ""
 
-#: includes/rollback/classes/class-rollback-admin-page.php:329
+#: includes/rollback/classes/class-rollback-admin-page.php:509
 msgid "View or edit note"
 msgstr ""
 
-#: includes/rollback/classes/class-rollback-admin-page.php:379
-#: includes/rollback/classes/class-rollback-admin-page.php:425
+#: includes/rollback/classes/class-rollback-admin-page.php:563
+#: includes/rollback/classes/class-rollback-admin-page.php:631
 msgid "Close modal"
 msgstr ""
 
-#: includes/rollback/classes/class-rollback-admin-page.php:388
+#: includes/rollback/classes/class-rollback-admin-page.php:576
 msgid "Rollback to"
 msgstr ""
 
-#: includes/rollback/classes/class-rollback-admin-page.php:392
+#: includes/rollback/classes/class-rollback-admin-page.php:584
 msgid "Rollback notes"
 msgstr ""
 
-#: includes/rollback/classes/class-rollback-admin-page.php:404
-#: includes/rollback/classes/class-rollback-admin-page.php:439
+#: includes/rollback/classes/class-rollback-admin-page.php:604
+#: includes/rollback/classes/class-rollback-admin-page.php:653
 #: settings.php:1184
 msgid "Cancel"
 msgstr ""
 
-#: includes/rollback/classes/class-rollback-admin-page.php:405
+#: includes/rollback/classes/class-rollback-admin-page.php:607
 msgid "Rollback Now"
 msgstr ""
 
-#: includes/rollback/classes/class-rollback-admin-page.php:424
+#: includes/rollback/classes/class-rollback-admin-page.php:628
 msgid "Rollback Note"
 msgstr ""
 
-#: includes/rollback/classes/class-rollback-admin-page.php:440
+#: includes/rollback/classes/class-rollback-admin-page.php:656
 msgid "Save note"
 msgstr ""
 
-#: includes/rollback/classes/class-rollback-admin.php:171
-#: includes/rollback/classes/class-rollback-admin.php:221
+#: includes/rollback/classes/class-rollback-admin.php:194
+#: includes/rollback/classes/class-rollback-admin.php:244
 msgid "Sorry, you are not allowed to perform this action."
 msgstr ""
 
-#: includes/rollback/classes/class-rollback-admin.php:185
+#: includes/rollback/classes/class-rollback-admin.php:208
 msgid "Please choose a rollback version first."
 msgstr ""
 
-#: includes/rollback/classes/class-rollback-admin.php:189
-#: includes/rollback/classes/class-rollback-versions.php:195
+#: includes/rollback/classes/class-rollback-admin.php:212
+#: includes/rollback/classes/class-rollback-versions.php:203
 msgid "The selected plugin or theme could not be found."
 msgstr ""
 
-#: includes/rollback/classes/class-rollback-admin.php:193
-#: includes/rollback/classes/class-rollback-versions.php:210
+#: includes/rollback/classes/class-rollback-admin.php:216
+#: includes/rollback/classes/class-rollback-versions.php:218
 msgid "The selected rollback version is no longer available."
 msgstr ""
 
 #. translators: 1: asset name, 2: version number
-#: includes/rollback/classes/class-rollback-admin.php:207
+#: includes/rollback/classes/class-rollback-admin.php:230
 #, php-format
 msgid "%1$s was rolled back to version %2$s."
 msgstr ""
 
-#: includes/rollback/classes/class-rollback-admin.php:231
+#: includes/rollback/classes/class-rollback-admin.php:254
 msgid "The rollback note was updated."
 msgstr ""
 
-#: includes/rollback/classes/class-rollback-admin.php:296
+#: includes/rollback/classes/class-rollback-admin.php:319
 msgid "The rollback could not be completed."
 msgstr ""
 
-#: includes/rollback/classes/class-rollback-helper.php:178
+#: includes/rollback/classes/class-rollback-helper.php:249
 msgid "The rollback storage directory could not be created."
 msgstr ""
 
-#: includes/rollback/classes/class-rollback-helper.php:188
+#: includes/rollback/classes/class-rollback-helper.php:259
 msgid "One of the rollback storage directories could not be created."
 msgstr ""
 
@@ -2460,8 +2503,8 @@ msgstr ""
 msgid "Unknown user"
 msgstr ""
 
-#: includes/rollback/classes/class-rollback-versions.php:371
-msgid "- current"
+#: includes/rollback/classes/class-rollback-versions.php:388
+msgid "- installed"
 msgstr ""
 
 #: settings.php:444

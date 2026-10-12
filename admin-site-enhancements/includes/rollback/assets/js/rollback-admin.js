@@ -73,7 +73,8 @@ jQuery( function( $ ) {
 			$( '#asenha-rollback-asset-type' ).val( assetType );
 			$( '#asenha-rollback-asset-key' ).val( assetKey );
 			$( '.asenha-rollback-asset-name' ).text( assetName );
-			$( '.asenha-rollback-current-version-label' ).text( ( asenhaRollback.strings && asenhaRollback.strings.currentVersion ? asenhaRollback.strings.currentVersion : 'Current version:' ) + ' ' + currentVersion );
+			$( '.asenha-rollback-current-version-label' ).text( ( asenhaRollback.strings && asenhaRollback.strings.currentVersion ? asenhaRollback.strings.currentVersion : 'Installed version:' ) + ' ' + currentVersion );
+			
 			setEditorContent( 'asenha_rollback_note', '' );
 			updateRollbackSubmitState();
 			openModal( $rollbackOverlay );
@@ -84,6 +85,8 @@ jQuery( function( $ ) {
 		} );
 
 		$( document ).on( 'change', '#asenha-rollback-target-version', updateRollbackSubmitState );
+
+		
 
 		$( document ).on( 'click', '.asenha-close-modal', function() {
 			closeModal( $( this ).closest( '.asenha-modal-overlay' ) );
@@ -135,6 +138,22 @@ jQuery( function( $ ) {
 			return asenhaRollback.rollbackPageUrl + '&tab=themes&asset_type=theme&asset_key=' + encodeURIComponent( themeSlug ) + '&open_modal=1';
 		}
 
+		function themeRollbackButtonLabel( themeSlug ) {
+			var rollbackLabel = ( asenhaRollback.strings && asenhaRollback.strings.rollback ) ? asenhaRollback.strings.rollback : 'Rollback';
+
+			
+
+			return rollbackLabel;
+		}
+
+		function applyThemeRollbackButtonLabel( $button, themeSlug ) {
+			var label = themeRollbackButtonLabel( themeSlug );
+
+			if ( $button.text() !== label ) {
+				$button.text( label );
+			}
+		}
+
 		function ensureOverlayButton() {
 			var params = new URLSearchParams( window.location.search );
 			var themeSlug = params.get( 'theme' );
@@ -148,6 +167,7 @@ jQuery( function( $ ) {
 
 			if ( eligibleThemeSlugs.indexOf( themeSlug ) === -1 ) {
 				$themeActions.find( '.asenha-theme-rollback-button' ).remove();
+				$( '.theme-overlay .asenha-theme-rollback-latest' ).remove();
 				return;
 			}
 
@@ -168,19 +188,27 @@ jQuery( function( $ ) {
 					return false;
 				}
 				var el = $control.get( 0 );
+				var next = el.nextElementSibling;
+
+				if ( next && next.classList && next.classList.contains( 'asenha-theme-rollback-latest' ) ) {
+					next = next.nextElementSibling;
+				}
+
 				if ( $delete.length ) {
-					return $delete.get( 0 ).previousElementSibling === el;
+					return next === $delete.get( 0 );
 				}
 				if ( $activeTheme.length ) {
 					return $activeTheme.get( 0 ).nextElementSibling === el;
 				}
-				return themeActionsEl.lastElementChild === el;
+				return ! next;
 			}
 
 			if ( $btn.length && placementIsCorrect( $btn ) ) {
 				if ( $btn.attr( 'href' ) !== expectedHref ) {
 					$btn.attr( 'href', expectedHref );
 				}
+				applyThemeRollbackButtonLabel( $btn, themeSlug );
+				syncThemeLatestNote( themeSlug );
 				return;
 			}
 
@@ -188,10 +216,11 @@ jQuery( function( $ ) {
 				$btn = $( '<a />', {
 					'class': 'button asenha-theme-rollback-button',
 					href: expectedHref,
-					text: ( asenhaRollback.strings && asenhaRollback.strings.rollback ) ? asenhaRollback.strings.rollback : 'Rollback'
+					text: themeRollbackButtonLabel( themeSlug )
 				} );
 			} else {
 				$btn.attr( 'href', expectedHref );
+				applyThemeRollbackButtonLabel( $btn, themeSlug );
 			}
 
 			$btn.detach();
@@ -203,6 +232,12 @@ jQuery( function( $ ) {
 			} else {
 				$themeActions.append( $btn );
 			}
+
+			syncThemeLatestNote( themeSlug );
+		}
+
+		function syncThemeLatestNote( themeSlug ) {
+			
 		}
 
 		var overlayButtonRafId = null;

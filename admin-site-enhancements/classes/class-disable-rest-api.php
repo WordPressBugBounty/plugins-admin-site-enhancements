@@ -33,7 +33,7 @@ class Disable_REST_API {
         if ( empty( $route ) ) {
             // This is when visiting /wp-json root
             $allow_rest_api_access = false;
-        } elseif ( false !== strpos( $route, 'altcha/v1' ) || false !== strpos( $route, 'two-factor/1.0' ) || in_array( 'contact-form-7/wp-contact-form-7.php', get_option( 'active_plugins', array() ) ) && false !== strpos( $route, 'contact-form-7/' ) || in_array( 'the-events-calendar/the-events-calendar.php', get_option( 'active_plugins', array() ) ) && false !== strpos( $route, 'tribe/' ) ) {
+        } elseif ( false !== strpos( $route, 'altcha/v1' ) || false !== strpos( $route, 'two-factor/1.0' ) || false !== strpos( $route, 'novamira/v1/oauth' ) || false !== strpos( $route, 'mcp/novamira' ) || ( new Common_Methods() )->is_mcp_toolkit_auth_request() || $this->is_mcp_toolkit_memory_rest_route( $route ) || in_array( 'contact-form-7/wp-contact-form-7.php', get_option( 'active_plugins', array() ) ) && false !== strpos( $route, 'contact-form-7/' ) || in_array( 'the-events-calendar/the-events-calendar.php', get_option( 'active_plugins', array() ) ) && false !== strpos( $route, 'tribe/' ) ) {
             $allow_rest_api_access = true;
         } else {
         }
@@ -48,6 +48,26 @@ class Disable_REST_API {
         }
         // Allow path: pass through unchanged so core's `true` is preserved.
         return $errors;
+    }
+
+    /**
+     * Whether a REST route is in the MCP Toolkit memory namespace.
+     *
+     * Slash-boundary match so mcp-toolkit/v1 does not also allow mcp-toolkit/v1-extra.
+     * The namespace stays reachable so each route can apply its own permission callback.
+     *
+     * @since 9.2.0
+     *
+     * @param string $route REST route without leading or trailing slash.
+     * @return bool
+     */
+    private function is_mcp_toolkit_memory_rest_route( $route ) {
+        $route = (string) $route;
+        $prefix = 'mcp-toolkit/v1';
+        if ( '' === $route ) {
+            return false;
+        }
+        return $route === $prefix || 0 === strpos( $route, $prefix . '/' );
     }
 
     /**
