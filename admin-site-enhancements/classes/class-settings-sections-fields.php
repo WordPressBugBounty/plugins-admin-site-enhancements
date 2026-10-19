@@ -3309,6 +3309,7 @@ class Settings_Sections_Fields {
             admin_url( 'tools.php?page=asenha-rollback' )
          );
         $module_description = __( 'Roll back plugins and themes hosted on WordPress.org to an earlier or newer version.', 'admin-site-enhancements' ) . ' ' . $rollback_page_link;
+        $rollback_show_subfields = false;
         add_settings_field(
             $field_id,
             $field_title,
@@ -3323,7 +3324,7 @@ class Settings_Sections_Fields {
                 'field_name'             => ASENHA_SLUG_U . '[' . $field_id . ']',
                 'field_description'      => $module_description,
                 'field_options_wrapper'  => true,
-                'field_options_moreless' => false,
+                'field_options_moreless' => $rollback_show_subfields,
                 'class'                  => 'asenha-toggle utilities ' . $field_slug,
             )
         );

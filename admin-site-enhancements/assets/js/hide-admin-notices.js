@@ -275,6 +275,9 @@
 			// Keep Freemius clone/migration safe mode notices visible in place.
 			noticesToMove = noticesToMove.not('[data-id="clone_resolution_options_notice"], [data-id="temporary_duplicate_notice"]');
 
+			// Keep the UpdraftPlus pre-update backup choice on the page so its checkboxes stay effective.
+			noticesToMove = noticesToMove.not('.updraft-ad-container');
+
 			
 
 			noticesToMove.not(':hidden').detach()

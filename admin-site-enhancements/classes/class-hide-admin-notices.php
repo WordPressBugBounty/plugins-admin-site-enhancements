@@ -359,6 +359,13 @@ class Hide_Admin_Notices {
                     visibility: visible !important;
                 }
 
+                /* Keep the UpdraftPlus pre-update backup choice visible so its checkboxes stay effective. */
+                #wpbody #wpbody-content .updraft-ad-container {
+                    display: block !important;
+                    position: static !important;
+                    visibility: visible !important;
+                }
+
                 #wpbody #wpbody-content #asenha-view-admin-as-role-recovery-notice p strong,
                 #wpbody #wpbody-content #asenha-view-admin-as-role-recovery-copy-notice p strong {
                     word-break: break-all;

@@ -544,6 +544,7 @@
       // Place fields into "Utilities" tab
       
       $('.plugins-themes-rollback').appendTo('.fields-utilities > table > tbody');
+      
       $('.smtp-email-delivery').appendTo('.fields-utilities > table > tbody');
       $('.smtp-default-from-description').appendTo('.fields-utilities .smtp-email-delivery .asenha-subfields');
       $('.smtp-default-from-name').appendTo('.fields-utilities .smtp-email-delivery .asenha-subfields');

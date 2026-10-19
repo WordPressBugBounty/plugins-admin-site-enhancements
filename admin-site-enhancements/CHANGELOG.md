@@ -1,10 +1,36 @@
 ## Changelog
 
-**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **92 _major_ releases** (e.g. 1.1.0 ) and **211 _minor_ releases** (e.g. 4.9.1), for a **total of 303 releases**.
+**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **92 _major_ releases** (e.g. 1.1.0 ) and **212 _minor_ releases** (e.g. 4.9.1), for a **total of 304 releases**.
 
 Each **_major release_** usually corresponds with the addition of one new module/feature. Each module/feature usually is the equivalent of one (or more) single-purpose plugin. Each **_minor release_** usually contain one or more bugfix or improvements to existing modules/features.
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web). **Currently on YEAR END SALE, 20% discount on new license and license upgrade**. Lifetime Deal (LTD) available.
+
+### 9.2.2 (2026.10.19) - ASE Free and Pro
+
+* **[IMPROVED in Free and Pro] Utilities >> Plugins and Themes Rollback**: 
+  * ASE Free and Pro: Added mechanism to prevent timeout error when opening the rollback page on a site with lots of plugins.
+  * ASE Pro: Added settings to limit the number of local rollback archives to keep for plugins and themes not hosted on wordpress.org. Props to @VisedFAQ for prompting this improvement.
+
+* **[IMPROVED in Free and Pro] Log In/Out & Register >> Change Login URL**: A successful login now returns the user to the original URL they came from.
+
+* **[FIXED in Free and Pro] Utilities >> Redirect 404**: missing `/.well-known/` files, such as `ai-catalog.json`, now stay a real 404 instead of being redirected to the homepage. This keeps clients that expect a machine-readable file, including Lighthouse Agent Discoverability, from treating homepage HTML as that file.
+
+* **[FIXED in Free and Pro] Utilities >> Password Protection**: Fixed a 401 on nonce-less REST requests from logged-in users, including Core Framework's GET /wp-json/wp/v2/ schema fetch that is required to load it's admin page. Props to John D. for reporting the issue in great detail.
+
+* **[CHANGED in Free and Pro] Admin Interface >> Hide Admin Notices**: Automatic backup notice from UpdraftPlus is no longer hidden in "Home >> Updates" admin page to make sure it works properly. Props to Christian S. for reporting the issue that prompted this change.
+
+* **[IMPROVED and FIXED in Pro] Content Management >> Custom Content Types >> Custom Field Groups**: 
+  * Improved integration with Elementor Atomic Elements, so that ASE custom fields are available as dynamic data source there too. Props to Stijn V. for prompting this improvement.
+  * Fixed CFG's select field's Select2 wiping WooCommerce product's attribute values on product update. Props to  Andrea B. for reporting the issue in detail.
+  * Fixed PHP fatal error that can occur when a textarea field has double underscores in its field name, and the field is rendered in an Elementor template with "Plain" selected as the output type. Props to Jasmin Z. for reporting the issue in great detail.
+
+* **[FIXED in Pro] Utilities >> Site Backup and Migration**: Fixed a conflict with Constant Contact plugin that causes adding Google Drive location to fail in the last step. Props to Jonathan J. for reporting the issue in detail and facilitating the troubleshooting process.
+
+* **[TRANSLATION in Free and Pro]** ASE is now being translated into [41 languages](https://translate.wpase.com/):
+  * **Added new/improved translation** for:
+    * ASE Free: Added [Galician](https://translate.wordpress.org/locale/gl/default/wp-plugins/admin-site-enhancements/) (props to [Jesús Amieiro](https://profiles.wordpress.org/amieiro/)!). Updated Turkish, Spanish, Serbian, Portuguese (Brazil), Polish, Dutch (Belgium), Norwegian, Italian, French.
+    * ASE Pro: Updated Italian.
 
 ### 9.2.1 (2026.10.12) - ASE Free and Pro
 
